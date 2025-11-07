@@ -47,4 +47,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function pembayarans()
+    {
+        return $this->hasMany(Pembayaran::class, 'user_id');
+    }
+
+    public function sopirs()
+    {
+        return $this->hasMany(Sopir::class, 'user_id');
+    }
+
+    public function tikets()
+    {
+        return $this->hasMany(Tiket::class, 'user_id');
+    }
 }
