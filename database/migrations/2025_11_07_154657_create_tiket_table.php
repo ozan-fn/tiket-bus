@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('tiket', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->foreignId('jadwal_id')->constrained('jadwal')->onDelete('cascade');
+            $table->foreignId('jadwal_kelas_bus_id')->constrained('jadwal_kelas_bus')->onDelete('cascade');
             $table->string('nik');
             $table->string('nama_penumpang');
             $table->date('tanggal_lahir')->nullable();

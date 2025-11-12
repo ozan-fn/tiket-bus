@@ -26,27 +26,37 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Rute extends Model
 {
-	protected $table = 'rute';
+    protected $table = 'rute';
 
-	protected $casts = [
-		'asal_terminal_id' => 'int',
-		'tujuan_terminal_id' => 'int'
-	];
+    protected $casts = [
+        'asal_terminal_id' => 'int',
+        'tujuan_terminal_id' => 'int'
+    ];
 
-	protected $fillable = [
-		'asal_terminal_id',
-		'tujuan_terminal_id'
-	];
+    protected $fillable = [
+        'asal_terminal_id',
+        'tujuan_terminal_id'
+    ];
 
-	public function terminal()
-	{
-		return $this->belongsToMany(Terminal::class)
-					->withPivot('id', 'urutan')
-					->withTimestamps();
-	}
+    public function terminal()
+    {
+        return $this->belongsToMany(Terminal::class)
+            ->withPivot('id', 'urutan')
+            ->withTimestamps();
+    }
 
-	public function jadwals()
-	{
-		return $this->hasMany(Jadwal::class);
-	}
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class);
+    }
+
+    public function asalTerminal()
+    {
+        return $this->belongsTo(Terminal::class, 'asal_terminal_id');
+    }
+
+    public function tujuanTerminal()
+    {
+        return $this->belongsTo(Terminal::class, 'tujuan_terminal_id');
+    }
 }

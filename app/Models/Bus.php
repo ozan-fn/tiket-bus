@@ -17,7 +17,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $nama
  * @property string $plat_nomor
  * @property int $kapasitas
- * @property string|null $tipe
  * @property string $status
  * @property string|null $keterangan
  * @property Carbon|null $created_at
@@ -30,30 +29,29 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Bus extends Model
 {
-	protected $table = 'bus';
+    protected $table = 'bus';
 
-	protected $casts = [
-		'kapasitas' => 'int'
-	];
+    protected $casts = [
+        'kapasitas' => 'int'
+    ];
 
-	protected $fillable = [
-		'nama',
-		'plat_nomor',
-		'kapasitas',
-		'tipe',
-		'status',
-		'keterangan'
-	];
+    protected $fillable = [
+        'nama',
+        'plat_nomor',
+        'kapasitas',
+        'status',
+        'keterangan'
+    ];
 
-	public function fasilitas()
-	{
-		return $this->belongsToMany(Fasilitas::class)
-					->withPivot('id')
-					->withTimestamps();
-	}
+    public function fasilitas()
+    {
+        return $this->belongsToMany(Fasilitas::class)
+            ->withPivot('id')
+            ->withTimestamps();
+    }
 
-	public function jadwals()
-	{
-		return $this->hasMany(Jadwal::class);
-	}
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class);
+    }
 }

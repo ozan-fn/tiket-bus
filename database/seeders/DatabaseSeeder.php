@@ -53,7 +53,6 @@ class DatabaseSeeder extends Seeder
             'nama' => 'Bus Mawar',
             'plat_nomor' => 'B 1234 MAW',
             'kapasitas' => 40,
-            'tipe' => 'Eksekutif',
             'status' => 'aktif',
         ]);
         $bus1->fasilitas()->attach([$ac->id, $wifi->id]);
@@ -62,10 +61,31 @@ class DatabaseSeeder extends Seeder
             'nama' => 'Bus Melati',
             'plat_nomor' => 'B 5678 MEL',
             'kapasitas' => 32,
-            'tipe' => 'Ekonomi',
             'status' => 'aktif',
         ]);
         $bus2->fasilitas()->attach([$ac->id, $toilet->id]);
+
+        // Kelas Bus dan relasi ke bus
+        foreach ([$bus1, $bus2] as $bus) {
+            $ekonomi = \App\Models\KelasBus::create([
+                'bus_id' => $bus->id,
+                'nama_kelas' => 'Ekonomi',
+                'posisi' => 'depan',
+                'jumlah_kursi' => 20,
+            ]);
+            $bisnis = \App\Models\KelasBus::create([
+                'bus_id' => $bus->id,
+                'nama_kelas' => 'Bisnis',
+                'posisi' => 'tengah',
+                'jumlah_kursi' => 10,
+            ]);
+            $vip = \App\Models\KelasBus::create([
+                'bus_id' => $bus->id,
+                'nama_kelas' => 'VIP',
+                'posisi' => 'belakang',
+                'jumlah_kursi' => 5,
+            ]);
+        }
 
         // Terminal
         $terminalJakarta = \App\Models\Terminal::create(['nama_terminal' => 'Terminal Pulo Gebang', 'nama_kota' => 'Jakarta', 'alamat' => 'Jl. Pulo Gebang']);
@@ -97,10 +117,17 @@ class DatabaseSeeder extends Seeder
             'status' => 'tersedia',
         ]);
 
+        // Jadwal Kelas Bus untuk jadwal ini
+        $jadwalKelasBus = \App\Models\JadwalKelasBus::create([
+            'jadwal_id' => $jadwal->id,
+            'kelas_bus_id' => \App\Models\KelasBus::where('bus_id', $bus1->id)->where('nama_kelas', 'Ekonomi')->first()->id,
+            'harga' => 150000,
+        ]);
+
         // Tiket
         $tiket = \App\Models\Tiket::create([
             'user_id' => $user->id,
-            'jadwal_id' => $jadwal->id,
+            'jadwal_kelas_bus_id' => $jadwalKelasBus->id,
             'nik' => '3173123456789001',
             'nama_penumpang' => 'Penumpang Satu',
             'tanggal_lahir' => '2000-01-01',

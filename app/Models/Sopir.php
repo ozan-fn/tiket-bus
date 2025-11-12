@@ -31,30 +31,30 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Sopir extends Model
 {
-	protected $table = 'sopir';
+    protected $table = 'sopir';
 
-	protected $casts = [
-		'user_id' => 'int',
-		'tanggal_lahir' => 'datetime'
-	];
+    protected $casts = [
+        'user_id' => 'int',
+        'tanggal_lahir' => 'datetime'
+    ];
 
-	protected $fillable = [
-		'user_id',
-		'nik',
-		'nomor_sim',
-		'alamat',
-		'telepon',
-		'tanggal_lahir',
-		'status'
-	];
+    protected $fillable = [
+        'user_id',
+        'nik',
+        'nomor_sim',
+        'alamat',
+        'telepon',
+        'tanggal_lahir',
+        'status'
+    ];
 
-	public function users()
-	{
-		return $this->belongsTo(Users::class, 'user_id');
-	}
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
-	public function jadwals()
-	{
-		return $this->hasMany(Jadwal::class);
-	}
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class);
+    }
 }
