@@ -54,4 +54,9 @@ class Bus extends Model
     {
         return $this->hasMany(Jadwal::class);
     }
+
+    public function photos()
+    {
+        return $this->hasMany(BusPhoto::class);
+    }
 }

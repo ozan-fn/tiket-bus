@@ -4,54 +4,58 @@ namespace App\Http\Controllers;
 
 use App\Models\Fasilitas;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class FasilitasController extends Controller
 {
-    // Menampilkan semua fasilitas
-    public function index(Request $request)
+    public function index(): View
     {
-        $perPage = $request->get('per_page', 10);
-        $fasilitas = Fasilitas::paginate($perPage);
-        return response()->json($fasilitas);
+        $fasilitas = Fasilitas::paginate(10);
+        return view('fasilitas.index', compact('fasilitas'));
     }
 
-    // Menambah fasilitas baru
-    public function store(Request $request)
+    public function create(): View
+    {
+        return view('fasilitas.create');
+    }
+
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'nama' => 'required|string|max:255',
         ]);
-        $fasilitas = Fasilitas::create([
-            'nama' => $request->nama,
-        ]);
-        return response()->json($fasilitas, 201);
+
+        Fasilitas::create($request->only('nama'));
+
+        return redirect()->route('admin/fasilitas.index')->with('success', 'Fasilitas berhasil ditambahkan');
     }
 
-    // Menampilkan detail fasilitas
-    public function show($id)
+    public function show(Fasilitas $fasilitas): View
     {
-        $fasilitas = Fasilitas::findOrFail($id);
-        return response()->json($fasilitas);
+        return view('fasilitas.show', compact('fasilitas'));
     }
 
-    // Update fasilitas
-    public function update(Request $request, $id)
+    public function edit(Fasilitas $fasilitas): View
     {
-        $fasilitas = Fasilitas::findOrFail($id);
+        return view('fasilitas.edit', compact('fasilitas'));
+    }
+
+    public function update(Request $request, Fasilitas $fasilitas): RedirectResponse
+    {
         $request->validate([
             'nama' => 'required|string|max:255',
         ]);
-        $fasilitas->update([
-            'nama' => $request->nama,
-        ]);
-        return response()->json($fasilitas);
+
+        $fasilitas->update($request->only('nama'));
+
+        return redirect()->route('admin/fasilitas.index')->with('success', 'Fasilitas berhasil diperbarui');
     }
 
-    // Hapus fasilitas
-    public function destroy($id)
+    public function destroy(Fasilitas $fasilitas): RedirectResponse
     {
-        $fasilitas = Fasilitas::findOrFail($id);
         $fasilitas->delete();
-        return response()->json(['message' => 'Fasilitas dihapus']);
+
+        return redirect()->route('admin/fasilitas.index')->with('success', 'Fasilitas berhasil dihapus');
     }
 }

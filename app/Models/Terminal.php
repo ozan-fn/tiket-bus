@@ -27,23 +27,28 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Terminal extends Model
 {
-	protected $table = 'terminal';
+    protected $table = 'terminal';
 
-	protected $fillable = [
-		'nama_terminal',
-		'nama_kota',
-		'alamat'
-	];
+    protected $fillable = [
+        'nama_terminal',
+        'nama_kota',
+        'alamat'
+    ];
 
-	public function rutes()
-	{
-		return $this->hasMany(Rute::class, 'tujuan_terminal_id');
-	}
+    public function rutes()
+    {
+        return $this->hasMany(Rute::class, 'tujuan_terminal_id');
+    }
 
-	public function rute()
-	{
-		return $this->belongsToMany(Rute::class)
-					->withPivot('id', 'urutan')
-					->withTimestamps();
-	}
+    public function rute()
+    {
+        return $this->belongsToMany(Rute::class)
+            ->withPivot('id', 'urutan')
+            ->withTimestamps();
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(TerminalPhoto::class);
+    }
 }

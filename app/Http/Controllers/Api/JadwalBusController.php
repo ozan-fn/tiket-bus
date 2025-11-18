@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Jadwal;
 use App\Models\Rute;
@@ -10,7 +11,7 @@ use App\Models\Bus;
 class JadwalBusController extends Controller
 {
     // Menampilkan jadwal bus dengan filter tanggal, rute, status
-    // Membuat jadwal bus (khusus admin/operator)
+// Membuat jadwal bus (khusus admin/operator)
     public function store(Request $request)
     {
         $request->validate([

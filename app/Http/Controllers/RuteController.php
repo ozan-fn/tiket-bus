@@ -3,44 +3,65 @@
 namespace App\Http\Controllers;
 
 use App\Models\Rute;
+use App\Models\Terminal;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class RuteController extends Controller
 {
-    public function index(Request $request)
+    public function index(): View
     {
-        $perPage = $request->get('per_page', 10);
-        $rute = Rute::with(['asalTerminal', 'tujuanTerminal'])->paginate($perPage);
-        return response()->json($rute);
+        $rutes = Rute::with('asalTerminal', 'tujuanTerminal')->paginate(10);
+        return view('rute.index', compact('rutes'));
     }
 
-    public function store(Request $request)
+    public function create(): View
+    {
+        $terminals = Terminal::all();
+        return view('rute.create', compact('terminals'));
+    }
+
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'asal_terminal_id' => 'required|exists:terminal,id',
-            'tujuan_terminal_id' => 'required|exists:terminal,id',
+            'tujuan_terminal_id' => 'required|exists:terminal,id|different:asal_terminal_id',
         ]);
-        $rute = Rute::create($request->all());
-        return response()->json($rute, 201);
+
+        Rute::create($request->only(['asal_terminal_id', 'tujuan_terminal_id']));
+
+        return redirect()->route('admin/rute.index')->with('success', 'Rute berhasil ditambahkan');
     }
 
-    public function show($id)
+    public function show(Rute $rute): View
     {
-        $rute = Rute::with(['asalTerminal', 'tujuanTerminal'])->findOrFail($id);
-        return response()->json($rute);
+        $rute->load('asalTerminal', 'tujuanTerminal');
+        return view('rute.show', compact('rute'));
     }
 
-    public function update(Request $request, $id)
+    public function edit(Rute $rute): View
     {
-        $rute = Rute::findOrFail($id);
-        $rute->update($request->all());
-        return response()->json($rute);
+        $terminals = Terminal::all();
+        return view('rute.edit', compact('rute', 'terminals'));
     }
 
-    public function destroy($id)
+    public function update(Request $request, Rute $rute): RedirectResponse
     {
-        $rute = Rute::findOrFail($id);
+        $request->validate([
+            'asal_terminal_id' => 'required|exists:terminal,id',
+            'tujuan_terminal_id' => 'required|exists:terminal,id|different:asal_terminal_id',
+        ]);
+
+        $rute->update($request->only(['asal_terminal_id', 'tujuan_terminal_id']));
+
+        return redirect()->route('admin/rute.index')->with('success', 'Rute berhasil diperbarui');
+    }
+
+    public function destroy(Rute $rute): RedirectResponse
+    {
         $rute->delete();
-        return response()->json(['message' => 'Rute dihapus']);
+
+        return redirect()->route('admin/rute.index')->with('success', 'Rute berhasil dihapus');
     }
 }
