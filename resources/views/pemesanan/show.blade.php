@@ -56,6 +56,11 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-4">
+                        @if($tiket->status == 'dipesan')
+                            <button class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-2">
+                                Bayar Sekarang
+                            </button>
+                        @endif
                         <a href="{{ route('pemesanan.index') }}" class="text-gray-600 hover:text-gray-900">Kembali</a>
                     </div>
                 </div>

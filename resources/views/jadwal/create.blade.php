@@ -50,7 +50,8 @@
                                 <option value="">Pilih Rute</option>
                                 @foreach($rutes as $rute)
                                     <option value="{{ $rute->id }}">{{ $rute->asalTerminal->nama_terminal ?? '-' }} →
-                                        {{ $rute->tujuanTerminal->nama_terminal ?? '-' }}</option>
+                                        {{ $rute->tujuanTerminal->nama_terminal ?? '-' }}
+                                    </option>
                                 @endforeach
                             </select>
                             @error('rute_id')
@@ -93,6 +94,38 @@
                             @enderror
                         </div>
 
+                        <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">
+                                <input type="checkbox" name="is_recurring" id="is_recurring" value="1" class="mr-2">
+                                Buat Jadwal Berulang
+                            </label>
+                        </div>
+
+                        <div id="recurring-fields" class="hidden mb-4">
+                            <div class="mb-4">
+                                <label for="recurring_type" class="block text-sm font-medium text-gray-700">Jenis
+                                    Berulang</label>
+                                <select name="recurring_type" id="recurring_type"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                    <option value="daily">Harian</option>
+                                    <option value="weekly">Mingguan</option>
+                                </select>
+                                @error('recurring_type')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="recurring_count" class="block text-sm font-medium text-gray-700">Jumlah
+                                    Hari/Minggu</label>
+                                <input type="number" name="recurring_count" id="recurring_count" min="1" max="90"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                @error('recurring_count')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div class="flex items-center justify-end mt-4">
                             <a href="{{ route('admin/jadwal.index') }}"
                                 class="mr-4 text-gray-600 hover:text-gray-900">Batal</a>
@@ -102,6 +135,17 @@
                             </button>
                         </div>
                     </form>
+
+                    <script>
+                        document.getElementById('is_recurring').addEventListener('change', function () {
+                            const recurringFields = document.getElementById('recurring-fields');
+                            if (this.checked) {
+                                recurringFields.classList.remove('hidden');
+                            } else {
+                                recurringFields.classList.add('hidden');
+                            }
+                        });
+                    </script>
                 </div>
             </div>
         </div>

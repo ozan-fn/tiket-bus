@@ -13,7 +13,7 @@ class PemesananController extends Controller
     public function index(Request $request): View
     {
         $jadwals = Jadwal::with('bus', 'sopir.user', 'rute.asalTerminal', 'rute.tujuanTerminal')
-            ->where('status', 'aktif')
+            ->where('status', 'tersedia')
             ->when($request->asal, fn($q) => $q->whereHas('rute.asalTerminal', fn($q2) => $q2->where('nama_terminal', 'like', '%' . $request->asal . '%')))
             ->when($request->tujuan, fn($q) => $q->whereHas('rute.tujuanTerminal', fn($q2) => $q2->where('nama_terminal', 'like', '%' . $request->tujuan . '%')))
             ->when($request->tanggal, fn($q) => $q->whereDate('tanggal_berangkat', $request->tanggal))

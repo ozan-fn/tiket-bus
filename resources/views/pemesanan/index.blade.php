@@ -74,7 +74,8 @@
                                             {{ $jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
                                         </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $jadwal->bus->nama }}</td>
+                                            {{ $jadwal->bus->nama }}
+                                        </td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                             {{ $jadwal->tanggal_berangkat->format('d-m-Y') }}
                                             {{ $jadwal->jam_berangkat->format('H:i') }}
