@@ -16,33 +16,36 @@ class KursiController extends Controller
      */
     public function getKursiByJadwal($jadwalId)
     {
-        $jadwal = Jadwal::with(['bus.kelasBuses.kursis'])->findOrFail($jadwalId);
+        $jadwal = Jadwal::with(['bus.kelasBus.kursi', 'jadwalKelasBus'])->findOrFail($jadwalId);
 
-        // Get semua kursi yang sudah terpakai di jadwal ini
-        $kursiTerpakai = Tiket::where('jadwal_id', $jadwalId)
+        // Get semua kursi yang sudah terpakai di jadwal ini (via jadwal_kelas_bus)
+        $kursiTerpakai = Tiket::whereHas('jadwalKelasBus', function ($q) use ($jadwalId) {
+            $q->where('jadwal_id', $jadwalId);
+        })
             ->whereIn('status', ['dipesan', 'dibayar'])
             ->pluck('kursi_id')
             ->toArray();
 
         $result = [];
-        foreach ($jadwal->bus->kelasBuses as $kelasBus) {
-            $kursis = $kelasBus->kursis->map(function ($kursi) use ($kursiTerpakai) {
+        foreach ($jadwal->bus->kelasBus as $kelasBus) {
+            $kursis = $kelasBus->kursi->map(function ($kursi) use ($kursiTerpakai) {
                 return [
                     'id' => $kursi->id,
                     'nomor_kursi' => $kursi->nomor_kursi,
-                    'baris' => $kursi->baris,
-                    'kolom' => $kursi->kolom,
-                    'posisi' => $kursi->posisi,
-                    'dekat_jendela' => $kursi->dekat_jendela,
+                    'index' => $kursi->index,
                     'tersedia' => !in_array($kursi->id, $kursiTerpakai),
                 ];
             });
 
+            // Get harga dari jadwal_kelas_bus
+            $jadwalKelas = $jadwal->jadwalKelasBus->firstWhere('kelas_bus_id', $kelasBus->id);
+
             $result[] = [
                 'kelas_bus_id' => $kelasBus->id,
                 'nama_kelas' => $kelasBus->nama_kelas,
-                'posisi' => $kelasBus->posisi,
+                'deskripsi' => $kelasBus->deskripsi,
                 'jumlah_kursi' => $kelasBus->jumlah_kursi,
+                'harga' => $jadwalKelas ? $jadwalKelas->harga : null,
                 'kursi' => $kursis,
             ];
         }
@@ -53,7 +56,7 @@ class KursiController extends Controller
                 'jadwal_id' => $jadwal->id,
                 'bus' => [
                     'id' => $jadwal->bus->id,
-                    'nama' => $jadwal->bus->nama_bus,
+                    'nama' => $jadwal->bus->nama,
                 ],
                 'kelas_bus' => $result,
             ],
@@ -66,9 +69,9 @@ class KursiController extends Controller
      */
     public function checkKetersediaan($kursiId, Request $request)
     {
-        $jadwalId = $request->query('jadwal_id');
+        $jadwalKelasBusId = $request->query('jadwal_kelas_bus_id');
 
-        $isAvailable = !Tiket::where('jadwal_id', $jadwalId)
+        $isAvailable = !Tiket::where('jadwal_kelas_bus_id', $jadwalKelasBusId)
             ->where('kursi_id', $kursiId)
             ->whereIn('status', ['dipesan', 'dibayar'])
             ->exists();
@@ -76,7 +79,7 @@ class KursiController extends Controller
         return response()->json([
             'success' => true,
             'kursi_id' => $kursiId,
-            'jadwal_id' => $jadwalId,
+            'jadwal_kelas_bus_id' => $jadwalKelasBusId,
             'tersedia' => $isAvailable,
         ]);
     }

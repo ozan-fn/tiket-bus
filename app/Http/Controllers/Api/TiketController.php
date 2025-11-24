@@ -17,7 +17,6 @@ class TiketController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'jadwal_id' => 'required|exists:jadwal,id',
             'jadwal_kelas_bus_id' => 'required|exists:jadwal_kelas_bus,id',
             'kursi_id' => 'required|exists:kursi,id',
             'nama_penumpang' => 'required|string|max:255',
@@ -28,8 +27,12 @@ class TiketController extends Controller
             'email' => 'required|email',
         ]);
 
+        // Get jadwal dari jadwal_kelas_bus
+        $jadwalKelasBus = \App\Models\JadwalKelasBus::with('jadwal')->findOrFail($request->jadwal_kelas_bus_id);
+        $jadwalId = $jadwalKelasBus->jadwal_id;
+
         // Cek kursi masih tersedia atau tidak
-        $kursiTerpakai = Tiket::where('jadwal_id', $request->jadwal_id)
+        $kursiTerpakai = Tiket::where('jadwal_kelas_bus_id', $request->jadwal_kelas_bus_id)
             ->where('kursi_id', $request->kursi_id)
             ->whereIn('status', ['dipesan', 'dibayar'])
             ->exists();
@@ -44,12 +47,8 @@ class TiketController extends Controller
         // Generate kode tiket unik
         $kodeTicket = 'TKT-' . strtoupper(Str::random(8));
 
-        // Get harga dari jadwal_kelas_bus
-        $jadwalKelasBus = \App\Models\JadwalKelasBus::findOrFail($request->jadwal_kelas_bus_id);
-
         $tiket = Tiket::create([
             'user_id' => auth()->id() ?? 1, // Jika guest bisa pakai ID default
-            'jadwal_id' => $request->jadwal_id,
             'jadwal_kelas_bus_id' => $request->jadwal_kelas_bus_id,
             'kursi_id' => $request->kursi_id,
             'nama_penumpang' => $request->nama_penumpang,
@@ -64,7 +63,7 @@ class TiketController extends Controller
             'waktu_pesan' => now(),
         ]);
 
-        $tiket->load(['jadwal.bus', 'jadwal.rute.asalTerminal', 'jadwal.rute.tujuanTerminal', 'kursi']);
+        $tiket->load(['jadwalKelasBus.jadwal.bus', 'jadwalKelasBus.jadwal.rute.asalTerminal', 'jadwalKelasBus.jadwal.rute.tujuanTerminal', 'kursi']);
 
         return response()->json([
             'success' => true,
@@ -91,9 +90,9 @@ class TiketController extends Controller
     public function myTickets()
     {
         $tikets = Tiket::with([
-            'jadwal.bus',
-            'jadwal.rute.asalTerminal',
-            'jadwal.rute.tujuanTerminal',
+            'jadwalKelasBus.jadwal.bus',
+            'jadwalKelasBus.jadwal.rute.asalTerminal',
+            'jadwalKelasBus.jadwal.rute.tujuanTerminal',
             'kursi'
         ])
             ->where('user_id', auth()->id())
@@ -107,11 +106,11 @@ class TiketController extends Controller
                 'kode_tiket' => $tiket->kode_tiket,
                 'nama_penumpang' => $tiket->nama_penumpang,
                 'rute' => [
-                    'asal' => $tiket->jadwal->rute->asalTerminal->nama_terminal,
-                    'tujuan' => $tiket->jadwal->rute->tujuanTerminal->nama_terminal,
+                    'asal' => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal,
+                    'tujuan' => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal,
                 ],
-                'tanggal_berangkat' => $tiket->jadwal->tanggal_berangkat,
-                'waktu_berangkat' => $tiket->jadwal->waktu_berangkat,
+                'tanggal_berangkat' => $tiket->jadwalKelasBus->jadwal->tanggal_berangkat,
+                'jam_berangkat' => $tiket->jadwalKelasBus->jadwal->jam_berangkat,
                 'kursi' => $tiket->kursi->nomor_kursi,
                 'harga' => $tiket->harga,
                 'status' => $tiket->status,
@@ -127,10 +126,10 @@ class TiketController extends Controller
     public function show($kodeTicket)
     {
         $tiket = Tiket::with([
-            'jadwal.bus',
-            'jadwal.sopir.user',
-            'jadwal.rute.asalTerminal',
-            'jadwal.rute.tujuanTerminal',
+            'jadwalKelasBus.jadwal.bus',
+            'jadwalKelasBus.jadwal.sopir.user',
+            'jadwalKelasBus.jadwal.rute.asalTerminal',
+            'jadwalKelasBus.jadwal.rute.tujuanTerminal',
             'kursi'
         ])
             ->where('kode_tiket', $kodeTicket)
@@ -147,19 +146,18 @@ class TiketController extends Controller
                 'nomor_telepon' => $tiket->nomor_telepon,
                 'email' => $tiket->email,
                 'bus' => [
-                    'nama' => $tiket->jadwal->bus->nama_bus,
-                    'plat_nomor' => $tiket->jadwal->bus->plat_nomor,
+                    'nama' => $tiket->jadwalKelasBus->jadwal->bus->nama,
+                    'plat_nomor' => $tiket->jadwalKelasBus->jadwal->bus->plat_nomor,
                 ],
                 'rute' => [
-                    'asal' => $tiket->jadwal->rute->asalTerminal->nama_terminal,
-                    'tujuan' => $tiket->jadwal->rute->tujuanTerminal->nama_terminal,
+                    'asal' => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal,
+                    'tujuan' => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal,
                 ],
-                'tanggal_berangkat' => $tiket->jadwal->tanggal_berangkat,
-                'waktu_berangkat' => $tiket->jadwal->waktu_berangkat,
+                'tanggal_berangkat' => $tiket->jadwalKelasBus->jadwal->tanggal_berangkat,
+                'jam_berangkat' => $tiket->jadwalKelasBus->jadwal->jam_berangkat,
                 'kursi' => [
                     'nomor' => $tiket->kursi->nomor_kursi,
-                    'posisi' => $tiket->kursi->posisi,
-                    'dekat_jendela' => $tiket->kursi->dekat_jendela,
+                    'index' => $tiket->kursi->index,
                 ],
                 'harga' => $tiket->harga,
                 'status' => $tiket->status,

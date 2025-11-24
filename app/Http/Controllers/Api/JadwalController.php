@@ -19,7 +19,7 @@ class JadwalController extends Controller
             'sopir.user',
             'rute.asalTerminal',
             'rute.tujuanTerminal',
-            'jadwalKelasBuses.kelasBus'
+            'jadwalKelasBus.kelasBus'
         ])
             ->where('status', 'tersedia')
             ->when($request->asal, fn($q) => $q->whereHas('rute.asalTerminal', fn($q2) => $q2->where('nama_terminal', 'like', '%' . $request->asal . '%')))
@@ -33,12 +33,11 @@ class JadwalController extends Controller
                 return [
                     'id' => $jadwal->id,
                     'tanggal_berangkat' => $jadwal->tanggal_berangkat,
-                    'waktu_berangkat' => $jadwal->waktu_berangkat,
-                    'estimasi_tiba' => $jadwal->estimasi_tiba,
+                    'jam_berangkat' => $jadwal->jam_berangkat,
                     'status' => $jadwal->status,
                     'bus' => [
                         'id' => $jadwal->bus->id,
-                        'nama' => $jadwal->bus->nama_bus,
+                        'nama' => $jadwal->bus->nama,
                         'plat_nomor' => $jadwal->bus->plat_nomor,
                         'kapasitas' => $jadwal->bus->kapasitas,
                     ],
@@ -47,7 +46,7 @@ class JadwalController extends Controller
                         'asal' => $jadwal->rute->asalTerminal->nama_terminal,
                         'tujuan' => $jadwal->rute->tujuanTerminal->nama_terminal,
                     ],
-                    'kelas_tersedia' => $jadwal->jadwalKelasBuses->map(fn($jkb) => [
+                    'kelas_tersedia' => $jadwal->jadwalKelasBus->map(fn($jkb) => [
                         'id' => $jkb->id,
                         'kelas_bus_id' => $jkb->kelas_bus_id,
                         'nama_kelas' => $jkb->kelasBus->nama_kelas,
@@ -69,7 +68,7 @@ class JadwalController extends Controller
             'sopir.user',
             'rute.asalTerminal',
             'rute.tujuanTerminal',
-            'jadwalKelasBuses.kelasBus'
+            'jadwalKelasBus.kelasBus'
         ])->findOrFail($id);
 
         return response()->json([
@@ -77,12 +76,11 @@ class JadwalController extends Controller
             'data' => [
                 'id' => $jadwal->id,
                 'tanggal_berangkat' => $jadwal->tanggal_berangkat,
-                'waktu_berangkat' => $jadwal->waktu_berangkat,
-                'estimasi_tiba' => $jadwal->estimasi_tiba,
+                'jam_berangkat' => $jadwal->jam_berangkat,
                 'status' => $jadwal->status,
                 'bus' => [
                     'id' => $jadwal->bus->id,
-                    'nama' => $jadwal->bus->nama_bus,
+                    'nama' => $jadwal->bus->nama,
                     'plat_nomor' => $jadwal->bus->plat_nomor,
                     'kapasitas' => $jadwal->bus->kapasitas,
                 ],
@@ -95,23 +93,88 @@ class JadwalController extends Controller
                     'asal' => [
                         'id' => $jadwal->rute->asalTerminal->id,
                         'nama' => $jadwal->rute->asalTerminal->nama_terminal,
-                        'kota' => $jadwal->rute->asalTerminal->kota,
+                        'kota' => $jadwal->rute->asalTerminal->nama_kota,
                     ],
                     'tujuan' => [
                         'id' => $jadwal->rute->tujuanTerminal->id,
                         'nama' => $jadwal->rute->tujuanTerminal->nama_terminal,
-                        'kota' => $jadwal->rute->tujuanTerminal->kota,
+                        'kota' => $jadwal->rute->tujuanTerminal->nama_kota,
                     ],
                 ],
-                'kelas_tersedia' => $jadwal->jadwalKelasBuses->map(fn($jkb) => [
+                'kelas_tersedia' => $jadwal->jadwalKelasBus->map(fn($jkb) => [
                     'id' => $jkb->id,
                     'kelas_bus_id' => $jkb->kelas_bus_id,
                     'nama_kelas' => $jkb->kelasBus->nama_kelas,
-                    'posisi' => $jkb->kelasBus->posisi,
+                    'deskripsi' => $jkb->kelasBus->deskripsi,
                     'jumlah_kursi' => $jkb->kelasBus->jumlah_kursi,
                     'harga' => $jkb->harga,
                 ]),
             ],
+        ]);
+    }
+
+    /**
+     * Buat jadwal baru
+     * POST /api/jadwal
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'bus_id' => 'required|exists:bus,id',
+            'sopir_id' => 'required|exists:sopir,id',
+            'rute_id' => 'required|exists:rute,id',
+            'tanggal_berangkat' => 'required|date',
+            'jam_berangkat' => 'required|date_format:H:i',
+            'status' => 'required|in:tersedia,berangkat,selesai,batal',
+        ]);
+
+        $jadwal = Jadwal::create($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jadwal berhasil dibuat',
+            'data' => $jadwal,
+        ], 201);
+    }
+
+    /**
+     * Update jadwal
+     * PUT /api/jadwal/{id}
+     */
+    public function update(Request $request, $id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+
+        $request->validate([
+            'bus_id' => 'sometimes|exists:bus,id',
+            'sopir_id' => 'sometimes|exists:sopir,id',
+            'rute_id' => 'sometimes|exists:rute,id',
+            'tanggal_berangkat' => 'sometimes|date',
+            'jam_berangkat' => 'sometimes|date_format:H:i',
+            'status' => 'sometimes|in:tersedia,berangkat,selesai,batal',
+        ]);
+
+        $jadwal->update($request->all());
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jadwal berhasil diupdate',
+            'data' => $jadwal,
+        ]);
+    }
+
+    /**
+     * Hapus jadwal
+     * DELETE /api/jadwal/{id}
+     */
+    public function destroy($id)
+    {
+        $jadwal = Jadwal::findOrFail($id);
+        $jadwal->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Jadwal berhasil dihapus',
         ]);
     }
 }
