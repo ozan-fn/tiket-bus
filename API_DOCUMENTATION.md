@@ -148,6 +148,28 @@ POST /pembayaran/callback  # Callback payment gateway
 }
 ```
 
+### Upload
+
+```http
+POST /upload/profile              # Upload foto profile user
+POST /upload/bukti-pembayaran     # Upload bukti pembayaran
+```
+
+**Body POST /upload/profile:**
+
+```
+Content-Type: multipart/form-data
+photo: file (jpg,png,gif, max 2MB)
+```
+
+**Body POST /upload/bukti-pembayaran:**
+
+```
+Content-Type: multipart/form-data
+pembayaran_id: integer
+bukti_pembayaran: file (jpg,png,pdf, max 5MB)
+```
+
 ---
 
 ## 4. Admin/Agent Endpoints (Auth + Role Required)
@@ -229,6 +251,31 @@ DELETE /jadwal-kelas-bus/{id} # Hapus
 GET /laporan/tiket?dari=&sampai=&status=           # Laporan tiket
 GET /laporan/pendapatan?dari=&sampai=&group_by=    # Laporan pendapatan
 GET /laporan/penumpang?dari=&sampai=               # Laporan penumpang
+```
+
+### Upload (Admin/Agent)
+
+```http
+POST /upload/bus-photo           # Upload foto bus
+DELETE /upload/bus-photo/{id}    # Hapus foto bus
+POST /upload/terminal-photo      # Upload foto terminal
+DELETE /upload/terminal-photo/{id} # Hapus foto terminal
+```
+
+**Body POST /upload/bus-photo:**
+
+```
+Content-Type: multipart/form-data
+bus_id: integer
+photo: file (jpg,png,gif, max 5MB)
+```
+
+**Body POST /upload/terminal-photo:**
+
+```
+Content-Type: multipart/form-data
+terminal_id: integer
+photo: file (jpg,png,gif, max 5MB)
 ```
 
 ---

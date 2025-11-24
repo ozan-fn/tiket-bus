@@ -53,6 +53,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('pembayaran', [App\Http\Controllers\Api\PembayaranController::class, 'store']);
     Route::get('pembayaran', [App\Http\Controllers\Api\PembayaranController::class, 'index']);
     Route::get('pembayaran/{id}', [App\Http\Controllers\Api\PembayaranController::class, 'show']);
+
+    // Upload
+    Route::post('upload/profile', [App\Http\Controllers\Api\UploadController::class, 'uploadProfile']);
+    Route::post('upload/bukti-pembayaran', [App\Http\Controllers\Api\UploadController::class, 'uploadBuktiPembayaran']);
 });
 
 // =================== ADMIN/AGENT ENDPOINTS ===================
@@ -95,4 +99,10 @@ Route::middleware(['auth:sanctum', 'role:owner|agent'])->group(function () {
     Route::get('laporan/tiket', [App\Http\Controllers\Api\LaporanController::class, 'tiket']);
     Route::get('laporan/pendapatan', [App\Http\Controllers\Api\LaporanController::class, 'pendapatan']);
     Route::get('laporan/penumpang', [App\Http\Controllers\Api\LaporanController::class, 'penumpang']);
+
+    // Upload (Admin/Agent)
+    Route::post('upload/bus-photo', [App\Http\Controllers\Api\UploadController::class, 'uploadBusPhoto']);
+    Route::delete('upload/bus-photo/{id}', [App\Http\Controllers\Api\UploadController::class, 'deleteBusPhoto']);
+    Route::post('upload/terminal-photo', [App\Http\Controllers\Api\UploadController::class, 'uploadTerminalPhoto']);
+    Route::delete('upload/terminal-photo/{id}', [App\Http\Controllers\Api\UploadController::class, 'deleteTerminalPhoto']);
 });

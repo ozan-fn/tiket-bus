@@ -46,7 +46,8 @@ class Pembayaran extends Model
         'nominal',
         'status',
         'waktu_bayar',
-        'kode_transaksi'
+        'kode_transaksi',
+        'bukti_pembayaran'
     ];
 
     public function tiket()
