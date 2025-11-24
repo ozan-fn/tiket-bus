@@ -13,14 +13,7 @@ class Kursi extends Model
     protected $fillable = [
         'kelas_bus_id',
         'nomor_kursi',
-        'baris',
-        'kolom',
-        'posisi',
-        'dekat_jendela',
-    ];
-
-    protected $casts = [
-        'dekat_jendela' => 'boolean',
+        'index', // Menambahkan kolom index ke fillable
     ];
 
     public function kelasBus(): BelongsTo

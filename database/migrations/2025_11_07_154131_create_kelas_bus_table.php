@@ -11,7 +11,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('bus_id')->constrained('bus')->onDelete('cascade');
             $table->string('nama_kelas');
-            $table->string('posisi')->nullable();
+            $table->text('deskripsi')->nullable();
             $table->integer('jumlah_kursi')->nullable();
             $table->timestamps();
         });

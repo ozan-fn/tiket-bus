@@ -10,12 +10,22 @@ class KelasBus extends Model
     protected $fillable = [
         'bus_id',
         'nama_kelas',
-        'posisi',
+        'deskripsi',
         'jumlah_kursi',
     ];
 
     public function bus()
     {
         return $this->belongsTo(Bus::class);
+    }
+
+    public function kursi()
+    {
+        return $this->hasMany(Kursi::class);
+    }
+
+    public function jadwalKelasBus()
+    {
+        return $this->hasMany(JadwalKelasBus::class);
     }
 }

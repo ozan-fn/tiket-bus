@@ -39,7 +39,8 @@ class Tiket extends Model
 
     protected $casts = [
         'user_id' => 'int',
-        'jadwal_id' => 'int',
+        'jadwal_kelas_bus_id' => 'int',
+        'kursi_id' => 'int',
         'tanggal_lahir' => 'datetime',
         'harga' => 'float',
         'waktu_pesan' => 'datetime'
@@ -47,7 +48,6 @@ class Tiket extends Model
 
     protected $fillable = [
         'user_id',
-        'jadwal_id',
         'jadwal_kelas_bus_id',
         'kursi_id',
         'nik',
@@ -56,17 +56,11 @@ class Tiket extends Model
         'jenis_kelamin',
         'nomor_telepon',
         'email',
-        'kursi',
         'kode_tiket',
         'harga',
         'status',
         'waktu_pesan'
     ];
-
-    public function jadwal()
-    {
-        return $this->belongsTo(Jadwal::class);
-    }
 
     public function user()
     {

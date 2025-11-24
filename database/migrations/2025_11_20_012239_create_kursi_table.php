@@ -14,10 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('kelas_bus_id')->constrained('kelas_bus')->onDelete('cascade');
             $table->string('nomor_kursi'); // Contoh: "A1", "B5", "15"
-            $table->integer('baris'); // 1, 2, 3, 4 (untuk layout visual)
-            $table->integer('kolom'); // 1, 2, 3, 4 (untuk layout visual)
-            $table->enum('posisi', ['kiri', 'tengah', 'kanan'])->nullable(); // Posisi di bus
-            $table->boolean('dekat_jendela')->default(false);
+            $table->integer('index'); // Kolom untuk menyimpan urutan kursi
             $table->timestamps();
 
             $table->unique(['kelas_bus_id', 'nomor_kursi']);

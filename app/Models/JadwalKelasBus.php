@@ -22,4 +22,9 @@ class JadwalKelasBus extends Model
     {
         return $this->belongsTo(KelasBus::class);
     }
+
+    public function tikets()
+    {
+        return $this->hasMany(Tiket::class);
+    }
 }

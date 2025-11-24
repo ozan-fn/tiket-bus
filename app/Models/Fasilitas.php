@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $nama
  * @property string|null $deskripsi
+ * @property string|null $icon
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * 
@@ -25,17 +26,18 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Fasilitas extends Model
 {
-	protected $table = 'fasilitas';
+    protected $table = 'fasilitas';
 
-	protected $fillable = [
-		'nama',
-		'deskripsi'
-	];
+    protected $fillable = [
+        'nama',
+        'deskripsi',
+        'icon'
+    ];
 
-	public function bus()
-	{
-		return $this->belongsToMany(Bus::class)
-					->withPivot('id')
-					->withTimestamps();
-	}
+    public function bus()
+    {
+        return $this->belongsToMany(Bus::class)
+            ->withPivot('id')
+            ->withTimestamps();
+    }
 }

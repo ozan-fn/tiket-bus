@@ -59,4 +59,9 @@ class Bus extends Model
     {
         return $this->hasMany(BusPhoto::class);
     }
+
+    public function kelasBus()
+    {
+        return $this->hasMany(KelasBus::class);
+    }
 }

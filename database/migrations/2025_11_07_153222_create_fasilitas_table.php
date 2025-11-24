@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('nama');
             $table->text('deskripsi')->nullable();
+            $table->string('icon')->nullable();
             $table->timestamps();
         });
     }

@@ -30,32 +30,32 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Pembayaran extends Model
 {
-	protected $table = 'pembayaran';
+    protected $table = 'pembayaran';
 
-	protected $casts = [
-		'user_id' => 'int',
-		'tiket_id' => 'int',
-		'nominal' => 'float',
-		'waktu_bayar' => 'datetime'
-	];
+    protected $casts = [
+        'user_id' => 'int',
+        'tiket_id' => 'int',
+        'nominal' => 'float',
+        'waktu_bayar' => 'datetime'
+    ];
 
-	protected $fillable = [
-		'user_id',
-		'tiket_id',
-		'metode',
-		'nominal',
-		'status',
-		'waktu_bayar',
-		'kode_transaksi'
-	];
+    protected $fillable = [
+        'user_id',
+        'tiket_id',
+        'metode',
+        'nominal',
+        'status',
+        'waktu_bayar',
+        'kode_transaksi'
+    ];
 
-	public function tiket()
-	{
-		return $this->belongsTo(Tiket::class);
-	}
+    public function tiket()
+    {
+        return $this->belongsTo(Tiket::class);
+    }
 
-	public function users()
-	{
-		return $this->belongsTo(Users::class, 'user_id');
-	}
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

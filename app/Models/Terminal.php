@@ -35,9 +35,14 @@ class Terminal extends Model
         'alamat'
     ];
 
-    public function rutes()
+    public function ruteTujuan()
     {
         return $this->hasMany(Rute::class, 'tujuan_terminal_id');
+    }
+
+    public function ruteAsal()
+    {
+        return $this->hasMany(Rute::class, 'asal_terminal_id');
     }
 
     public function rute()
