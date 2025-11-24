@@ -10,6 +10,18 @@ Route::get('/auth/google', [App\Http\Controllers\Api\GoogleAuthController::class
 Route::get('/auth/google/callback', [App\Http\Controllers\Api\GoogleAuthController::class, 'callback']);
 
 // =================== PUBLIC ENDPOINTS ===================
+// Jadwal (New)
+Route::get('jadwal', [App\Http\Controllers\Api\JadwalController::class, 'index']);
+Route::get('jadwal/{id}', [App\Http\Controllers\Api\JadwalController::class, 'show']);
+
+// Kursi & Layout
+Route::get('jadwal/{jadwal_id}/kursi', [App\Http\Controllers\Api\KursiController::class, 'getKursiByJadwal']);
+Route::get('kursi/{kursi_id}/check', [App\Http\Controllers\Api\KursiController::class, 'checkKetersediaan']);
+
+// Tiket Public (cek by kode)
+Route::get('tiket/{kode_tiket}', [App\Http\Controllers\Api\TiketController::class, 'show']);
+
+// Old routes (keep for compatibility)
 Route::get('jadwal-bus', [App\Http\Controllers\Api\JadwalBusController::class, 'index']);
 Route::get('jadwal-bus/{id}', [App\Http\Controllers\Api\JadwalBusController::class, 'show']);
 Route::get('data-bus', [App\Http\Controllers\Api\DataBusController::class, 'index']);
@@ -19,8 +31,15 @@ Route::get('rute-terminals/{id}', [App\Http\Controllers\Api\TerminalRuteControll
 
 // =================== USER ENDPOINTS ===================
 Route::middleware(['auth:sanctum'])->group(function () {
+    // New Tiket Endpoints
+    Route::post('tiket', [App\Http\Controllers\Api\TiketController::class, 'store']);
+    Route::get('tiket/my-tickets', [App\Http\Controllers\Api\TiketController::class, 'myTickets']);
+
+    // Old endpoints (keep for compatibility)
     Route::post('pemesanan-tiket', [App\Http\Controllers\Api\PemesananTiketController::class, 'store']);
     Route::post('pembayaran-tiket', [App\Http\Controllers\Api\PembayaranTiketController::class, 'store']);
+
+    // Profile
     Route::get('/user', [App\Http\Controllers\Api\ProfileController::class, 'show']);
     Route::post('/user/update', [App\Http\Controllers\Api\ProfileController::class, 'update']);
     Route::post('/user/update-password', [App\Http\Controllers\Api\ProfileController::class, 'updatePassword']);

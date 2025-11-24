@@ -34,21 +34,29 @@
                             <strong>Email:</strong> {{ $tiket->email }}
                         </div>
                         <div>
-                            <strong>Kursi:</strong> {{ $tiket->kursi }}
+                            <strong>Kursi:</strong> {{ $tiket->kursi->nomor_kursi ?? $tiket->kursi ?? '-' }}
                         </div>
                         <div>
-                            <strong>Rute:</strong> {{ $tiket->jadwal->rute->asalTerminal->nama_terminal ?? '-' }} →
-                            {{ $tiket->jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
+                            @php
+                                $jadwalObj = $tiket->jadwal ?? ($tiket->jadwalKelasBus->jadwal ?? null);
+                            @endphp
+                            <strong>Rute:</strong> {{ $jadwalObj?->rute?->asalTerminal?->nama_terminal ?? '-' }} →
+                            {{ $jadwalObj?->rute?->tujuanTerminal?->nama_terminal ?? '-' }}
                         </div>
                         <div>
-                            <strong>Bus:</strong> {{ $tiket->jadwal->bus->nama }}
+                            <strong>Bus:</strong> {{ $jadwalObj?->bus?->nama_bus ?? $jadwalObj?->bus?->nama ?? '-' }}
                         </div>
                         <div>
-                            <strong>Sopir:</strong> {{ $tiket->jadwal->sopir->user->name }}
+                            <strong>Sopir:</strong> {{ $jadwalObj?->sopir?->user?->name ?? '-' }}
                         </div>
                         <div>
-                            <strong>Tanggal & Jam:</strong> {{ $tiket->jadwal->tanggal_berangkat->format('d-m-Y') }}
-                            {{ $tiket->jadwal->jam_berangkat->format('H:i') }}
+                            @if($jadwalObj?->tanggal_berangkat)
+                                <strong>Tanggal & Jam:</strong>
+                                {{ \Carbon\Carbon::parse($jadwalObj->tanggal_berangkat)->format('d-m-Y') }}
+                                {{ isset($jadwalObj->jam_berangkat) ? \Carbon\Carbon::parse($jadwalObj->jam_berangkat)->format('H:i') : '' }}
+                            @else
+                                <strong>Tanggal & Jam:</strong> -
+                            @endif
                         </div>
                         <div>
                             <strong>Dibuat:</strong> {{ $tiket->created_at->format('d-m-Y H:i') }}

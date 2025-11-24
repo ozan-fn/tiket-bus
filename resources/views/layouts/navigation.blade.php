@@ -18,6 +18,12 @@
                     <x-nav-link :href="route('pemesanan.index')" :active="request()->routeIs('pemesanan.*')">
                         {{ __('Pemesanan') }}
                     </x-nav-link>
+                    @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super_admin'))
+                        <x-nav-link :href="route('admin.history-pemesanan')"
+                            :active="request()->routeIs('admin.history-pemesanan')">
+                            {{ __('History Pemesanan') }}
+                        </x-nav-link>
+                    @endif
                     @if(Auth::user()->hasRole('super_admin'))
                         <x-nav-link :href="route('admin/fasilitas.index')"
                             :active="request()->routeIs('admin/fasilitas.*')">
@@ -104,6 +110,12 @@
             <x-responsive-nav-link :href="route('pemesanan.index')" :active="request()->routeIs('pemesanan.*')">
                 {{ __('Pemesanan') }}
             </x-responsive-nav-link>
+            @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super_admin'))
+                <x-responsive-nav-link :href="route('admin.history-pemesanan')"
+                    :active="request()->routeIs('admin.history-pemesanan')">
+                    {{ __('History Pemesanan') }}
+                </x-responsive-nav-link>
+            @endif
             @if(Auth::user()->hasRole('super_admin'))
                 <x-responsive-nav-link :href="route('admin/fasilitas.index')"
                     :active="request()->routeIs('admin/fasilitas.*')">

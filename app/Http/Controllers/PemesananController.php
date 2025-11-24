@@ -61,8 +61,46 @@ class PemesananController extends Controller
 
     public function show(Tiket $tiket): View
     {
-        $this->authorize('view', $tiket); // Pastikan user yang pesan
-        $tiket->load('jadwal.bus', 'jadwal.sopir.user', 'jadwal.rute.asalTerminal', 'jadwal.rute.tujuanTerminal');
+        // Otorisasi sederhana: hanya pemilik atau admin/super_admin
+        $user = auth()->user();
+        if ($tiket->user_id !== ($user?->id) && !$user?->hasRole('admin') && !$user?->hasRole('super_admin')) {
+            abort(403, 'Anda tidak berhak melihat tiket ini');
+        }
+
+        // Eager load fallback: jika kolom jadwal_id kosong gunakan jalur jadwalKelasBus
+        $tiket->load([
+            'jadwal.bus',
+            'jadwal.sopir.user',
+            'jadwal.rute.asalTerminal',
+            'jadwal.rute.tujuanTerminal',
+            'jadwalKelasBus.jadwal.bus',
+            'jadwalKelasBus.jadwal.sopir.user',
+            'jadwalKelasBus.jadwal.rute.asalTerminal',
+            'jadwalKelasBus.jadwal.rute.tujuanTerminal',
+            'kursi'
+        ]);
         return view('pemesanan.show', compact('tiket'));
+    }
+
+    public function history(Request $request): View
+    {
+        $tikets = Tiket::with([
+            'jadwalKelasBus.jadwal.bus',
+            'jadwalKelasBus.jadwal.sopir.user',
+            'jadwalKelasBus.jadwal.rute.asalTerminal',
+            'jadwalKelasBus.jadwal.rute.tujuanTerminal',
+            'jadwalKelasBus.kelasBus',
+            'kursi',
+            'user'
+        ])
+            ->whereHas('jadwalKelasBus.jadwal') // Pastikan ada jadwal
+            ->when($request->status, fn($q) => $q->where('status', $request->status))
+            ->when($request->tanggal, fn($q) => $q->whereDate('waktu_pesan', $request->tanggal))
+            ->when($request->nama, fn($q) => $q->where('nama_penumpang', 'like', '%' . $request->nama . '%'))
+            ->when($request->kode_tiket, fn($q) => $q->where('kode_tiket', 'like', '%' . $request->kode_tiket . '%'))
+            ->orderBy('waktu_pesan', 'desc')
+            ->paginate(20);
+
+        return view('admin.history-pemesanan', compact('tikets'));
     }
 }

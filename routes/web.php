@@ -46,6 +46,9 @@ Route::middleware('auth')->group(function () {
 
     // Jadwal CRUD for super admin
     Route::resource('admin/jadwal', JadwalController::class)->parameters(['jadwal' => 'jadwal'])->names('admin/jadwal')->middleware('role:super_admin');
+
+    // History Pemesanan for admin
+    Route::get('admin/history-pemesanan', [PemesananController::class, 'history'])->name('admin.history-pemesanan')->middleware('role:admin|super_admin');
 });
 
 require __DIR__ . '/auth.php';

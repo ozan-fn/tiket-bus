@@ -85,6 +85,58 @@ class DatabaseSeeder extends Seeder
                 'posisi' => 'belakang',
                 'jumlah_kursi' => 5,
             ]);
+
+            // Generate kursi untuk setiap kelas bus
+            // Ekonomi: 5 baris x 4 kolom = 20 kursi
+            $kursiCounter = 1;
+            for ($baris = 1; $baris <= 5; $baris++) {
+                for ($kolom = 1; $kolom <= 4; $kolom++) {
+                    $posisi = match ($kolom) {
+                        1, 2 => 'kiri',
+                        3, 4 => 'kanan',
+                        default => 'tengah'
+                    };
+                    $dekatJendela = in_array($kolom, [1, 4]);
+
+                    \App\Models\Kursi::create([
+                        'kelas_bus_id' => $ekonomi->id,
+                        'nomor_kursi' => 'E' . $kursiCounter,
+                        'baris' => $baris,
+                        'kolom' => $kolom,
+                        'posisi' => $posisi,
+                        'dekat_jendela' => $dekatJendela,
+                    ]);
+                    $kursiCounter++;
+                }
+            }
+
+            // Bisnis: 5 baris x 2 kolom = 10 kursi (lebih lega)
+            $kursiCounter = 1;
+            for ($baris = 1; $baris <= 5; $baris++) {
+                for ($kolom = 1; $kolom <= 2; $kolom++) {
+                    \App\Models\Kursi::create([
+                        'kelas_bus_id' => $bisnis->id,
+                        'nomor_kursi' => 'B' . $kursiCounter,
+                        'baris' => $baris,
+                        'kolom' => $kolom,
+                        'posisi' => $kolom == 1 ? 'kiri' : 'kanan',
+                        'dekat_jendela' => true, // Semua dekat jendela
+                    ]);
+                    $kursiCounter++;
+                }
+            }
+
+            // VIP: 5 kursi reclining (1 baris, 1 kolom per baris)
+            for ($baris = 1; $baris <= 5; $baris++) {
+                \App\Models\Kursi::create([
+                    'kelas_bus_id' => $vip->id,
+                    'nomor_kursi' => 'V' . $baris,
+                    'baris' => $baris,
+                    'kolom' => 1,
+                    'posisi' => 'tengah',
+                    'dekat_jendela' => false,
+                ]);
+            }
         }
 
         // Terminal
@@ -118,20 +170,27 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Jadwal Kelas Bus untuk jadwal ini
+        $kelasBusEkonomi = \App\Models\KelasBus::where('bus_id', $bus1->id)->where('nama_kelas', 'Ekonomi')->first();
         $jadwalKelasBus = \App\Models\JadwalKelasBus::create([
             'jadwal_id' => $jadwal->id,
-            'kelas_bus_id' => \App\Models\KelasBus::where('bus_id', $bus1->id)->where('nama_kelas', 'Ekonomi')->first()->id,
+            'kelas_bus_id' => $kelasBusEkonomi->id,
             'harga' => 150000,
         ]);
+
+        // Get kursi pertama dari kelas ekonomi
+        $kursiEkonomi = \App\Models\Kursi::where('kelas_bus_id', $kelasBusEkonomi->id)->first();
 
         // Tiket
         $tiket = \App\Models\Tiket::create([
             'user_id' => $user->id,
             'jadwal_kelas_bus_id' => $jadwalKelasBus->id,
+            'kursi_id' => $kursiEkonomi->id,
             'nik' => '3173123456789001',
             'nama_penumpang' => 'Penumpang Satu',
             'tanggal_lahir' => '2000-01-01',
             'jenis_kelamin' => 'L',
+            'nomor_telepon' => '081234567890',
+            'email' => 'penumpang@example.com',
             'kode_tiket' => 'TKT001',
             'harga' => 150000,
             'status' => 'dipesan',
