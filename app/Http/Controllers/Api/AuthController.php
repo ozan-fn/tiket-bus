@@ -33,7 +33,9 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'roles' => $user->getRoleNames(),
+                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
+                'roles' => $user->getRoleNames()->toArray(),
+                'role' => $user->getRoleNames()->first() ?? 'passenger',
             ],
         ], 201);
     }
@@ -61,7 +63,9 @@ class AuthController extends Controller
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
-                'roles' => $user->getRoleNames(),
+                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
+                'roles' => $user->getRoleNames()->toArray(),
+                'role' => $user->getRoleNames()->first() ?? 'passenger',
             ],
         ]);
     }

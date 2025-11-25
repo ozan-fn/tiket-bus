@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 class JadwalController extends Controller
 {
     /**
-     * Get daftar jadwal dengan filter
-     * GET /api/jadwal?asal=&tujuan=&tanggal=
+     * Get daftar jadwal dengan filter dan pagination
+     * GET /api/jadwal?asal=&tujuan=&tanggal=&page=&per_page=
      */
     public function index(Request $request)
     {
+        $perPage = $request->input('per_page', 10);
+
         $jadwals = Jadwal::with([
             'bus',
             'sopir.user',
@@ -25,7 +27,9 @@ class JadwalController extends Controller
             ->when($request->asal, fn($q) => $q->whereHas('rute.asalTerminal', fn($q2) => $q2->where('nama_terminal', 'like', '%' . $request->asal . '%')))
             ->when($request->tujuan, fn($q) => $q->whereHas('rute.tujuanTerminal', fn($q2) => $q2->where('nama_terminal', 'like', '%' . $request->tujuan . '%')))
             ->when($request->tanggal, fn($q) => $q->whereDate('tanggal_berangkat', $request->tanggal))
-            ->get();
+            ->orderBy('tanggal_berangkat', 'asc')
+            ->orderBy('jam_berangkat', 'asc')
+            ->paginate($perPage);
 
         return response()->json([
             'success' => true,
@@ -54,6 +58,14 @@ class JadwalController extends Controller
                     ]),
                 ];
             }),
+            'pagination' => [
+                'total' => $jadwals->total(),
+                'per_page' => $jadwals->perPage(),
+                'current_page' => $jadwals->currentPage(),
+                'last_page' => $jadwals->lastPage(),
+                'from' => $jadwals->firstItem(),
+                'to' => $jadwals->lastItem(),
+            ],
         ]);
     }
 

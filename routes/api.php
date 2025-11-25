@@ -105,4 +105,8 @@ Route::middleware(['auth:sanctum', 'role:owner|agent'])->group(function () {
     Route::delete('upload/bus-photo/{id}', [App\Http\Controllers\Api\UploadController::class, 'deleteBusPhoto']);
     Route::post('upload/terminal-photo', [App\Http\Controllers\Api\UploadController::class, 'uploadTerminalPhoto']);
     Route::delete('upload/terminal-photo/{id}', [App\Http\Controllers\Api\UploadController::class, 'deleteTerminalPhoto']);
+
+    // Pembayaran manual approval
+    Route::post('pembayaran/{id}/approve', [App\Http\Controllers\Api\PembayaranController::class, 'approveManual']);
+    Route::post('pembayaran/{id}/reject', [App\Http\Controllers\Api\PembayaranController::class, 'rejectManual']);
 });

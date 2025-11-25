@@ -36,7 +36,16 @@ class ProfileController
     public function show(Request $request)
     {
         $user = $request->user();
-        return response()->json($user);
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
+            'roles' => $user->getRoleNames()->toArray(),
+            'role' => $user->getRoleNames()->first() ?? 'passenger',
+            'created_at' => $user->created_at,
+            'updated_at' => $user->updated_at,
+        ]);
     }
 
     // Update profil user (nama, email, avatar S3)
@@ -54,21 +63,17 @@ class ProfileController
         }
         $user->update($data);
 
-        if ($request->hasFile('avatar')) {
-            if ($user->avatar) {
-                \Storage::disk('public')->delete($user->avatar);
-            }
-            $file = $request->file('avatar');
-            $path = $file->store('avatars', 'public');
-            $user->avatar = $path;
-            $user->save();
-        }
-
-        $avatarUrl = $user->avatar ? \Storage::disk('public')->url($user->avatar) : null;
-        $userData = $user->toArray();
-        $userData['avatar_url'] = $avatarUrl;
-
-        return response()->json(['message' => 'Profile updated', 'user' => $userData]);
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'user' => [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
+                'roles' => $user->getRoleNames()->toArray(),
+                'role' => $user->getRoleNames()->first() ?? 'passenger',
+            ]
+        ]);
     }
     /**
      * Display the user's profile form.

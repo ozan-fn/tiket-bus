@@ -346,118 +346,101 @@ class DatabaseSeeder extends Seeder
             'status' => 'aktif',
         ]);
 
-        // Jadwal tambahan untuk setiap bus dan rute
-        $jadwal1 = \App\Models\Jadwal::create([
-            'bus_id' => $bus1->id,
-            'sopir_id' => $sopir->id,
-            'rute_id' => $rute1->id,
-            'tanggal_berangkat' => now()->addDays(2)->toDateString(),
-            'jam_berangkat' => '09:00:00',
-            'status' => 'tersedia',
-        ]);
+        // Generate jadwal untuk 30 hari ke depan (mulai hari ini)
+        $buses = [$bus1, $bus2, $bus3, $bus4, $bus5];
+        $sopirs = [$sopir, $sopirBus2, $sopirBus3, $sopirBus4, $sopirBus5];
+        $rutes = [$rute1, $rute2, $rute3, $rute4, $rute5, $rute6, $rute7, $rute8, $rute9, $rute10];
+        $jamKeberangkatan = ['06:00:00', '08:00:00', '10:00:00', '12:00:00', '14:00:00', '16:00:00', '18:00:00', '20:00:00', '22:00:00'];
 
-        $jadwal2 = \App\Models\Jadwal::create([
-            'bus_id' => $bus2->id,
-            'sopir_id' => $sopirBus2->id,
-            'rute_id' => $rute2->id,
-            'tanggal_berangkat' => now()->addDays(3)->toDateString(),
-            'jam_berangkat' => '10:00:00',
-            'status' => 'tersedia',
-        ]);
+        $jadwalCollection = [];
 
-        $jadwal3 = \App\Models\Jadwal::create([
-            'bus_id' => $bus3->id,
-            'sopir_id' => $sopirBus3->id,
-            'rute_id' => $rute3->id,
-            'tanggal_berangkat' => now()->addDays(4)->toDateString(),
-            'jam_berangkat' => '11:00:00',
-            'status' => 'tersedia',
-        ]);
+        // Generate jadwal untuk 30 hari ke depan
+        for ($day = 0; $day < 30; $day++) {
+            $tanggal = now()->addDays($day)->toDateString();
 
-        $jadwal4 = \App\Models\Jadwal::create([
-            'bus_id' => $bus4->id,
-            'sopir_id' => $sopirBus4->id,
-            'rute_id' => $rute4->id,
-            'tanggal_berangkat' => now()->addDays(5)->toDateString(),
-            'jam_berangkat' => '12:00:00',
-            'status' => 'tersedia',
-        ]);
+            // Untuk setiap hari, buat beberapa jadwal dengan kombinasi berbeda
+            foreach ($buses as $busIndex => $bus) {
+                // Setiap bus akan beroperasi 2-3 kali per hari dengan rute yang berbeda
+                $jumlahJadwalPerHari = rand(2, 3);
 
-        $jadwal5 = \App\Models\Jadwal::create([
-            'bus_id' => $bus5->id,
-            'sopir_id' => $sopirBus5->id,
-            'rute_id' => $rute5->id,
-            'tanggal_berangkat' => now()->addDays(6)->toDateString(),
-            'jam_berangkat' => '13:00:00',
-            'status' => 'tersedia',
-        ]);
+                for ($j = 0; $j < $jumlahJadwalPerHari; $j++) {
+                    // Pilih rute secara random
+                    $rute = $rutes[array_rand($rutes)];
+                    $sopir = $sopirs[$busIndex];
+                    $jamBerangkat = $jamKeberangkatan[array_rand($jamKeberangkatan)];
 
-        // Jadwal Kelas Bus (menghubungkan jadwal dengan kelas bus dan harga)
-        $jadwalKelasBus1Ekonomi = \App\Models\JadwalKelasBus::create([
-            'jadwal_id' => $jadwal1->id,
-            'kelas_bus_id' => $kelasBus1Ekonomi->id,
-            'harga' => 150000,
-        ]);
+                    // Pastikan tidak ada jadwal duplikat (bus yang sama, jam yang sama, di hari yang sama)
+                    $key = $bus->id . '-' . $tanggal . '-' . $jamBerangkat;
+                    if (!isset($jadwalCollection[$key])) {
+                        $jadwal = \App\Models\Jadwal::create([
+                            'bus_id' => $bus->id,
+                            'sopir_id' => $sopir->id,
+                            'rute_id' => $rute->id,
+                            'tanggal_berangkat' => $tanggal,
+                            'jam_berangkat' => $jamBerangkat,
+                            'status' => 'tersedia',
+                        ]);
 
-        $jadwalKelasBus1Bisnis = \App\Models\JadwalKelasBus::create([
-            'jadwal_id' => $jadwal1->id,
-            'kelas_bus_id' => $kelasBus1Bisnis->id,
-            'harga' => 250000,
-        ]);
+                        $jadwalCollection[$key] = $jadwal;
 
-        $jadwalKelasBus2Ekonomi = \App\Models\JadwalKelasBus::create([
-            'jadwal_id' => $jadwal2->id,
-            'kelas_bus_id' => $kelasBus2Ekonomi->id,
-            'harga' => 120000,
-        ]);
+                        // Buat jadwal kelas bus untuk setiap kelas yang tersedia di bus tersebut
+                        $kelasBuses = \App\Models\KelasBus::where('bus_id', $bus->id)->get();
 
-        $jadwalKelasBus2Bisnis = \App\Models\JadwalKelasBus::create([
-            'jadwal_id' => $jadwal2->id,
-            'kelas_bus_id' => $kelasBus2Bisnis->id,
-            'harga' => 200000,
-        ]);
+                        foreach ($kelasBuses as $kelasBus) {
+                            // Harga berdasarkan nama kelas
+                            $harga = 100000; // Default
+                            if (stripos($kelasBus->nama_kelas, 'ekonomi') !== false) {
+                                $harga = rand(100000, 150000);
+                            } elseif (stripos($kelasBus->nama_kelas, 'bisnis') !== false) {
+                                $harga = rand(180000, 250000);
+                            } elseif (stripos($kelasBus->nama_kelas, 'vip') !== false) {
+                                $harga = rand(300000, 400000);
+                            }
 
-        $jadwalKelasBus3Ekonomi = \App\Models\JadwalKelasBus::create([
-            'jadwal_id' => $jadwal3->id,
-            'kelas_bus_id' => $kelasBus3Ekonomi->id,
-            'harga' => 180000,
-        ]);
+                            \App\Models\JadwalKelasBus::create([
+                                'jadwal_id' => $jadwal->id,
+                                'kelas_bus_id' => $kelasBus->id,
+                                'harga' => $harga,
+                            ]);
+                        }
+                    }
+                }
+            }
+        }
 
-        $jadwalKelasBus3VIP = \App\Models\JadwalKelasBus::create([
-            'jadwal_id' => $jadwal3->id,
-            'kelas_bus_id' => $kelasBus3VIP->id,
-            'harga' => 350000,
-        ]);
+        // Buat contoh tiket dan pembayaran menggunakan jadwal pertama yang tersedia
+        $jadwalPertama = array_values($jadwalCollection)[0] ?? null;
+        if ($jadwalPertama) {
+            $jadwalKelasBusPertama = \App\Models\JadwalKelasBus::where('jadwal_id', $jadwalPertama->id)->first();
+            $kursiPertama = \App\Models\Kursi::where('kelas_bus_id', $jadwalKelasBusPertama->kelas_bus_id)->first();
 
-        // Ambil kursi pertama dari kelas ekonomi bus 1 untuk contoh tiket
-        $kursiEkonomi = \App\Models\Kursi::where('kelas_bus_id', $kelasBus1Ekonomi->id)->first();
+            // Tiket
+            $tiket = \App\Models\Tiket::create([
+                'user_id' => $user->id,
+                'jadwal_kelas_bus_id' => $jadwalKelasBusPertama->id,
+                'kursi_id' => $kursiPertama->id,
+                'nik' => '3173123456789001',
+                'nama_penumpang' => 'Penumpang Satu',
+                'tanggal_lahir' => '2000-01-01',
+                'jenis_kelamin' => 'L',
+                'nomor_telepon' => '081234567890',
+                'email' => 'penumpang@example.com',
+                'kode_tiket' => 'TKT001',
+                'harga' => $jadwalKelasBusPertama->harga,
+                'status' => 'dipesan',
+                'waktu_pesan' => now(),
+            ]);
 
-        // Tiket
-        $tiket = \App\Models\Tiket::create([
-            'user_id' => $user->id,
-            'jadwal_kelas_bus_id' => $jadwalKelasBus1Ekonomi->id,
-            'kursi_id' => $kursiEkonomi->id,
-            'nik' => '3173123456789001',
-            'nama_penumpang' => 'Penumpang Satu',
-            'tanggal_lahir' => '2000-01-01',
-            'jenis_kelamin' => 'L',
-            'nomor_telepon' => '081234567890',
-            'email' => 'penumpang@example.com',
-            'kode_tiket' => 'TKT001',
-            'harga' => 150000,
-            'status' => 'dipesan',
-            'waktu_pesan' => now(),
-        ]);
-
-        // Pembayaran
-        \App\Models\Pembayaran::create([
-            'user_id' => $user->id,
-            'tiket_id' => $tiket->id,
-            'metode' => 'midtrans',
-            'nominal' => 150000,
-            'status' => 'berhasil',
-            'waktu_bayar' => now(),
-            'kode_transaksi' => 'TRX001',
-        ]);
+            // Pembayaran
+            \App\Models\Pembayaran::create([
+                'user_id' => $user->id,
+                'tiket_id' => $tiket->id,
+                'metode' => 'midtrans',
+                'nominal' => $jadwalKelasBusPertama->harga,
+                'status' => 'berhasil',
+                'waktu_bayar' => now(),
+                'kode_transaksi' => 'TRX001',
+            ]);
+        }
     }
 }

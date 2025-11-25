@@ -39,6 +39,34 @@ class PembayaranController extends Controller
             ], 400);
         }
 
+        // Idempotensi: jika sudah ada pembayaran pending/berhasil untuk tiket ini, kembalikan
+        $existing = Pembayaran::where('tiket_id', $tiket->id)
+            ->whereIn('status', ['pending', 'berhasil'])
+            ->latest()
+            ->first();
+
+        if ($existing) {
+            if ($existing->status === 'berhasil') {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tiket sudah memiliki pembayaran berhasil',
+                ], 409);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran sudah dibuat sebelumnya',
+                'data' => [
+                    'id' => $existing->id,
+                    'kode_transaksi' => $existing->kode_transaksi,
+                    'metode' => $existing->metode,
+                    'nominal' => $existing->nominal,
+                    'status' => $existing->status,
+                    'waktu_bayar' => $existing->waktu_bayar,
+                ],
+            ], 200);
+        }
+
         // Generate kode transaksi
         $kodeTransaksi = 'TRX-' . strtoupper(Str::random(12));
 
@@ -51,15 +79,8 @@ class PembayaranController extends Controller
             'kode_transaksi' => $kodeTransaksi,
         ]);
 
-        // Update status tiket jika pembayaran metode tunai atau transfer
-        if (in_array($request->metode, ['tunai', 'transfer'])) {
-            $pembayaran->update([
-                'status' => 'berhasil',
-                'waktu_bayar' => now(),
-            ]);
-
-            $tiket->update(['status' => 'dibayar']);
-        }
+        // Catatan: semua metode pembayaran dimulai dengan 'pending'.
+        // Perubahan ke 'berhasil' dilakukan via callback/payment gateway atau verifikasi admin.
 
         return response()->json([
             'success' => true,
@@ -148,20 +169,108 @@ class PembayaranController extends Controller
             return response()->json(['success' => false, 'message' => 'Pembayaran tidak ditemukan'], 404);
         }
 
-        // Update status berdasarkan response payment gateway
+        // Update status berdasarkan response payment gateway (idempotent)
         if ($status === 'settlement' || $status === 'capture') {
-            $pembayaran->update([
-                'status' => 'berhasil',
-                'waktu_bayar' => now(),
-            ]);
+            if ($pembayaran->status !== 'berhasil') {
+                $pembayaran->update([
+                    'status' => 'berhasil',
+                    'waktu_bayar' => now(),
+                ]);
 
-            $pembayaran->tiket->update(['status' => 'dibayar']);
+                // Terbitkan tiket (ubah status menjadi dibayar)
+                $pembayaran->tiket->update(['status' => 'dibayar']);
+            }
         } elseif ($status === 'pending') {
-            $pembayaran->update(['status' => 'pending']);
+            if ($pembayaran->status !== 'berhasil') {
+                $pembayaran->update(['status' => 'pending']);
+            }
         } elseif (in_array($status, ['deny', 'expire', 'cancel'])) {
-            $pembayaran->update(['status' => 'gagal']);
+            if ($pembayaran->status !== 'berhasil') {
+                $pembayaran->update(['status' => 'gagal']);
+            }
         }
 
         return response()->json(['success' => true, 'message' => 'Callback processed']);
+    }
+
+    /**
+     * Approve pembayaran manual (transfer/tunai) oleh admin/agent
+     * POST /api/pembayaran/{id}/approve
+     */
+    public function approveManual($id)
+    {
+        $pembayaran = Pembayaran::with('tiket')->findOrFail($id);
+
+        if (!in_array($pembayaran->metode, ['transfer', 'tunai'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya pembayaran manual yang dapat di-approve',
+            ], 422);
+        }
+
+        if ($pembayaran->status === 'berhasil') {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pembayaran sudah berhasil sebelumnya',
+            ], 200);
+        }
+
+        if ($pembayaran->status === 'gagal') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Pembayaran sudah ditandai gagal',
+            ], 409);
+        }
+
+        $pembayaran->update([
+            'status' => 'berhasil',
+            'waktu_bayar' => now(),
+        ]);
+
+        if ($pembayaran->tiket && $pembayaran->tiket->status !== 'dibayar') {
+            $pembayaran->tiket->update(['status' => 'dibayar']);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pembayaran manual berhasil di-approve dan tiket diterbitkan',
+        ]);
+    }
+
+    /**
+     * Reject pembayaran manual (transfer/tunai) oleh admin/agent
+     * POST /api/pembayaran/{id}/reject
+     */
+    public function rejectManual($id)
+    {
+        $pembayaran = Pembayaran::with('tiket')->findOrFail($id);
+
+        if (!in_array($pembayaran->metode, ['transfer', 'tunai'])) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya pembayaran manual yang dapat di-reject',
+            ], 422);
+        }
+
+        if ($pembayaran->status === 'berhasil') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tidak dapat menolak pembayaran yang sudah berhasil',
+            ], 409);
+        }
+
+        if ($pembayaran->status !== 'gagal') {
+            $pembayaran->update(['status' => 'gagal']);
+        }
+
+        // Release kursi dengan menandai tiket batal
+        if ($pembayaran->tiket && $pembayaran->tiket->status !== 'batal') {
+            $pembayaran->tiket->update(['status' => 'batal']);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pembayaran manual ditolak dan kursi dirilis',
+        ]);
     }
 }
