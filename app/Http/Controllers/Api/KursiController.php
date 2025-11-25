@@ -11,54 +11,67 @@ use Illuminate\Http\Request;
 class KursiController extends Controller
 {
     /**
-     * Get kursi layout per kelas bus dalam jadwal tertentu
-     * GET /api/jadwal/{jadwal_id}/kursi
+     * Get kursi layout untuk jadwal_kelas_bus tertentu
+     * GET /api/jadwal/{jadwal_id}/kursi?jadwal_kelas_bus_id={id}
      */
-    public function getKursiByJadwal($jadwalId)
+    public function getKursiByJadwal($jadwalId, Request $request)
     {
-        $jadwal = Jadwal::with(['bus.kelasBus.kursi', 'jadwalKelasBus'])->findOrFail($jadwalId);
+        $jadwalKelasBusId = $request->query('jadwal_kelas_bus_id');
 
-        // Get semua kursi yang sudah terpakai di jadwal ini (via jadwal_kelas_bus)
-        $kursiTerpakai = Tiket::whereHas('jadwalKelasBus', function ($q) use ($jadwalId) {
-            $q->where('jadwal_id', $jadwalId);
-        })
+        if (!$jadwalKelasBusId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Parameter jadwal_kelas_bus_id wajib diisi',
+            ], 400);
+        }
+
+        $jadwalKelasBus = \App\Models\JadwalKelasBus::with([
+            'jadwal.bus',
+            'kelasBus.kursi'
+        ])->findOrFail($jadwalKelasBusId);
+
+        // Pastikan jadwal_id sesuai
+        if ($jadwalKelasBus->jadwal_id != $jadwalId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Jadwal kelas bus tidak sesuai dengan jadwal',
+            ], 400);
+        }
+
+        // Get kursi yang sudah terpakai untuk jadwal_kelas_bus ini
+        $kursiTerpakai = Tiket::where('jadwal_kelas_bus_id', $jadwalKelasBusId)
             ->whereIn('status', ['dipesan', 'dibayar'])
             ->pluck('kursi_id')
             ->toArray();
 
-        $result = [];
-        foreach ($jadwal->bus->kelasBus as $kelasBus) {
-            $kursis = $kelasBus->kursi->map(function ($kursi) use ($kursiTerpakai) {
-                return [
-                    'id' => $kursi->id,
-                    'nomor_kursi' => $kursi->nomor_kursi,
-                    'index' => $kursi->index,
-                    'tersedia' => !in_array($kursi->id, $kursiTerpakai),
-                ];
-            });
-
-            // Get harga dari jadwal_kelas_bus
-            $jadwalKelas = $jadwal->jadwalKelasBus->firstWhere('kelas_bus_id', $kelasBus->id);
-
-            $result[] = [
-                'kelas_bus_id' => $kelasBus->id,
-                'nama_kelas' => $kelasBus->nama_kelas,
-                'deskripsi' => $kelasBus->deskripsi,
-                'jumlah_kursi' => $kelasBus->jumlah_kursi,
-                'harga' => $jadwalKelas ? $jadwalKelas->harga : null,
-                'kursi' => $kursis,
+        $kursiList = $jadwalKelasBus->kelasBus->kursi->map(function ($kursi) use ($kursiTerpakai) {
+            return [
+                'id' => $kursi->id,
+                'nomor_kursi' => $kursi->nomor_kursi,
+                'posisi' => $kursi->posisi,
+                'index' => $kursi->index,
+                'tersedia' => !in_array($kursi->id, $kursiTerpakai),
             ];
-        }
+        });
 
         return response()->json([
             'success' => true,
             'data' => [
-                'jadwal_id' => $jadwal->id,
+                'jadwal_id' => $jadwalKelasBus->jadwal_id,
+                'jadwal_kelas_bus_id' => $jadwalKelasBus->id,
                 'bus' => [
-                    'id' => $jadwal->bus->id,
-                    'nama' => $jadwal->bus->nama,
+                    'id' => $jadwalKelasBus->jadwal->bus->id,
+                    'nama' => $jadwalKelasBus->jadwal->bus->nama,
+                    'plat_nomor' => $jadwalKelasBus->jadwal->bus->plat_nomor,
                 ],
-                'kelas_bus' => $result,
+                'kelas_bus' => [
+                    'id' => $jadwalKelasBus->kelasBus->id,
+                    'nama_kelas' => $jadwalKelasBus->kelasBus->nama_kelas,
+                    'deskripsi' => $jadwalKelasBus->kelasBus->deskripsi,
+                    'jumlah_kursi' => $jadwalKelasBus->kelasBus->jumlah_kursi,
+                ],
+                'harga' => $jadwalKelasBus->harga,
+                'kursi' => $kursiList,
             ],
         ]);
     }

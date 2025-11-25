@@ -7,6 +7,7 @@ use App\Models\Pembayaran;
 use App\Models\Tiket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Http;
 
 class PembayaranController extends Controller
 {
@@ -18,7 +19,7 @@ class PembayaranController extends Controller
     {
         $request->validate([
             'tiket_id' => 'required|exists:tiket,id',
-            'metode' => 'required|in:midtrans,transfer,tunai',
+            'metode' => 'required|in:xendit,transfer,tunai',
         ]);
 
         $tiket = Tiket::findOrFail($request->tiket_id);
@@ -79,20 +80,77 @@ class PembayaranController extends Controller
             'kode_transaksi' => $kodeTransaksi,
         ]);
 
+        // Handle Xendit payment intent creation (API v3)
+        if ($request->metode === 'xendit') {
+            $xenditResponse = Http::withHeaders([
+                'Authorization' => 'Basic ' . base64_encode(config('services.xendit.api_key') . ':'),
+                'Content-Type' => 'application/json',
+                'xendit-api-version' => '2022-07-31',
+            ])->post(config('services.xendit.base_url') . '/v2/invoices', [
+                        'external_id' => $kodeTransaksi,
+                        'amount' => $tiket->harga,
+                        'currency' => 'IDR',
+                        'description' => 'Pembayaran Tiket Bus - ' . $tiket->kode_tiket,
+                        'invoice_duration' => 86400, // 24 hours
+                        'customer' => [
+                            'given_names' => $tiket->nama_penumpang,
+                            'email' => $tiket->email,
+                            'mobile_number' => $tiket->nomor_telepon,
+                        ],
+                        'customer_notification_preference' => [
+                            'invoice_created' => ['email', 'whatsapp'],
+                            'invoice_reminder' => ['email'],
+                            'invoice_paid' => ['email', 'whatsapp'],
+                        ],
+                        'success_redirect_url' => $request->input('success_redirect_url', env('APP_URL') . '/payment/success'),
+                        'failure_redirect_url' => $request->input('failure_redirect_url', env('APP_URL') . '/payment/failure'),
+                        'payment_methods' => ['CREDIT_CARD', 'BANK_TRANSFER', 'EWALLET', 'QR_CODE', 'RETAIL_OUTLET'],
+                        'items' => [
+                            [
+                                'name' => 'Tiket Bus - ' . $tiket->kode_tiket,
+                                'quantity' => 1,
+                                'price' => $tiket->harga,
+                                'category' => 'Transportation',
+                            ]
+                        ],
+                    ]);
+
+            if ($xenditResponse->failed()) {
+                $pembayaran->update(['status' => 'gagal']);
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Gagal membuat payment intent Xendit',
+                    'error' => $xenditResponse->json(),
+                ], 500);
+            }
+
+            $invoiceData = $xenditResponse->json();
+            $pembayaran->update(['external_id' => $invoiceData['id'] ?? null]);
+        }
+
         // Catatan: semua metode pembayaran dimulai dengan 'pending'.
         // Perubahan ke 'berhasil' dilakukan via callback/payment gateway atau verifikasi admin.
+
+        // Siapkan response
+        $responseData = [
+            'id' => $pembayaran->id,
+            'kode_transaksi' => $pembayaran->kode_transaksi,
+            'metode' => $pembayaran->metode,
+            'nominal' => $pembayaran->nominal,
+            'status' => $pembayaran->status,
+            'waktu_bayar' => $pembayaran->waktu_bayar,
+        ];
+
+        if (isset($invoiceData)) {
+            $responseData['invoice_url'] = $invoiceData['invoice_url'] ?? null;
+            $responseData['expiry_date'] = $invoiceData['expiry_date'] ?? null;
+            $responseData['external_id'] = $invoiceData['id'] ?? null;
+        }
 
         return response()->json([
             'success' => true,
             'message' => 'Pembayaran berhasil dibuat',
-            'data' => [
-                'id' => $pembayaran->id,
-                'kode_transaksi' => $pembayaran->kode_transaksi,
-                'metode' => $pembayaran->metode,
-                'nominal' => $pembayaran->nominal,
-                'status' => $pembayaran->status,
-                'waktu_bayar' => $pembayaran->waktu_bayar,
-            ],
+            'data' => $responseData,
         ], 201);
     }
 
@@ -152,39 +210,41 @@ class PembayaranController extends Controller
     }
 
     /**
-     * Callback dari payment gateway (Midtrans, dll)
+     * Callback dari Xendit
      * POST /api/pembayaran/callback
      */
     public function callback(Request $request)
     {
-        // Logic untuk handle callback dari payment gateway
-        // Contoh: verifikasi signature, update status pembayaran, dll
+        // Optional: verifikasi callback token
+        $callbackToken = config('services.xendit.callback_token');
+        if ($callbackToken) {
+            $headerToken = $request->header('x-callback-token');
+            if (!$headerToken || $headerToken !== $callbackToken) {
+                return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+            }
+        }
 
-        $kodeTransaksi = $request->order_id;
-        $status = $request->transaction_status;
+        $event = $request->input('event');
+        $invoiceId = data_get($request->input('data', []), 'id');
 
-        $pembayaran = Pembayaran::where('kode_transaksi', $kodeTransaksi)->first();
+        if (!$event || !$invoiceId) {
+            return response()->json(['success' => false, 'message' => 'Payload tidak valid'], 400);
+        }
 
+        $pembayaran = Pembayaran::where('external_id', $invoiceId)->first();
         if (!$pembayaran) {
             return response()->json(['success' => false, 'message' => 'Pembayaran tidak ditemukan'], 404);
         }
 
-        // Update status berdasarkan response payment gateway (idempotent)
-        if ($status === 'settlement' || $status === 'capture') {
+        if ($event === 'invoice.paid') {
             if ($pembayaran->status !== 'berhasil') {
                 $pembayaran->update([
                     'status' => 'berhasil',
                     'waktu_bayar' => now(),
                 ]);
-
-                // Terbitkan tiket (ubah status menjadi dibayar)
                 $pembayaran->tiket->update(['status' => 'dibayar']);
             }
-        } elseif ($status === 'pending') {
-            if ($pembayaran->status !== 'berhasil') {
-                $pembayaran->update(['status' => 'pending']);
-            }
-        } elseif (in_array($status, ['deny', 'expire', 'cancel'])) {
+        } elseif ($event === 'invoice.expired') {
             if ($pembayaran->status !== 'berhasil') {
                 $pembayaran->update(['status' => 'gagal']);
             }

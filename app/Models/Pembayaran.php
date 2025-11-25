@@ -47,7 +47,8 @@ class Pembayaran extends Model
         'status',
         'waktu_bayar',
         'kode_transaksi',
-        'bukti_pembayaran'
+        'bukti_pembayaran',
+        'external_id'
     ];
 
     public function tiket()
