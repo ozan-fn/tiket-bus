@@ -224,29 +224,50 @@ class PembayaranController extends Controller
             }
         }
 
-        $event = $request->input('event');
-        $invoiceId = data_get($request->input('data', []), 'id');
+        // Xendit mengirim invoice ID di field 'id'
+        $invoiceId = $request->input('id');
+        $status = strtoupper($request->input('status'));
+        $externalId = $request->input('external_id'); // kode_transaksi kita
 
-        if (!$event || !$invoiceId) {
+        if (!$invoiceId || !$status) {
             return response()->json(['success' => false, 'message' => 'Payload tidak valid'], 400);
         }
 
+        // Cari pembayaran berdasarkan external_id (invoice ID dari Xendit)
         $pembayaran = Pembayaran::where('external_id', $invoiceId)->first();
+
+        // Fallback: cari berdasarkan kode_transaksi jika tidak ketemu
+        if (!$pembayaran && $externalId) {
+            $pembayaran = Pembayaran::where('kode_transaksi', $externalId)->first();
+        }
+
         if (!$pembayaran) {
             return response()->json(['success' => false, 'message' => 'Pembayaran tidak ditemukan'], 404);
         }
 
-        if ($event === 'invoice.paid') {
+        // Handle status PAID
+        if ($status === 'PAID') {
             if ($pembayaran->status !== 'berhasil') {
+                $paidAt = $request->input('paid_at');
                 $pembayaran->update([
                     'status' => 'berhasil',
-                    'waktu_bayar' => now(),
+                    'waktu_bayar' => $paidAt ? \Carbon\Carbon::parse($paidAt) : now(),
                 ]);
-                $pembayaran->tiket->update(['status' => 'dibayar']);
+
+                if ($pembayaran->tiket && $pembayaran->tiket->status !== 'dibayar') {
+                    $pembayaran->tiket->update(['status' => 'dibayar']);
+                }
             }
-        } elseif ($event === 'invoice.expired') {
+        }
+        // Handle status EXPIRED
+        elseif ($status === 'EXPIRED') {
             if ($pembayaran->status !== 'berhasil') {
                 $pembayaran->update(['status' => 'gagal']);
+
+                // Optional: batal tiket jika expired
+                if ($pembayaran->tiket && $pembayaran->tiket->status === 'dipesan') {
+                    $pembayaran->tiket->update(['status' => 'batal']);
+                }
             }
         }
 
@@ -331,6 +352,101 @@ class PembayaranController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Pembayaran manual ditolak dan kursi dirilis',
+        ]);
+    }
+
+    /**
+     * Cek status pembayaran dari Xendit (jika webhook gagal)
+     * GET /api/pembayaran/{id}/check-status
+     */
+    public function checkStatus($id)
+    {
+        $pembayaran = Pembayaran::with('tiket')->findOrFail($id);
+
+        // Hanya untuk pembayaran xendit
+        if ($pembayaran->metode !== 'xendit') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Hanya pembayaran Xendit yang bisa dicek statusnya',
+            ], 422);
+        }
+
+        if (!$pembayaran->external_id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'External ID tidak ditemukan',
+            ], 404);
+        }
+
+        // Query status invoice ke Xendit
+        $xenditResponse = Http::withHeaders([
+            'Authorization' => 'Basic ' . base64_encode(config('services.xendit.api_key') . ':'),
+        ])->get(config('services.xendit.base_url') . '/v2/invoices/' . $pembayaran->external_id);
+
+        if ($xenditResponse->failed()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengambil status dari Xendit',
+                'error' => $xenditResponse->json(),
+            ], 500);
+        }
+
+        $invoiceData = $xenditResponse->json();
+        $xenditStatus = strtoupper($invoiceData['status'] ?? '');
+
+        // Sync status jika berbeda
+        if ($xenditStatus === 'PAID' && $pembayaran->status !== 'berhasil') {
+            $paidAt = $invoiceData['paid_at'] ?? null;
+            $pembayaran->update([
+                'status' => 'berhasil',
+                'waktu_bayar' => $paidAt ? \Carbon\Carbon::parse($paidAt) : now(),
+            ]);
+
+            if ($pembayaran->tiket && $pembayaran->tiket->status !== 'dibayar') {
+                $pembayaran->tiket->update(['status' => 'dibayar']);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status berhasil disinkronkan: PAID',
+                'data' => [
+                    'id' => $pembayaran->id,
+                    'kode_transaksi' => $pembayaran->kode_transaksi,
+                    'status' => $pembayaran->status,
+                    'xendit_status' => $xenditStatus,
+                    'waktu_bayar' => $pembayaran->waktu_bayar,
+                ],
+            ]);
+        } elseif ($xenditStatus === 'EXPIRED' && $pembayaran->status !== 'gagal') {
+            $pembayaran->update(['status' => 'gagal']);
+
+            if ($pembayaran->tiket && $pembayaran->tiket->status === 'dipesan') {
+                $pembayaran->tiket->update(['status' => 'batal']);
+            }
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Status berhasil disinkronkan: EXPIRED',
+                'data' => [
+                    'id' => $pembayaran->id,
+                    'kode_transaksi' => $pembayaran->kode_transaksi,
+                    'status' => $pembayaran->status,
+                    'xendit_status' => $xenditStatus,
+                ],
+            ]);
+        }
+
+        // Status sudah sync
+        return response()->json([
+            'success' => true,
+            'message' => 'Status sudah sinkron',
+            'data' => [
+                'id' => $pembayaran->id,
+                'kode_transaksi' => $pembayaran->kode_transaksi,
+                'status' => $pembayaran->status,
+                'xendit_status' => $xenditStatus,
+                'waktu_bayar' => $pembayaran->waktu_bayar,
+            ],
         ]);
     }
 }

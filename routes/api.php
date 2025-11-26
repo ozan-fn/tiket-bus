@@ -49,10 +49,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('tiket', [App\Http\Controllers\Api\TiketController::class, 'store']);
     Route::get('my-tickets', [App\Http\Controllers\Api\TiketController::class, 'myTickets']);
 
+    // Verifikasi tiket (petugas)
+    Route::post('tiket/{kode_tiket}/verify', [App\Http\Controllers\Api\TiketController::class, 'verify']);
+    Route::post('tiket/{kode_tiket}/checkin', [App\Http\Controllers\Api\TiketController::class, 'checkin']);
+
     // Pembayaran
     Route::post('pembayaran', [App\Http\Controllers\Api\PembayaranController::class, 'store']);
     Route::get('pembayaran', [App\Http\Controllers\Api\PembayaranController::class, 'index']);
     Route::get('pembayaran/{id}', [App\Http\Controllers\Api\PembayaranController::class, 'show']);
+    Route::get('pembayaran/{id}/check-status', [App\Http\Controllers\Api\PembayaranController::class, 'checkStatus']);
 
     // Upload
     Route::post('upload/profile', [App\Http\Controllers\Api\UploadController::class, 'uploadProfile']);

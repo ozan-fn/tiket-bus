@@ -165,4 +165,121 @@ class TiketController extends Controller
             ],
         ]);
     }
+
+    /**
+     * Verifikasi tiket oleh petugas (scan QR/input kode)
+     * POST /api/tiket/{kode_tiket}/verify
+     */
+    public function verify($kodeTicket)
+    {
+        $tiket = Tiket::with([
+            'jadwalKelasBus.jadwal.bus',
+            'jadwalKelasBus.jadwal.rute.asalTerminal',
+            'jadwalKelasBus.jadwal.rute.tujuanTerminal',
+            'jadwalKelasBus.kelasBus',
+            'kursi',
+            'pembayaran'
+        ])
+            ->where('kode_tiket', $kodeTicket)
+            ->firstOrFail();
+
+        // Cek apakah tiket sudah dibayar
+        if ($tiket->status !== 'dibayar') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tiket belum dibayar atau sudah dibatalkan',
+                'data' => [
+                    'kode_tiket' => $tiket->kode_tiket,
+                    'status' => $tiket->status,
+                ],
+            ], 403);
+        }
+
+        // Cek apakah tiket sudah digunakan (naik bus)
+        if ($tiket->status === 'selesai') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tiket sudah pernah digunakan',
+                'data' => [
+                    'kode_tiket' => $tiket->kode_tiket,
+                    'status' => $tiket->status,
+                    'waktu_digunakan' => $tiket->updated_at,
+                ],
+            ], 409);
+        }
+
+        // Return data lengkap untuk petugas
+        return response()->json([
+            'success' => true,
+            'message' => 'Tiket valid',
+            'data' => [
+                'kode_tiket' => $tiket->kode_tiket,
+                'status' => $tiket->status,
+                'penumpang' => [
+                    'nama' => $tiket->nama_penumpang,
+                    'nik' => $tiket->nik,
+                    'jenis_kelamin' => $tiket->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan',
+                    'nomor_telepon' => $tiket->nomor_telepon,
+                ],
+                'jadwal' => [
+                    'tanggal_berangkat' => $tiket->jadwalKelasBus->jadwal->tanggal_berangkat,
+                    'jam_berangkat' => $tiket->jadwalKelasBus->jadwal->jam_berangkat,
+                ],
+                'bus' => [
+                    'nama' => $tiket->jadwalKelasBus->jadwal->bus->nama,
+                    'plat_nomor' => $tiket->jadwalKelasBus->jadwal->bus->plat_nomor,
+                ],
+                'rute' => [
+                    'asal' => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal,
+                    'tujuan' => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal,
+                ],
+                'kelas' => $tiket->jadwalKelasBus->kelasBus->nama_kelas,
+                'kursi' => [
+                    'nomor' => $tiket->kursi->nomor_kursi,
+                    'posisi' => $tiket->kursi->posisi,
+                ],
+                'harga' => $tiket->harga,
+                'pembayaran' => [
+                    'metode' => $tiket->pembayaran->metode ?? null,
+                    'waktu_bayar' => $tiket->pembayaran->waktu_bayar ?? null,
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * Tandai tiket sebagai digunakan (penumpang naik)
+     * POST /api/tiket/{kode_tiket}/checkin
+     */
+    public function checkin($kodeTicket)
+    {
+        $tiket = Tiket::where('kode_tiket', $kodeTicket)->firstOrFail();
+
+        if ($tiket->status !== 'dibayar') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tiket belum dibayar atau tidak valid',
+            ], 403);
+        }
+
+        if ($tiket->status === 'selesai') {
+            return response()->json([
+                'success' => false,
+                'message' => 'Tiket sudah pernah digunakan',
+            ], 409);
+        }
+
+        $tiket->update(['status' => 'selesai']);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Check-in berhasil, penumpang boleh naik',
+            'data' => [
+                'kode_tiket' => $tiket->kode_tiket,
+                'nama_penumpang' => $tiket->nama_penumpang,
+                'status' => $tiket->status,
+                'waktu_checkin' => now(),
+            ],
+        ]);
+    }
 }
