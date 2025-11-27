@@ -16,20 +16,20 @@ class ProfileController
     public function updatePassword(Request $request)
     {
         $request->validate([
-            'current_password' => 'required',
-            'new_password' => 'required|string|min:8|confirmed',
+            "current_password" => "required",
+            "new_password" => "required|string|min:8|confirmed",
         ]);
 
         $user = Auth::user();
 
         if (!Hash::check($request->current_password, $user->password)) {
-            return response()->json(['error' => 'Current password is incorrect.'], 403);
+            return response()->json(["error" => "Current password is incorrect."], 403);
         }
 
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return response()->json(['message' => 'Password updated successfully.']);
+        return response()->json(["message" => "Password updated successfully."]);
     }
 
     // Menampilkan profil user
@@ -37,14 +37,18 @@ class ProfileController
     {
         $user = $request->user();
         return response()->json([
-            'id' => $user->id,
-            'name' => $user->name,
-            'email' => $user->email,
-            'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
-            'roles' => $user->getRoleNames()->toArray(),
-            'role' => $user->getRoleNames()->first() ?? 'passenger',
-            'created_at' => $user->created_at,
-            'updated_at' => $user->updated_at,
+            "id" => $user->id,
+            "name" => $user->name,
+            "email" => $user->email,
+            "nik" => $user->nik,
+            "tanggal_lahir" => $user->tanggal_lahir,
+            "jenis_kelamin" => $user->jenis_kelamin,
+            "nomor_telepon" => $user->nomor_telepon,
+            "photo" => $user->photo ? asset("storage/" . $user->photo) : null,
+            "roles" => $user->getRoleNames()->toArray(),
+            "role" => $user->getRoleNames()->first() ?? "passenger",
+            "created_at" => $user->created_at,
+            "updated_at" => $user->updated_at,
         ]);
     }
 
@@ -52,27 +56,35 @@ class ProfileController
     public function update(Request $request)
     {
         $user = $request->user();
-        $data = $request->only(['name', 'email']);
+        $data = $request->only(["name", "email", "nik", "tanggal_lahir", "jenis_kelamin", "nomor_telepon"]);
         $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+            "name" => "required|string|max:255",
+            "email" => "required|email|max:255|unique:users,email," . $user->id,
+            "nik" => "nullable|string|max:16",
+            "tanggal_lahir" => "nullable|date",
+            "jenis_kelamin" => "nullable|in:L,P",
+            "nomor_telepon" => "nullable|string|max:20",
         ];
         $validator = \Validator::make($data, $rules);
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+            return response()->json(["errors" => $validator->errors()], 422);
         }
         $user->update($data);
 
         return response()->json([
-            'message' => 'Profile updated successfully',
-            'user' => [
-                'id' => $user->id,
-                'name' => $user->name,
-                'email' => $user->email,
-                'photo' => $user->photo ? asset('storage/' . $user->photo) : null,
-                'roles' => $user->getRoleNames()->toArray(),
-                'role' => $user->getRoleNames()->first() ?? 'passenger',
-            ]
+            "message" => "Profile updated successfully",
+            "user" => [
+                "id" => $user->id,
+                "name" => $user->name,
+                "email" => $user->email,
+                "nik" => $user->nik,
+                "tanggal_lahir" => $user->tanggal_lahir,
+                "jenis_kelamin" => $user->jenis_kelamin,
+                "nomor_telepon" => $user->nomor_telepon,
+                "photo" => $user->photo ? asset("storage/" . $user->photo) : null,
+                "roles" => $user->getRoleNames()->toArray(),
+                "role" => $user->getRoleNames()->first() ?? "passenger",
+            ],
         ]);
     }
     /**
@@ -80,8 +92,8 @@ class ProfileController
      */
     public function edit(Request $request): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
+        return view("profile.edit", [
+            "user" => $request->user(),
         ]);
     }
 
@@ -90,8 +102,8 @@ class ProfileController
      */
     public function destroy(Request $request): RedirectResponse
     {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
+        $request->validateWithBag("userDeletion", [
+            "password" => ["required", "current_password"],
         ]);
 
         $user = $request->user();
@@ -103,6 +115,6 @@ class ProfileController
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return Redirect::to('/');
+        return Redirect::to("/");
     }
 }

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Tiket
- * 
+ *
  * @property int $id
  * @property int $user_id
  * @property int $jadwal_id
@@ -26,50 +26,36 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $waktu_pesan
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Jadwal $jadwal
  * @property User $user
- * @property Collection|Pembayaran[] $pembayarans
+ * @property Pembayaran $pembayaran
  *
  * @package App\Models
  */
 class Tiket extends Model
 {
-    protected $table = 'tiket';
+    protected $table = "tiket";
 
     protected $casts = [
-        'user_id' => 'int',
-        'jadwal_kelas_bus_id' => 'int',
-        'kursi_id' => 'int',
-        'tanggal_lahir' => 'datetime',
-        'harga' => 'float',
-        'waktu_pesan' => 'datetime'
+        "user_id" => "int",
+        "jadwal_kelas_bus_id" => "int",
+        "kursi_id" => "int",
+        "tanggal_lahir" => "datetime",
+        "harga" => "float",
+        "waktu_pesan" => "datetime",
     ];
 
-    protected $fillable = [
-        'user_id',
-        'jadwal_kelas_bus_id',
-        'kursi_id',
-        'nik',
-        'nama_penumpang',
-        'tanggal_lahir',
-        'jenis_kelamin',
-        'nomor_telepon',
-        'email',
-        'kode_tiket',
-        'harga',
-        'status',
-        'waktu_pesan'
-    ];
+    protected $fillable = ["user_id", "jadwal_kelas_bus_id", "kursi_id", "nik", "nama_penumpang", "tanggal_lahir", "jenis_kelamin", "nomor_telepon", "email", "kode_tiket", "harga", "status", "waktu_pesan"];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, "user_id");
     }
 
-    public function pembayarans()
+    public function pembayaran()
     {
-        return $this->hasMany(Pembayaran::class);
+        return $this->hasOne(Pembayaran::class);
     }
 
     public function kursi()
@@ -79,6 +65,6 @@ class Tiket extends Model
 
     public function jadwalKelasBus()
     {
-        return $this->belongsTo(JadwalKelasBus::class, 'jadwal_kelas_bus_id');
+        return $this->belongsTo(JadwalKelasBus::class, "jadwal_kelas_bus_id");
     }
 }

@@ -19,22 +19,14 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'photo',
-        'password',
-    ];
+    protected $fillable = ["name", "email", "photo", "password", "nik", "tanggal_lahir", "jenis_kelamin", "nomor_telepon"];
 
     /**
      * The attributes that should be hidden for serialization.
      *
      * @var list<string>
      */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
+    protected $hidden = ["password", "remember_token"];
 
     /**
      * Get the attributes that should be cast.
@@ -44,23 +36,24 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            "email_verified_at" => "datetime",
+            "password" => "hashed",
+            "tanggal_lahir" => "date",
         ];
     }
 
     public function pembayarans()
     {
-        return $this->hasMany(Pembayaran::class, 'user_id');
+        return $this->hasMany(Pembayaran::class, "user_id");
     }
 
     public function sopirs()
     {
-        return $this->hasMany(Sopir::class, 'user_id');
+        return $this->hasMany(Sopir::class, "user_id");
     }
 
     public function tikets()
     {
-        return $this->hasMany(Tiket::class, 'user_id');
+        return $this->hasMany(Tiket::class, "user_id");
     }
 }
