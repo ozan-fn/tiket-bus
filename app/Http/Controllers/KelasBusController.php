@@ -1,0 +1,90 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\KelasBus;
+use App\Models\Bus;
+use Illuminate\Http\Request;
+
+class KelasBusController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $kelasBus = KelasBus::with("bus")->paginate(10);
+        return view("kelas-bus.index", compact("kelasBus"));
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $buses = Bus::all();
+        return view("kelas-bus.create", compact("buses"));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            "bus_id" => "required|exists:bus,id",
+            "nama_kelas" => "required|string|max:50",
+            "deskripsi" => "nullable|string",
+            "jumlah_kursi" => "required|integer|min:1",
+        ]);
+
+        KelasBus::create($validated);
+
+        return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil ditambahkan");
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(KelasBus $kelasBus)
+    {
+        $kelasBus->load("bus", "kursi");
+        return view("kelas-bus.show", compact("kelasBus"));
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(KelasBus $kelasBus)
+    {
+        $buses = Bus::all();
+        return view("kelas-bus.edit", compact("kelasBus", "buses"));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, KelasBus $kelasBus)
+    {
+        $validated = $request->validate([
+            "bus_id" => "required|exists:bus,id",
+            "nama_kelas" => "required|string|max:50",
+            "deskripsi" => "nullable|string",
+            "jumlah_kursi" => "required|integer|min:1",
+        ]);
+
+        $kelasBus->update($validated);
+
+        return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil diperbarui");
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(KelasBus $kelasBus)
+    {
+        $kelasBus->delete();
+
+        return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil dihapus");
+    }
+}
