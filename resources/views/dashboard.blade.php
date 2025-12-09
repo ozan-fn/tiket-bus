@@ -8,68 +8,72 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <!-- Total Bus -->
             <x-ui::card>
-                <x-ui::card.content class="p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="space-y-1">
-                            <p class="text-sm font-medium text-muted-foreground">Total Bus</p>
-                            <p class="text-2xl font-bold">{{ \App\Models\Bus::count() }}</p>
-                        </div>
-                        <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                            <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <x-ui::card.content class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                             </svg>
                         </div>
+                        <a href="{{ route('admin/bus.index') }}" class="text-xs text-primary hover:underline">Lihat →</a>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold">{{ \App\Models\Bus::count() }}</p>
+                        <p class="text-xs text-muted-foreground">Total Bus</p>
                     </div>
                 </x-ui::card.content>
             </x-ui::card>
 
             <!-- Total Sopir -->
             <x-ui::card>
-                <x-ui::card.content class="p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="space-y-1">
-                            <p class="text-sm font-medium text-muted-foreground">Total Sopir</p>
-                            <p class="text-2xl font-bold">{{ \App\Models\Sopir::count() }}</p>
-                        </div>
-                        <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                            <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <x-ui::card.content class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                             </svg>
                         </div>
+                        <a href="{{ route('admin/sopir.index') }}" class="text-xs text-primary hover:underline">Lihat →</a>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold">{{ \App\Models\Sopir::count() }}</p>
+                        <p class="text-xs text-muted-foreground">Total Sopir</p>
                     </div>
                 </x-ui::card.content>
             </x-ui::card>
 
             <!-- Total Terminal -->
             <x-ui::card>
-                <x-ui::card.content class="p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="space-y-1">
-                            <p class="text-sm font-medium text-muted-foreground">Total Terminal</p>
-                            <p class="text-2xl font-bold">{{ \App\Models\Terminal::count() }}</p>
-                        </div>
-                        <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                            <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <x-ui::card.content class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                             </svg>
                         </div>
+                        <a href="{{ route('admin/terminal.index') }}" class="text-xs text-primary hover:underline">Lihat →</a>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold">{{ \App\Models\Terminal::count() }}</p>
+                        <p class="text-xs text-muted-foreground">Total Terminal</p>
                     </div>
                 </x-ui::card.content>
             </x-ui::card>
 
             <!-- Total Tiket -->
             <x-ui::card>
-                <x-ui::card.content class="p-6">
-                    <div class="flex items-center justify-between">
-                        <div class="space-y-1">
-                            <p class="text-sm font-medium text-muted-foreground">Total Tiket</p>
-                            <p class="text-2xl font-bold">{{ \App\Models\Tiket::count() }}</p>
-                        </div>
-                        <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                            <svg class="h-6 w-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <x-ui::card.content class="p-4">
+                    <div class="flex items-center justify-between mb-2">
+                        <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                            <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
                             </svg>
                         </div>
+                        <a href="{{ route('admin.history-pemesanan') }}" class="text-xs text-primary hover:underline">Lihat →</a>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-bold">{{ \App\Models\Tiket::count() }}</p>
+                        <p class="text-xs text-muted-foreground">Total Tiket</p>
                     </div>
                 </x-ui::card.content>
             </x-ui::card>
