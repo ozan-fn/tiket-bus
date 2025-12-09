@@ -2,8 +2,8 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Manajemen Bus</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Kelola data bus dan armada</p>
+                <h2 class="text-2xl font-bold">Manajemen Bus</h2>
+                <p class="text-sm text-muted-foreground mt-1">Kelola data bus dan armada</p>
             </div>
             <a href="{{ route('admin/bus.create') }}">
                 <x-ui::button>
@@ -54,14 +54,14 @@
                                         <x-ui::table.cell class="font-medium">#{{ $item->id }}</x-ui::table.cell>
                                         <x-ui::table.cell>
                                             <div class="flex items-center gap-3">
-                                                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-lg flex items-center justify-center">
-                                                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                                    <svg class="h-5 w-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                                                     </svg>
                                                 </div>
                                                 <div>
-                                                    <p class="font-medium text-gray-900 dark:text-white">{{ $item->nama }}</p>
-                                                    <p class="text-sm text-gray-500 dark:text-gray-400">{{ $item->jenis ?? 'Bus Standar' }}</p>
+                                                    <p class="font-medium">{{ $item->nama }}</p>
+                                                    <p class="text-sm text-muted-foreground">{{ $item->jenis ?? 'Bus Standar' }}</p>
                                                 </div>
                                             </div>
                                         </x-ui::table.cell>
@@ -69,11 +69,11 @@
                                             <x-ui::badge variant="outline">{{ $item->plat_nomor }}</x-ui::badge>
                                         </x-ui::table.cell>
                                         <x-ui::table.cell class="text-center">
-                                            <div class="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded-md">
-                                                <svg class="w-4 h-4 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <div class="inline-flex items-center gap-1 px-2 py-1 bg-muted rounded-md">
+                                                <svg class="h-4 w-4 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                                 </svg>
-                                                <span class="text-sm font-medium text-gray-900 dark:text-white">{{ $item->kapasitas }}</span>
+                                                <span class="text-sm font-medium">{{ $item->kapasitas }}</span>
                                             </div>
                                         </x-ui::table.cell>
                                         <x-ui::table.cell>
@@ -84,7 +84,7 @@
                                                     </x-ui::badge>
 
                                                 @empty
-                                                    <span class="text-sm text-gray-400">-</span>
+                                                    <span class="text-sm text-muted-foreground">-</span>
                                                 @endforelse
                                             </div>
                                         </x-ui::table.cell>
@@ -108,7 +108,7 @@
                                                 <form method="POST" action="{{ route('admin/bus.destroy', $item) }}" class="inline" onsubmit="return confirm('Apakah Anda yakin ingin menghapus bus ini?')">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <x-ui::button type="submit" variant="ghost" size="sm" class="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20">
+                                                    <x-ui::button type="submit" variant="ghost" size="sm" class="text-destructive hover:bg-destructive/10">
                                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                                                         </svg>
@@ -123,14 +123,14 @@
                     </div>
                 @else
                     <div class="text-center py-12">
-                        <div class="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
+                            <svg class="h-8 w-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                             </svg>
 
                         </div>
-                        <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-1">Belum ada data bus</h3>
-                        <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Mulai tambahkan bus pertama Anda</p>
+                        <h3 class="text-lg font-medium mb-1">Belum ada data bus</h3>
+                        <p class="text-sm text-muted-foreground mb-4">Mulai tambahkan bus pertama Anda</p>
                         <a href="{{ route('admin/bus.create') }}">
                             <x-ui::button>
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,7 +145,7 @@
             @if($bus->count() > 0)
                 <x-ui::card.footer>
                     <div class="flex items-center justify-between">
-                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                        <p class="text-sm text-muted-foreground">
                             Menampilkan {{ $bus->firstItem() }} - {{ $bus->lastItem() }} dari {{ $bus->total() }} bus
                         </p>
                         <div>
