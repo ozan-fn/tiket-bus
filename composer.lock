@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c21d75f05b6d9b7b84595d806ce6adb7",
+    "content-hash": "e89da8c1569c184347a600d40caea793",
     "packages": [
         {
             "name": "brick/math",
@@ -4410,6 +4410,61 @@
                 "source": "https://github.com/ramsey/uuid/tree/4.9.1"
             },
             "time": "2025-09-04T20:59:21+00:00"
+        },
+        {
+            "name": "rustam76/shadcn-blade",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rustam76/shadcn-blade.git",
+                "reference": "718214cb6ae3b0d0659d42c590074d4cd40892c8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rustam76/shadcn-blade/zipball/718214cb6ae3b0d0659d42c590074d4cd40892c8",
+                "reference": "718214cb6ae3b0d0659d42c590074d4cd40892c8",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "^10.0 || ^11.0 || ^12.0",
+                "illuminate/support": "^10.0 || ^11.0 || ^12.0",
+                "illuminate/view": "^10.0 || ^11.0 || ^12.0",
+                "php": ">=8.1"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^10.8",
+                "phpunit/phpunit": "^12.4"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ShadcnBlade\\Providers\\ShadcnBladeServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ShadcnBlade\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Shadcn Blade UI Component Generator",
+            "keywords": [
+                "blade",
+                "component-generator",
+                "laravel",
+                "shadcn",
+                "ui"
+            ],
+            "support": {
+                "issues": "https://github.com/rustam76/shadcn-blade/issues",
+                "source": "https://github.com/rustam76/shadcn-blade/tree/v1.0.1"
+            },
+            "time": "2025-12-01T16:27:15+00:00"
         },
         {
             "name": "spatie/laravel-permission",

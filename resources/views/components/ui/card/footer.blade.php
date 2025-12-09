@@ -1,0 +1,8 @@
+@props(['class' => ''])
+
+<div
+    data-slot="card-footer"
+    class="flex items-center px-6 [.border-t]:pt-6 {{ $class }}"
+>
+    {{ $slot }}
+</div>
