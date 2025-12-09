@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Edit Jadwal') }}
@@ -65,10 +65,9 @@
                         <div class="mb-4">
                             <label for="tanggal_berangkat" class="block text-sm font-medium text-gray-700">Tanggal
                                 Berangkat</label>
-                            <input type="date" name="tanggal_berangkat" id="tanggal_berangkat"
+                            <x-datepicker name="tanggal_berangkat" id="tanggal_berangkat"
                                 value="{{ $jadwal->tanggal_berangkat->format('Y-m-d') }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
+                                placeholder="Pilih tanggal berangkat..." required class="mt-1" />
                             @error('tanggal_berangkat')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -77,10 +76,9 @@
                         <div class="mb-4">
                             <label for="jam_berangkat" class="block text-sm font-medium text-gray-700">Jam
                                 Berangkat</label>
-                            <input type="time" name="jam_berangkat" id="jam_berangkat"
+                            <x-timepicker name="jam_berangkat" id="jam_berangkat"
                                 value="{{ $jadwal->jam_berangkat->format('H:i') }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
+                                placeholder="HH:MM" required class="mt-1" />
                             @error('jam_berangkat')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -113,4 +111,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

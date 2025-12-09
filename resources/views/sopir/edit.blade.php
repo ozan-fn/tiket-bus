@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Edit Sopir') }}
@@ -70,10 +70,9 @@
                         <div class="mb-4">
                             <label for="tanggal_lahir" class="block text-sm font-medium text-gray-700">Tanggal
                                 Lahir</label>
-                            <input type="date" name="tanggal_lahir" id="tanggal_lahir"
+                            <x-datepicker name="tanggal_lahir" id="tanggal_lahir"
                                 value="{{ old('tanggal_lahir', $sopir->tanggal_lahir ? $sopir->tanggal_lahir->format('Y-m-d') : '') }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
+                                placeholder="Pilih tanggal lahir..." required class="mt-1" />
                             @error('tanggal_lahir')
                                 <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -157,4 +156,4 @@
             @endif
         });
     </script>
-</x-app-layout>
+</x-admin-layout>

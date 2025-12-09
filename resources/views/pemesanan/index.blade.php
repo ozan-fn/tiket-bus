@@ -27,8 +27,8 @@
                             <div>
                                 <label for="tanggal" class="block text-sm font-medium text-gray-700">Tanggal
                                     Berangkat</label>
-                                <input type="date" name="tanggal" id="tanggal" value="{{ request('tanggal') }}"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                                <x-datepicker name="tanggal" id="tanggal" value="{{ request('tanggal') }}"
+                                    placeholder="Pilih tanggal..." class="mt-1" />
                             </div>
                             <div class="flex items-end">
                                 <button type="submit"
@@ -45,54 +45,42 @@
                         </div>
                     @endif
 
-                    <div class="overflow-x-auto">
-                        <table class="min-w-full bg-white">
-                            <thead class="bg-gray-50">
-                                <tr>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Rute</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Bus</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Tanggal & Jam</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Harga</th>
-                                    <th
-                                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                        Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody class="bg-white divide-y divide-gray-200">
-                                @foreach($jadwals as $jadwal)
-                                    <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $jadwal->rute->asalTerminal->nama_terminal ?? '-' }} →
-                                            {{ $jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $jadwal->bus->nama }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                            {{ $jadwal->tanggal_berangkat->format('d-m-Y') }}
-                                            {{ $jadwal->jam_berangkat->format('H:i') }}
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Rp 100.000</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                            <a href="{{ route('pemesanan.create', $jadwal) }}"
-                                                class="text-indigo-600 hover:text-indigo-900">Pesan</a>
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
+                    <x-ui.table>
+                        <x-ui.table.header>
+                            <x-ui.table.row>
+                                <x-ui.table.head>Rute</x-ui.table.head>
+                                <x-ui.table.head>Bus</x-ui.table.head>
+                                <x-ui.table.head>Tanggal & Jam</x-ui.table.head>
+                                <x-ui.table.head>Harga</x-ui.table.head>
+                                <x-ui.table.head>Aksi</x-ui.table.head>
+                            </x-ui.table.row>
+                        </x-ui.table.header>
+                        <x-ui.table.body>
+                            @foreach($jadwals as $jadwal)
+                                <x-ui.table.row>
+                                    <x-ui.table.cell>
+                                        {{ $jadwal->rute->asalTerminal->nama_terminal ?? '-' }} →
+                                        {{ $jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
+                                    </x-ui.table.cell>
+                                    <x-ui.table.cell>
+                                        {{ $jadwal->bus->nama }}
+                                    </x-ui.table.cell>
+                                    <x-ui.table.cell>
+                                        {{ $jadwal->tanggal_berangkat->format('d-m-Y') }}
+                                        {{ $jadwal->jam_berangkat->format('H:i') }}
+                                    </x-ui.table.cell>
+                                    <x-ui.table.cell>Rp 100.000</x-ui.table.cell>
+                                    <x-ui.table.cell>
+                                        <a href="{{ route('pemesanan.create', $jadwal) }}"
+                                            class="text-indigo-600 hover:text-indigo-900">Pesan</a>
+                                    </x-ui.table.cell>
+                                </x-ui.table.row>
+                            @endforeach
+                        </x-ui.table.body>
+                    </x-ui.table>
 
                     <div class="mt-4">
-                        {{ $jadwals->links() }}
+                        {{ $jadwals->links('vendor.pagination.shadcn') }}
                     </div>
                 </div>
             </div>

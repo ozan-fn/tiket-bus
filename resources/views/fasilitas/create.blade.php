@@ -1,38 +1,66 @@
-<x-app-layout>
+<x-admin-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tambah Fasilitas') }}
-        </h2>
+        <div class="flex items-center justify-between">
+            <div>
+                <h2 class="text-2xl font-bold">Tambah Fasilitas Baru</h2>
+                <p class="text-sm text-muted-foreground mt-1">Isi formulir untuk menambahkan fasilitas baru</p>
+            </div>
+            <a href="{{ route('admin/fasilitas.index') }}">
+                <x-ui.button variant="outline">
+                    <x-lucide-arrow-left class="w-4 h-4" />
+                    Kembali
+                </x-ui.button>
+            </a>
+        </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('admin/fasilitas.store') }}">
+    <div class="p-6">
+        <div class="max-w-2xl">
+            <x-ui.card>
+                <x-ui.card.header>
+                    <x-ui.card.title>Informasi Fasilitas</x-ui.card.title>
+                    <x-ui.card.description>Masukkan detail fasilitas yang akan ditambahkan</x-ui.card.description>
+                </x-ui.card.header>
+                <x-ui.card.content>
+                    <form method="POST" action="{{ route('admin/fasilitas.store') }}" id="fasilitasForm">
                         @csrf
 
-                        <div class="mb-4">
-                            <label for="nama" class="block text-sm font-medium text-gray-700">Nama Fasilitas</label>
-                            <input type="text" name="nama" id="nama" value="{{ old('nama') }}"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
-                            @error('nama')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
+                        <div class="space-y-6">
+                            <!-- Nama Fasilitas -->
+                            <div class="space-y-2">
+                                <x-ui.label for="nama">
+                                    Nama Fasilitas
+                                    <span class="text-red-500">*</span>
+                                </x-ui.label>
+                                <x-ui.input
+                                    type="text"
+                                    id="nama"
+                                    name="nama"
+                                    value="{{ old('nama') }}"
+                                    placeholder="Contoh: AC, WiFi, USB Charger"
+                                    required
+                                />
+                                @error('nama')
+                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                @enderror
+                                <p class="text-sm text-muted-foreground">Masukkan nama fasilitas yang tersedia di bus</p>
+                            </div>
                         </div>
 
-                        <div class="flex items-center justify-between">
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Simpan
-                            </button>
-                            <a href="{{ route('admin/fasilitas.index') }}"
-                                class="text-gray-600 hover:text-gray-900">Kembali</a>
+                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-border">
+                            <a href="{{ route('admin/fasilitas.index') }}">
+                                <x-ui.button type="button" variant="outline">
+                                    Batal
+                                </x-ui.button>
+                            </a>
+                            <x-ui.button type="submit">
+                                <x-lucide-check class="w-4 h-4" />
+                                Simpan Fasilitas
+                            </x-ui.button>
                         </div>
                     </form>
-                </div>
-            </div>
+                </x-ui.card.content>
+            </x-ui.card>
         </div>
     </div>
-</x-app-layout>
+</x-admin-layout>

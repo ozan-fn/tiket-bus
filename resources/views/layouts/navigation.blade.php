@@ -19,8 +19,8 @@
                         {{ __('Pemesanan') }}
                     </x-nav-link>
                     @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super_admin'))
-                        <x-nav-link :href="route('admin.history-pemesanan')"
-                            :active="request()->routeIs('admin.history-pemesanan')">
+                        <x-nav-link :href="route('admin/history-pemesanan')"
+                            :active="request()->routeIs('admin/history-pemesanan')">
                             {{ __('History Pemesanan') }}
                         </x-nav-link>
                     @endif
@@ -111,8 +111,8 @@
                 {{ __('Pemesanan') }}
             </x-responsive-nav-link>
             @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('super_admin'))
-                <x-responsive-nav-link :href="route('admin.history-pemesanan')"
-                    :active="request()->routeIs('admin.history-pemesanan')">
+                <x-responsive-nav-link :href="route('admin/history-pemesanan')"
+                    :active="request()->routeIs('admin/history-pemesanan')">
                     {{ __('History Pemesanan') }}
                 </x-responsive-nav-link>
             @endif

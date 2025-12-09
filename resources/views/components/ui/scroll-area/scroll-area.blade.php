@@ -9,7 +9,7 @@
         {{ $slot }}
     </div>
 
-    <x-ui::scrollbar :orientation="$orientation" />
+    {{-- <x-ui.scrollbar :orientation="$orientation" /> --}}
 
     <div data-slot="scroll-area-corner"></div>
 </div>

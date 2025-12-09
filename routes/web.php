@@ -8,6 +8,9 @@ use App\Http\Controllers\TerminalController;
 use App\Http\Controllers\RuteController;
 use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\PemesananController;
+use App\Http\Controllers\KelasBusController;
+use App\Http\Controllers\JadwalKelasBusController;
+use App\Http\Controllers\LaporanController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
@@ -59,6 +62,19 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
 
         // History Pemesanan
         Route::get("history-pemesanan", [PemesananController::class, "history"])->name("history-pemesanan");
+
+        // Kelas Bus Management
+        Route::resource("kelas-bus", KelasBusController::class)->parameters(["kelas-bus" => "kelasBus"]);
+
+        // Jadwal Kelas Bus Management
+        Route::get("jadwal-kelas-bus/kelas-by-jadwal/{jadwal_id}", [JadwalKelasBusController::class, "getKelasByJadwal"])->name("jadwal-kelas-bus.kelas-by-jadwal");
+        Route::resource("jadwal-kelas-bus", JadwalKelasBusController::class)->parameters(["jadwal-kelas-bus" => "jadwalKelasBu"]);
+
+        // Laporan & Analytics
+        Route::get("laporan", [LaporanController::class, "index"])->name("laporan.index");
+        Route::get("laporan/tiket", [LaporanController::class, "tiket"])->name("laporan.tiket");
+        Route::get("laporan/pendapatan", [LaporanController::class, "pendapatan"])->name("laporan.pendapatan");
+        Route::get("laporan/penumpang", [LaporanController::class, "penumpang"])->name("laporan.penumpang");
     });
 
 require __DIR__ . "/auth.php";
