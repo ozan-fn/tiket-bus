@@ -13,17 +13,17 @@ class TerminalController extends Controller
         $query = Terminal::query();
 
         // Conditional eager loading based on 'include' query parameter
-        if ($request->has('include')) {
-            $includes = explode(',', $request->include);
+        if ($request->has("include")) {
+            $includes = explode(",", $request->include);
             // Filter to only allowed relations for security
-            $allowed = ['rutes', 'rute'];
+            $allowed = ["rutes", "rute"];
             $validIncludes = array_intersect($includes, $allowed);
             if (!empty($validIncludes)) {
                 $query->with($validIncludes);
             }
         }
 
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->get("per_page", 10);
         $terminal = $query->paginate($perPage);
         return response()->json($terminal);
     }
@@ -31,9 +31,9 @@ class TerminalController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_terminal' => 'required|string',
-            'nama_kota' => 'required|string',
-            'alamat' => 'required|string',
+            "nama_terminal" => "required|string",
+            "nama_kota" => "required|string",
+            "alamat" => "required|string",
         ]);
         $terminal = Terminal::create($request->all());
         return response()->json($terminal, 201);
@@ -44,10 +44,10 @@ class TerminalController extends Controller
         $query = Terminal::query();
 
         // Conditional eager loading based on 'include' query parameter
-        if ($request->has('include')) {
-            $includes = explode(',', $request->include);
+        if ($request->has("include")) {
+            $includes = explode(",", $request->include);
             // Filter to only allowed relations for security
-            $allowed = ['rutes', 'rute'];
+            $allowed = ["rutes", "rute"];
             $validIncludes = array_intersect($includes, $allowed);
             if (!empty($validIncludes)) {
                 $query->with($validIncludes);
@@ -69,6 +69,6 @@ class TerminalController extends Controller
     {
         $terminal = Terminal::findOrFail($id);
         $terminal->delete();
-        return response()->json(['message' => 'Terminal dihapus']);
+        return response()->json(["message" => "Terminal dihapus"]);
     }
 }

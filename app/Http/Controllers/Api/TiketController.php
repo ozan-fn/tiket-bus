@@ -154,7 +154,87 @@ class TiketController extends Controller
     }
 
     /**
-     * Get detail tiket
+     * Get detail tiket by ID
+     * GET /api/tiket/detail/{id}
+     */
+    public function showById($id)
+    {
+        $tiket = Tiket::with(["jadwalKelasBus.jadwal.bus", "jadwalKelasBus.jadwal.sopir.user", "jadwalKelasBus.jadwal.rute.asalTerminal", "jadwalKelasBus.jadwal.rute.tujuanTerminal", "jadwalKelasBus.kelasBus", "kursi", "pembayaran"])
+            ->where("id", $id)
+            ->where("user_id", auth()->id())
+            ->firstOrFail();
+
+        return response()->json([
+            "success" => true,
+            "data" => [
+                "id" => $tiket->id,
+                "kode_tiket" => $tiket->kode_tiket,
+                "nama_penumpang" => $tiket->nama_penumpang,
+                "nik" => $tiket->nik,
+                "jenis_kelamin" => $tiket->jenis_kelamin,
+                "tanggal_lahir" => $tiket->tanggal_lahir,
+                "nomor_telepon" => $tiket->nomor_telepon,
+                "email" => $tiket->email,
+                "bus" => [
+                    "id" => $tiket->jadwalKelasBus->jadwal->bus->id,
+                    "nama" => $tiket->jadwalKelasBus->jadwal->bus->nama,
+                    "plat_nomor" => $tiket->jadwalKelasBus->jadwal->bus->plat_nomor,
+                    "kapasitas" => $tiket->jadwalKelasBus->jadwal->bus->kapasitas,
+                ],
+                "sopir" => [
+                    "id" => $tiket->jadwalKelasBus->jadwal->sopir->id,
+                    "nama" => $tiket->jadwalKelasBus->jadwal->sopir->user->name,
+                ],
+                "rute" => [
+                    "id" => $tiket->jadwalKelasBus->jadwal->rute->id,
+                    "asal" => [
+                        "id" => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->id,
+                        "nama" => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal,
+                        "kota" => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_kota,
+                        "alamat" => $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->alamat,
+                    ],
+                    "tujuan" => [
+                        "id" => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->id,
+                        "nama" => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal,
+                        "kota" => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_kota,
+                        "alamat" => $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->alamat,
+                    ],
+                ],
+                "jadwal" => [
+                    "id" => $tiket->jadwalKelasBus->jadwal->id,
+                    "tanggal_berangkat" => $tiket->jadwalKelasBus->jadwal->tanggal_berangkat,
+                    "jam_berangkat" => $tiket->jadwalKelasBus->jadwal->jam_berangkat,
+                    "status" => $tiket->jadwalKelasBus->jadwal->status,
+                ],
+                "kelas" => [
+                    "id" => $tiket->jadwalKelasBus->kelasBus->id,
+                    "nama" => $tiket->jadwalKelasBus->kelasBus->nama_kelas,
+                    "deskripsi" => $tiket->jadwalKelasBus->kelasBus->deskripsi,
+                ],
+                "kursi" => [
+                    "id" => $tiket->kursi->id,
+                    "nomor" => $tiket->kursi->nomor_kursi,
+                    "posisi" => $tiket->kursi->posisi,
+                ],
+                "harga" => $tiket->harga,
+                "status" => $tiket->status,
+                "waktu_pesan" => $tiket->waktu_pesan,
+                "pembayaran" => $tiket->pembayaran
+                    ? [
+                        "id" => $tiket->pembayaran->id,
+                        "metode" => $tiket->pembayaran->metode,
+                        "status" => $tiket->pembayaran->status,
+                        "total_bayar" => $tiket->pembayaran->total_bayar,
+                        "waktu_bayar" => $tiket->pembayaran->waktu_bayar,
+                        "bukti_pembayaran" => $tiket->pembayaran->bukti_pembayaran,
+                    ]
+                    : null,
+            ],
+        ]);
+    }
+
+    /**
+     * Get detail tiket by kode tiket (Public)
      * GET /api/tiket/{kode_tiket}
      */
     public function show($kodeTicket)

@@ -53,6 +53,7 @@ Route::middleware(["auth:sanctum"])->group(function () {
     // Tiket
     Route::post("tiket", [App\Http\Controllers\Api\TiketController::class, "store"]);
     Route::get("my-tickets", [App\Http\Controllers\Api\TiketController::class, "myTickets"]);
+    Route::get("tiket/detail/{id}", [App\Http\Controllers\Api\TiketController::class, "showById"]);
 
     // Verifikasi tiket (petugas)
     Route::post("tiket/{kode_tiket}/verify", [App\Http\Controllers\Api\TiketController::class, "verify"]);

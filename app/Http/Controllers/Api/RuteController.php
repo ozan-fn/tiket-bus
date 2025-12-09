@@ -13,17 +13,31 @@ class RuteController extends Controller
         $query = Rute::query();
 
         // Conditional eager loading based on 'include' query parameter
-        if ($request->has('include')) {
-            $includes = explode(',', $request->include);
+        if ($request->has("include")) {
+            $includes = explode(",", $request->include);
             // Filter to only allowed relations for security
-            $allowed = ['asalTerminal', 'tujuanTerminal'];
+            $allowed = ["asalTerminal", "tujuanTerminal"];
             $validIncludes = array_intersect($includes, $allowed);
             if (!empty($validIncludes)) {
                 $query->with($validIncludes);
             }
         }
 
-        $perPage = $request->get('per_page', 10);
+        // Filter berdasarkan asal terminal
+        if ($request->has("asal")) {
+            $query->whereHas("asalTerminal", function ($q) use ($request) {
+                $q->where("nama_terminal", "like", "%" . $request->asal . "%")->orWhere("nama_kota", "like", "%" . $request->asal . "%");
+            });
+        }
+
+        // Filter berdasarkan tujuan terminal
+        if ($request->has("tujuan")) {
+            $query->whereHas("tujuanTerminal", function ($q) use ($request) {
+                $q->where("nama_terminal", "like", "%" . $request->tujuan . "%")->orWhere("nama_kota", "like", "%" . $request->tujuan . "%");
+            });
+        }
+
+        $perPage = $request->get("per_page", 10);
         $rute = $query->paginate($perPage);
         return response()->json($rute);
     }
@@ -31,8 +45,8 @@ class RuteController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'asal_terminal_id' => 'required|exists:terminal,id',
-            'tujuan_terminal_id' => 'required|exists:terminal,id',
+            "asal_terminal_id" => "required|exists:terminal,id",
+            "tujuan_terminal_id" => "required|exists:terminal,id",
         ]);
         $rute = Rute::create($request->all());
         return response()->json($rute, 201);
@@ -43,10 +57,10 @@ class RuteController extends Controller
         $query = Rute::query();
 
         // Conditional eager loading based on 'include' query parameter
-        if ($request->has('include')) {
-            $includes = explode(',', $request->include);
+        if ($request->has("include")) {
+            $includes = explode(",", $request->include);
             // Filter to only allowed relations for security
-            $allowed = ['asalTerminal', 'tujuanTerminal'];
+            $allowed = ["asalTerminal", "tujuanTerminal"];
             $validIncludes = array_intersect($includes, $allowed);
             if (!empty($validIncludes)) {
                 $query->with($validIncludes);
@@ -68,6 +82,6 @@ class RuteController extends Controller
     {
         $rute = Rute::findOrFail($id);
         $rute->delete();
-        return response()->json(['message' => 'Rute dihapus']);
+        return response()->json(["message" => "Rute dihapus"]);
     }
 }
