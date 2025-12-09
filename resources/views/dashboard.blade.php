@@ -7,8 +7,8 @@
         <!-- Stats Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <!-- Total Bus -->
-            <x-ui.card.card class="border-l-4 border-l-blue-500">
-                <x-ui.card.card-content class="p-6">
+            <x-ui::card class="border-l-4 border-l-blue-500">
+                <x-ui::card.content class="p-6">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Bus</p>
@@ -20,12 +20,12 @@
                             </svg>
                         </div>
                     </div>
-                </x-ui.card.card-content>
-            </x-ui.card.card>
+                </x-ui::card.content>
+            </x-ui::card>
 
             <!-- Total Sopir -->
-            <x-ui.card.card class="border-l-4 border-l-green-500">
-                <x-ui.card.card-content class="p-6">
+            <x-ui::card class="border-l-4 border-l-green-500">
+                <x-ui::card.content class="p-6">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Sopir</p>
@@ -37,12 +37,12 @@
                             </svg>
                         </div>
                     </div>
-                </x-ui.card.card-content>
-            </x-ui.card.card>
+                </x-ui::card.content>
+            </x-ui::card>
 
             <!-- Total Terminal -->
-            <x-ui.card.card class="border-l-4 border-l-purple-500">
-                <x-ui.card.card-content class="p-6">
+            <x-ui::card class="border-l-4 border-l-purple-500">
+                <x-ui::card.content class="p-6">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Terminal</p>
@@ -54,12 +54,12 @@
                             </svg>
                         </div>
                     </div>
-                </x-ui.card.card-content>
-            </x-ui.card.card>
+                </x-ui::card.content>
+            </x-ui::card>
 
             <!-- Total Tiket -->
-            <x-ui.card.card class="border-l-4 border-l-orange-500">
-                <x-ui.card.card-content class="p-6">
+            <x-ui::card class="border-l-4 border-l-orange-500">
+                <x-ui::card.content class="p-6">
                     <div class="flex items-center justify-between">
                         <div>
                             <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Tiket</p>
@@ -71,19 +71,19 @@
                             </svg>
                         </div>
                     </div>
-                </x-ui.card.card-content>
-            </x-ui.card.card>
+                </x-ui::card.content>
+            </x-ui::card>
         </div>
 
         <!-- Recent Activity & Quick Stats -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <!-- Jadwal Hari Ini -->
-            <x-ui.card.card>
-                <x-ui.card.card-header>
-                    <x-ui.card.card-title>Jadwal Hari Ini</x-ui.card.card-title>
-                    <x-ui.card.card-description>Daftar keberangkatan hari ini</x-ui.card.card-description>
-                </x-ui.card.card-header>
-                <x-ui.card.card-content>
+            <x-ui::card>
+                <x-ui::card.header>
+                    <x-ui::card.title>Jadwal Hari Ini</x-ui::card.title>
+                    <x-ui::card.description>Daftar keberangkatan hari ini</x-ui::card.description>
+                </x-ui::card.header>
+                <x-ui::card.content>
                     @php
                         $jadwalsToday = \App\Models\Jadwal::with('bus', 'rute.asalTerminal', 'rute.tujuanTerminal')
                             ->whereDate('tanggal_berangkat', today())
@@ -108,9 +108,9 @@
                                             </p>
                                         </div>
                                     </div>
-                                    <x-ui.badge.badge variant="outline">
+                                    <x-ui::badge variant="outline">
                                         {{ $jadwal->jam_berangkat->format('H:i') }}
-                                    </x-ui.badge.badge>
+                                    </x-ui::badge>
                                 </div>
                             @endforeach
                         </div>
@@ -122,21 +122,21 @@
                             <p class="text-sm text-gray-500 dark:text-gray-400">Tidak ada jadwal hari ini</p>
                         </div>
                     @endif
-                </x-ui.card.card-content>
-                <x-ui.card.card-footer>
+                </x-ui::card.content>
+                <x-ui::card.footer>
                     <a href="{{ route('admin/jadwal.index') }}" class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium">
                         Lihat Semua Jadwal →
                     </a>
-                </x-ui.card.card-footer>
-            </x-ui.card.card>
+                </x-ui::card.footer>
+            </x-ui::card>
 
             <!-- Statistik Tiket -->
-            <x-ui.card.card>
-                <x-ui.card.card-header>
-                    <x-ui.card.card-title>Statistik Tiket</x-ui.card.card-title>
-                    <x-ui.card.card-description>Status pemesanan tiket</x-ui.card.card-description>
-                </x-ui.card.card-header>
-                <x-ui.card.card-content>
+            <x-ui::card>
+                <x-ui::card.header>
+                    <x-ui::card.title>Statistik Tiket</x-ui::card.title>
+                    <x-ui::card.description>Status pemesanan tiket</x-ui::card.description>
+                </x-ui::card.header>
+                <x-ui::card.content>
                     @php
                         $tiketStats = [
                             'dipesan' => \App\Models\Tiket::where('status', 'dipesan')->count(),
@@ -176,22 +176,22 @@
                             <span class="text-sm font-semibold text-gray-900 dark:text-white">{{ $tiketStats['dibatalkan'] }}</span>
                         </div>
                     </div>
-                </x-ui.card.card-content>
-                <x-ui.card.card-footer>
+                </x-ui::card.content>
+                <x-ui::card.footer>
                     <a href="{{ route('admin.history-pemesanan') }}" class="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium">
                         Lihat History Pemesanan →
                     </a>
-                </x-ui.card.card-footer>
-            </x-ui.card.card>
+                </x-ui::card.footer>
+            </x-ui::card>
         </div>
 
         <!-- Rute Populer -->
-        <x-ui.card.card>
-            <x-ui.card.card-header>
-                <x-ui.card.card-title>Rute Populer</x-ui.card.card-title>
-                <x-ui.card.card-description>Rute dengan pemesanan terbanyak</x-ui.card.card-description>
-            </x-ui.card.card-header>
-            <x-ui.card.card-content>
+        <x-ui::card>
+            <x-ui::card.header>
+                <x-ui::card.title>Rute Populer</x-ui::card.title>
+                <x-ui::card.description>Rute dengan pemesanan terbanyak</x-ui::card.description>
+            </x-ui::card.header>
+            <x-ui::card.content>
                 @php
                     $popularRoutes = \App\Models\Rute::with('asalTerminal', 'tujuanTerminal')
                         ->withCount('jadwals')
@@ -234,7 +234,7 @@
                         <p class="text-sm text-gray-500 dark:text-gray-400">Belum ada rute tersedia</p>
                     </div>
                 @endif
-            </x-ui.card.card-content>
-        </x-ui.card.card>
+            </x-ui::card.content>
+        </x-ui::card>
     </div>
 </x-admin-layout>

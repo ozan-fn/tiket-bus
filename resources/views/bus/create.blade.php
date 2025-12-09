@@ -3,38 +3,39 @@
         <div class="flex items-center justify-between">
             <div>
                 <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Tambah Bus Baru</h2>
-                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Isi formulir untuk menambahkan bus baru</p>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Isi formulir untuk menambahkan
+ bus baru</p>
             </div>
             <a href="{{ route('admin/bus.index') }}">
-                <x-ui.button.button variant="outline">
+                <x-ui::button variant="outline">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                     Kembali
-                </x-ui.button.button>
+                </x-ui::button>
             </a>
         </div>
     </x-slot>
 
     <div class="p-6">
         <div class="max-w-3xl">
-            <x-ui.card.card>
-                <x-ui.card.card-header>
-                    <x-ui.card.card-title>Informasi Bus</x-ui.card.card-title>
-                    <x-ui.card.card-description>Masukkan detail informasi bus yang akan ditambahkan</x-ui.card.card-description>
-                </x-ui.card.card-header>
-                <x-ui.card.card-content>
+            <x-ui::card>
+                <x-ui::card.header>
+                    <x-ui::card.title>Informasi Bus</x-ui::card.title>
+                    <x-ui::card.description>Masukkan detail informasi bus yang akan ditambahkan</x-ui::card.description>
+                </x-ui::card.header>
+                <x-ui::card.content>
                     <form method="POST" action="{{ route('admin/bus.store') }}" enctype="multipart/form-data" id="busForm">
                         @csrf
 
                         <div class="space-y-6">
                             <!-- Nama Bus -->
                             <div class="space-y-2">
-                                <x-ui.label.label for="nama">
+                                <x-ui::label for="nama">
                                     Nama Bus
                                     <span class="text-red-500">*</span>
-                                </x-ui.label.label>
-                                <x-ui.input.input
+                                </x-ui::label>
+                                <x-ui::input
                                     type="text"
                                     id="nama"
                                     name="nama"
@@ -50,11 +51,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <!-- Kapasitas -->
                                 <div class="space-y-2">
-                                    <x-ui.label.label for="kapasitas">
+                                    <x-ui::label for="kapasitas">
                                         Kapasitas Kursi
                                         <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
+                                    </x-ui::label>
+                                    <x-ui::input
                                         type="number"
                                         id="kapasitas"
                                         name="kapasitas"
@@ -70,11 +71,11 @@
 
                                 <!-- Plat Nomor -->
                                 <div class="space-y-2">
-                                    <x-ui.label.label for="plat_nomor">
+                                    <x-ui::label for="plat_nomor">
                                         Plat Nomor
                                         <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
+                                    </x-ui::label>
+                                    <x-ui::input
                                         type="text"
                                         id="plat_nomor"
                                         name="plat_nomor"
@@ -91,7 +92,7 @@
 
                             <!-- Fasilitas -->
                             <div class="space-y-2">
-                                <x-ui.label.label for="fasilitas_ids">Fasilitas Bus</x-ui.label.label>
+                                <x-ui::label for="fasilitas_ids">Fasilitas Bus</x-ui::label>
                                 <select
                                     name="fasilitas_ids[]"
                                     id="fasilitas_ids"
@@ -112,7 +113,7 @@
 
                             <!-- Upload Foto -->
                             <div class="space-y-2">
-                                <x-ui.label.label for="foto">Foto Bus</x-ui.label.label>
+                                <x-ui::label for="foto">Foto Bus</x-ui::label>
                                 <div class="border-2 border-dashed border-gray-300 dark:border-gray-700 rounded-lg p-6 text-center hover:border-blue-500 dark:hover:border-blue-400 transition">
                                     <svg class="w-12 h-12 text-gray-400 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -140,20 +141,20 @@
 
                         <div class="flex items-center justify-between mt-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                             <a href="{{ route('admin/bus.index') }}">
-                                <x-ui.button.button type="button" variant="outline">
+                                <x-ui::button type="button" variant="outline">
                                     Batal
-                                </x-ui.button.button>
+                                </x-ui::button>
                             </a>
-                            <x-ui.button.button type="submit">
+                            <x-ui::button type="submit">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                                 </svg>
                                 Simpan Bus
-                            </x-ui.button.button>
+                            </x-ui::button>
                         </div>
                     </form>
-                </x-ui.card.card-content>
-            </x-ui.card.card>
+                </x-ui::card.content>
+            </x-ui::card>
         </div>
     </div>
 
@@ -180,8 +181,7 @@
                         div.className = 'relative group';
                         div.innerHTML = `
                             <img src="${e.target.result}" class="w-full h-24 object-cover rounded-lg border border-gray-300 dark:border-gray-700">
-                            <button type="button" onclick
-="this.parentElement.remove()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition">
+                            <button type="button" onclick="this.parentElement.remove()" class="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 opacity-0 group-hover:opacity-100 transition">
                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
