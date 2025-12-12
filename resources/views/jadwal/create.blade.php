@@ -1,151 +1,350 @@
 <x-admin-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Tambah Jadwal') }}
-        </h2>
+        <x-ui.breadcrumb.breadcrumb>
+            <x-ui.breadcrumb.list class="text-xs">
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.link href="{{ route('dashboard') }}">
+                        Home
+                    </x-ui.breadcrumb.link>
+                </x-ui.breadcrumb.item>
+                <x-ui.breadcrumb.separator>
+                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                </x-ui.breadcrumb.separator>
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.link href="{{ route('admin/jadwal.index') }}">
+                        Jadwal
+                    </x-ui.breadcrumb.link>
+                </x-ui.breadcrumb.item>
+                <x-ui.breadcrumb.separator>
+                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                </x-ui.breadcrumb.separator>
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.page>
+                        Tambah Jadwal
+                    </x-ui.breadcrumb.page>
+                </x-ui.breadcrumb.item>
+            </x-ui.breadcrumb.list>
+        </x-ui.breadcrumb.breadcrumb>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <form method="POST" action="{{ route('admin/jadwal.store') }}">
+    <div class="p-4 sm:p-6">
+        <div class="max-w-4xl mx-auto">
+            <x-ui.card>
+                <x-ui.card.header>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <x-ui.card.title>Informasi Jadwal</x-ui.card.title>
+                            <x-ui.card.description>Masukkan detail jadwal keberangkatan yang akan ditambahkan</x-ui.card.description>
+                        </div>
+                        <a href="{{ route('admin/jadwal.index') }}">
+                            <x-ui.button variant="outline" size="sm">
+                                <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                Kembali
+                            </x-ui.button>
+                        </a>
+                    </div>
+                </x-ui.card.header>
+                <x-ui.card.content>
+                    <form method="POST" action="{{ route('admin/jadwal.store') }}" id="jadwalForm">
                         @csrf
 
-                        <div class="mb-4">
-                            <label for="bus_id" class="block text-sm font-medium text-gray-700">Bus</label>
-                            <select name="bus_id" id="bus_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
-                                <option value="">Pilih Bus</option>
-                                @foreach($buses as $bus)
-                                    <option value="{{ $bus->id }}">{{ $bus->nama }}</option>
-                                @endforeach
-                            </select>
-                            @error('bus_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="sopir_id" class="block text-sm font-medium text-gray-700">Sopir</label>
-                            <select name="sopir_id" id="sopir_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
-                                <option value="">Pilih Sopir</option>
-                                @foreach($sopirs as $sopir)
-                                    <option value="{{ $sopir->id }}">{{ $sopir->user->name }}</option>
-                                @endforeach
-                            </select>
-                            @error('sopir_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="rute_id" class="block text-sm font-medium text-gray-700">Rute</label>
-                            <select name="rute_id" id="rute_id"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
-                                <option value="">Pilih Rute</option>
-                                @foreach($rutes as $rute)
-                                    <option value="{{ $rute->id }}">{{ $rute->asalTerminal->nama_terminal ?? '-' }} →
-                                        {{ $rute->tujuanTerminal->nama_terminal ?? '-' }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            @error('rute_id')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="tanggal_berangkat" class="block text-sm font-medium text-gray-700">Tanggal
-                                Berangkat</label>
-                            <x-datepicker name="tanggal_berangkat" id="tanggal_berangkat"
-                                placeholder="Pilih tanggal berangkat..." required class="mt-1" />
-                            @error('tanggal_berangkat')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="jam_berangkat" class="block text-sm font-medium text-gray-700">Jam
-                                Berangkat</label>
-                            <x-timepicker name="jam_berangkat" id="jam_berangkat"
-                                placeholder="HH:MM" required class="mt-1" />
-                            @error('jam_berangkat')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                            <select name="status" id="status"
-                                class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
-                                required>
-                                <option value="aktif">Aktif</option>
-                                <option value="tidak_aktif">Tidak Aktif</option>
-                            </select>
-                            @error('status')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                            @enderror
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="block text-sm font-medium text-gray-700">
-                                <input type="checkbox" name="is_recurring" id="is_recurring" value="1" class="mr-2">
-                                Buat Jadwal Berulang
-                            </label>
-                        </div>
-
-                        <div id="recurring-fields" class="hidden mb-4">
-                            <div class="mb-4">
-                                <label for="recurring_type" class="block text-sm font-medium text-gray-700">Jenis
-                                    Berulang</label>
-                                <select name="recurring_type" id="recurring_type"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                    <option value="daily">Harian</option>
-                                    <option value="weekly">Mingguan</option>
+                        <div class="space-y-6">
+                            <!-- Bus -->
+                            <div class="space-y-2">
+                                <x-ui.label for="bus_id">
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-bus class="w-4 h-4" />
+                                        Bus
+                                    </div>
+                                    <span class="text-red-500">*</span>
+                                </x-ui.label>
+                                <select
+                                    name="bus_id"
+                                    id="bus_id"
+                                    required
+                                    class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
+                                    <option value="">Pilih Bus</option>
+                                    @foreach($buses as $bus)
+                                        <option value="{{ $bus->id }}">{{ $bus->nama }}</option>
+                                    @endforeach
                                 </select>
-                                @error('recurring_type')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @error('bus_id')
+                                    <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        {{ $message }}
+                                    </p>
                                 @enderror
                             </div>
 
-                            <div class="mb-4">
-                                <label for="recurring_count" class="block text-sm font-medium text-gray-700">Jumlah
-                                    Hari/Minggu</label>
-                                <input type="number" name="recurring_count" id="recurring_count" min="1" max="90"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                                @error('recurring_count')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Sopir -->
+                                <div class="space-y-2">
+                                    <x-ui.label for="sopir_id">
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-user class="w-4 h-4" />
+                                            Sopir
+                                        </div>
+                                        <span class="text-red-500">*</span>
+                                    </x-ui.label>
+                                    <select
+                                        name="sopir_id"
+                                        id="sopir_id"
+                                        required
+                                        class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
+                                        <option value="">Pilih Sopir</option>
+                                        @foreach($sopirs as $sopir)
+                                            <option value="{{ $sopir->id }}">{{ $sopir->user->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('sopir_id')
+                                        <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                            <x-lucide-alert-circle class="w-4 h-4" />
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+
+                                <!-- Kondektur -->
+                                <div class="space-y-2">
+                                    <x-ui.label for="conductor_id">
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-user-round class="w-4 h-4" />
+                                            Kondektur (Opsional)
+                                        </div>
+                                    </x-ui.label>
+                                    <select
+                                        name="conductor_id"
+                                        id="conductor_id"
+                                        class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
+                                        <option value="">Pilih Kondektur (Opsional)</option>
+                                        @foreach($conductors as $conductor)
+                                            <option value="{{ $conductor->id }}">{{ $conductor->user->name }} - {{ $conductor->nomor_sim }}</option>
+                                        @endforeach
+                                    </select>
+                                    @error('conductor_id')
+                                        <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                            <x-lucide-alert-circle class="w-4 h-4" />
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+
+                                <!-- Rute -->
+                                <div class="space-y-2">
+                                    <x-ui.label for="rute_id">
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-map-pin class="w-4 h-4" />
+                                            Rute
+                                        </div>
+                                        <span class="text-red-500">*</span>
+                                    </x-ui.label>
+                                    <select
+                                        name="rute_id"
+                                        id="rute_id"
+                                        required
+                                        class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
+                                        <option value="">Pilih Rute</option>
+                                        @foreach($rutes as $rute)
+                                            <option value="{{ $rute->id }}">
+                                                {{ $rute->asalTerminal->nama_terminal ?? '-' }} → {{ $rute->tujuanTerminal->nama_terminal ?? '-' }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('rute_id')
+                                        <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                            <x-lucide-alert-circle class="w-4 h-4" />
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <!-- Tanggal Berangkat -->
+                                <div class="space-y-2">
+                                    <x-ui.label for="tanggal_berangkat">
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-calendar class="w-4 h-4" />
+                                            Tanggal Berangkat
+                                        </div>
+                                        <span class="text-red-500">*</span>
+                                    </x-ui.label>
+                                    <x-datepicker
+                                        name="tanggal_berangkat"
+                                        id="tanggal_berangkat"
+                                        placeholder="Pilih tanggal berangkat..."
+                                        required
+                                    />
+                                    @error('tanggal_berangkat')
+                                        <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                            <x-lucide-alert-circle class="w-4 h-4" />
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+
+                                <!-- Jam Berangkat -->
+                                <div class="space-y-2">
+                                    <x-ui.label for="jam_berangkat">
+                                        <div class="flex items-center gap-2">
+                                            <x-lucide-clock class="w-4 h-4" />
+                                            Jam Berangkat
+                                        </div>
+                                        <span class="text-red-500">*</span>
+                                    </x-ui.label>
+                                    <x-timepicker
+                                        name="jam_berangkat"
+                                        id="jam_berangkat"
+                                        placeholder="HH:MM"
+                                        required
+                                    />
+                                    @error('jam_berangkat')
+                                        <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                            <x-lucide-alert-circle class="w-4 h-4" />
+                                            {{ $message }}
+                                        </p>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <!-- Status -->
+                            <div class="space-y-2">
+                                <x-ui.label for="status">
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-check-circle class="w-4 h-4" />
+                                        Status
+                                    </div>
+                                    <span class="text-red-500">*</span>
+                                </x-ui.label>
+                                <select
+                                    name="status"
+                                    id="status"
+                                    required
+                                    class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
+                                    <option value="aktif">Aktif</option>
+                                    <option value="tidak_aktif">Tidak Aktif</option>
+                                </select>
+                                @error('status')
+                                    <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        {{ $message }}
+                                    </p>
                                 @enderror
+                            </div>
+
+                            <!-- Recurring -->
+                            <div class="space-y-2">
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        name="is_recurring"
+                                        id="is_recurring"
+                                        value="1"
+                                        class="w-4 h-4 rounded border-input"
+                                    />
+                                    <span class="text-sm font-medium">Buat Jadwal Berulang</span>
+                                </label>
+                            </div>
+
+                            <!-- Recurring Fields -->
+                            <div id="recurring-fields" class="hidden space-y-6">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <!-- Jenis Berulang -->
+                                    <div class="space-y-2">
+                                        <x-ui.label for="recurring_type">
+                                            <div class="flex items-center gap-2">
+                                                <x-lucide-repeat class="w-4 h-4" />
+                                                Jenis Berulang
+                                            </div>
+                                        </x-ui.label>
+                                        <select
+                                            name="recurring_type"
+                                            id="recurring_type"
+                                            class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
+                                            <option value="daily">Harian</option>
+                                            <option value="weekly">Mingguan</option>
+                                        </select>
+                                        @error('recurring_type')
+                                            <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <!-- Jumlah Hari/Minggu -->
+                                    <div class="space-y-2">
+                                        <x-ui.label for="recurring_count">
+                                            <div class="flex items-center gap-2">
+                                                <x-lucide-hash class="w-4 h-4" />
+                                                Jumlah Hari/Minggu
+                                            </div>
+                                        </x-ui.label>
+                                        <x-ui.input
+                                            type="number"
+                                            id="recurring_count"
+                                            name="recurring_count"
+                                            min="1"
+                                            max="90"
+                                            placeholder="Contoh: 7"
+                                        />
+                                        @error('recurring_count')
+                                            <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-end mt-4">
-                            <a href="{{ route('admin/jadwal.index') }}"
-                                class="mr-4 text-gray-600 hover:text-gray-900">Batal</a>
-                            <button type="submit"
-                                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                                Simpan
-                            </button>
+                        <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
+                            <a href="{{ route('admin/jadwal.index') }}" class="w-full sm:w-auto">
+                                <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
+                                    <x-lucide-x class="w-4 h-4 mr-2" />
+                                    Batal
+                                </x-ui.button>
+                            </a>
+                            <x-ui.button type="submit" class="w-full sm:w-auto">
+                                <x-lucide-save class="w-4 h-4 mr-2" />
+                                Tambah Jadwal
+                            </x-ui.button>
                         </div>
                     </form>
-
-                    <script>
-                        document.getElementById('is_recurring').addEventListener('change', function () {
-                            const recurringFields = document.getElementById('recurring-fields');
-                            if (this.checked) {
-                                recurringFields.classList.remove('hidden');
-                            } else {
-                                recurringFields.classList.add('hidden');
-                            }
-                        });
-                    </script>
-                </div>
-            </div>
+                </x-ui.card.content>
+            </x-ui.card>
         </div>
     </div>
+
+    @push('scripts')
+    <script>
+        document.getElementById('is_recurring').addEventListener('change', function () {
+            const recurringFields = document.getElementById('recurring-fields');
+            if (this.checked) {
+                recurringFields.classList.remove('hidden');
+            } else {
+                recurringFields.classList.add('hidden');
+            }
+        });
+
+        new TomSelect('#bus_id', {
+            placeholder: 'Pilih Bus',
+            allowEmptyOption: true,
+            create: false
+        });
+
+        new TomSelect('#sopir_id', {
+            placeholder: 'Pilih Sopir',
+            allowEmptyOption: true,
+            create: false
+        });
+
+        new TomSelect('#conductor_id', {
+            placeholder: 'Pilih Kondektur',
+            allowEmptyOption: true,
+            create: false
+        });
+
+        new TomSelect('#rute_id', {
+            placeholder: 'Pilih Rute',
+            allowEmptyOption: true,
+            create: false
+        });
+    </script>
+    @endpush
 </x-admin-layout>

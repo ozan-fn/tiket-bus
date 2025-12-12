@@ -6,17 +6,54 @@ use App\Models\JadwalKelasBus;
 use App\Models\Jadwal;
 use App\Models\KelasBus;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class JadwalKelasBusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $jadwalKelasBus = JadwalKelasBus::with(["jadwal.bus", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "kelasBus"])->paginate(15);
+        $search = $request->input("search");
+        $dateFrom = $request->input("date_from");
+        $dateTo = $request->input("date_to");
 
-        return view("jadwal-kelas-bus.index", compact("jadwalKelasBus"));
+        $jadwalKelasBus = QueryBuilder::for(JadwalKelasBus::with(["jadwal.bus", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "kelasBus"]))
+            ->where(function ($q) use ($search) {
+                if ($search) {
+                    $q->whereHas("jadwal.bus", function ($q2) use ($search) {
+                        $q2->where("nama", "like", "%{$search}%")->orWhere("plat_nomor", "like", "%{$search}%");
+                    })
+                        ->orWhereHas("jadwal.rute.asalTerminal", function ($q2) use ($search) {
+                            $q2->where("nama_terminal", "like", "%{$search}%")->orWhere("nama_kota", "like", "%{$search}%");
+                        })
+                        ->orWhereHas("jadwal.rute.tujuanTerminal", function ($q2) use ($search) {
+                            $q2->where("nama_terminal", "like", "%{$search}%")->orWhere("nama_kota", "like", "%{$search}%");
+                        })
+                        ->orWhereHas("kelasBus", function ($q2) use ($search) {
+                            $q2->where("nama_kelas", "like", "%{$search}%");
+                        })
+                        ->orWhere("harga", "like", "%{$search}%")
+                        ->orWhere("kursi_tersedia", "like", "%{$search}%");
+                }
+            })
+            ->when($dateFrom, function ($query) use ($dateFrom) {
+                return $query->whereDate("created_at", ">=", $dateFrom);
+            })
+            ->when($dateTo, function ($query) use ($dateTo) {
+                return $query->whereDate("created_at", "<=", $dateTo);
+            })
+            ->allowedSorts(["harga", "created_at"])
+            ->defaultSort("-created_at")
+            ->paginate(15)
+            ->withQueryString();
+
+        $sort = $request->input("sort", "-created_at");
+        $order = strpos($sort, "-") === 0 ? "desc" : "asc";
+        $sortField = ltrim($sort, "-");
+
+        return view("jadwal-kelas-bus.index", compact("jadwalKelasBus", "search", "sort", "order", "sortField", "dateFrom", "dateTo"));
     }
 
     /**
@@ -61,7 +98,7 @@ class JadwalKelasBusController extends Controller
      */
     public function show(JadwalKelasBus $jadwalKelasBu)
     {
-        $jadwalKelasBu->load(["jadwal.bus", "jadwal.sopir.user", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "kelasBus.bus", "tikets"]);
+        $jadwalKelasBu->load(["jadwal.bus", "jadwal.sopir.user", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "kelasBus.bus", "tikets.kursi", "tikets.user"]);
 
         return view("jadwal-kelas-bus.show", compact("jadwalKelasBu"));
     }
@@ -71,12 +108,7 @@ class JadwalKelasBusController extends Controller
      */
     public function edit(JadwalKelasBus $jadwalKelasBu)
     {
-        $jadwals = Jadwal::with([
-            "bus",
-            "rute.asalTerminal",
-            'rute.tujuan
-Terminal',
-        ])->get();
+        $jadwals = Jadwal::with(["bus", "rute.asalTerminal", "rute.tujuanTerminal"])->get();
         $kelasBuses = KelasBus::with("bus")->get();
 
         return view("jadwal-kelas-bus.edit", compact("jadwalKelasBu", "jadwals", "kelasBuses"));

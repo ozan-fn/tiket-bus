@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Jadwal
- * 
+ *
  * @property int $id
  * @property int $bus_id
  * @property int $sopir_id
@@ -22,34 +22,28 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $status
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Bus $bus
  * @property Rute $rute
  * @property Sopir $sopir
+ * @property Sopir $conductor
  * @property Collection|Tiket[] $tikets
  *
  * @package App\Models
  */
 class Jadwal extends Model
 {
-    protected $table = 'jadwal';
+    protected $table = "jadwal";
 
     protected $casts = [
-        'bus_id' => 'int',
-        'sopir_id' => 'int',
-        'rute_id' => 'int',
-        'tanggal_berangkat' => 'datetime',
-        'jam_berangkat' => 'datetime'
+        "bus_id" => "int",
+        "sopir_id" => "int",
+        "rute_id" => "int",
+        "tanggal_berangkat" => "datetime",
+        "jam_berangkat" => "datetime",
     ];
 
-    protected $fillable = [
-        'bus_id',
-        'sopir_id',
-        'rute_id',
-        'tanggal_berangkat',
-        'jam_berangkat',
-        'status'
-    ];
+    protected $fillable = ["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"];
 
     public function bus()
     {
@@ -64,6 +58,11 @@ class Jadwal extends Model
     public function sopir()
     {
         return $this->belongsTo(Sopir::class);
+    }
+
+    public function conductor()
+    {
+        return $this->belongsTo(Sopir::class, "conductor_id");
     }
 
     public function jadwalKelasBus()

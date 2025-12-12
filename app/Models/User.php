@@ -19,7 +19,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
-    protected $fillable = ["name", "email", "photo", "password", "nik", "tanggal_lahir", "jenis_kelamin", "nomor_telepon"];
+    protected $fillable = ["name", "email", "photo", "password", "nik", "tanggal_lahir", "jenis_kelamin", "nomor_telepon", "terminal_id"];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -55,5 +55,10 @@ class User extends Authenticatable
     public function tikets()
     {
         return $this->hasMany(Tiket::class, "user_id");
+    }
+
+    public function terminal()
+    {
+        return $this->belongsTo(Terminal::class, "terminal_id");
     }
 }

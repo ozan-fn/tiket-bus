@@ -11,7 +11,7 @@
         x-on:click.outside="open = false"
         x-ref="content"
         data-slot="dropdown-menu-content"
-        class="absolute z-50 min-w-[8rem] rounded-md border bg-popover text-popover-foreground shadow-md p-1
+        class="absolute z-50 min-w-[8rem] rounded-md border bg-popover text-popover-foreground dark:bg-popover/95 dark:border-border shadow-md p-1
                data-[side=right]:left-full data-[side=left]:right-full data-[side=bottom]:top-full data-[side=top]:bottom-full"
         style="margin-top: {{ $sideOffset }}px;"
     >

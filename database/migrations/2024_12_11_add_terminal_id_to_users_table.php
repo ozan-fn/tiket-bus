@@ -11,13 +11,8 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::table("users", function (Blueprint $table) {
-            $table->string("nik", 16)->nullable()->after("email");
-            $table->date("tanggal_lahir")->nullable()->after("nik");
-            $table
-                ->enum("jenis_kelamin", ["L", "P"])
-                ->nullable()
-                ->after("tanggal_lahir");
-            $table->string("nomor_telepon", 20)->nullable()->after("jenis_kelamin");
+            $table->unsignedBigInteger("terminal_id")->nullable()->after("nomor_telepon");
+            $table->foreign("terminal_id")->references("id")->on("terminal")->onDelete("set null");
         });
     }
 
@@ -27,7 +22,8 @@ return new class extends Migration {
     public function down(): void
     {
         Schema::table("users", function (Blueprint $table) {
-            $table->dropColumn(["nik", "tanggal_lahir", "jenis_kelamin", "nomor_telepon"]);
+            $table->dropForeign(["terminal_id"]);
+            $table->dropColumn("terminal_id");
         });
     }
 };

@@ -7,100 +7,151 @@ use App\Models\Bus;
 use App\Models\Sopir;
 use App\Models\Rute;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class JadwalController extends Controller
 {
-    public function index(): \Illuminate\View\View
+    public function index(Request $request): \Illuminate\View\View
     {
-        $jadwals = Jadwal::with('bus', 'sopir.user', 'rute.asalTerminal', 'rute.tujuanTerminal')->paginate(10);
-        return view('jadwal.index', compact('jadwals'));
+        $search = $request->input("search");
+        $dateFrom = $request->input("date_from");
+        $dateTo = $request->input("date_to");
+        $user = auth()->user();
+        $userRole = $user->roles->first()?->name;
+
+        $jadwals = QueryBuilder::for(Jadwal::with("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal"))
+            ->where(function ($q) use ($search, $userRole, $user) {
+                if ($userRole === "agent" && $user->terminal_id) {
+                    $q->whereHas("rute", function ($q2) use ($user) {
+                        $q2->where("asal_terminal_id", $user->terminal_id);
+                    });
+                }
+                if ($search) {
+                    $q->whereHas("bus", function ($q2) use ($search) {
+                        $q2->where("nama", "like", "%{$search}%")->orWhere("plat_nomor", "like", "%{$search}%");
+                    })
+                        ->orWhereHas("sopir.user", function ($q2) use ($search) {
+                            $q2->where("name", "like", "%{$search}%");
+                        })
+                        ->orWhereHas("rute.asalTerminal", function ($q2) use ($search) {
+                            $q2->where("nama_terminal", "like", "%{$search}%")->orWhere("nama_kota", "like", "%{$search}%");
+                        })
+                        ->orWhereHas("rute.tujuanTerminal", function ($q2) use ($search) {
+                            $q2->where("nama_terminal", "like", "%{$search}%")->orWhere("nama_kota", "like", "%{$search}%");
+                        })
+                        ->orWhere("tanggal_berangkat", "like", "%{$search}%")
+                        ->orWhere("status", "like", "%{$search}%");
+                }
+            })
+            ->when($dateFrom, function ($query) use ($dateFrom) {
+                return $query->whereDate("created_at", ">=", $dateFrom);
+            })
+            ->when($dateTo, function ($query) use ($dateTo) {
+                return $query->whereDate("created_at", "<=", $dateTo);
+            })
+            ->allowedSorts(["tanggal_berangkat", "status", "created_at"])
+            ->defaultSort("-created_at")
+            ->paginate(10)
+            ->withQueryString();
+
+        $sort = $request->input("sort", "-created_at");
+        $order = strpos($sort, "-") === 0 ? "desc" : "asc";
+        $sortField = ltrim($sort, "-");
+
+        return view("jadwal.index", compact("jadwals", "search", "sort", "order", "sortField", "dateFrom", "dateTo"));
     }
 
     public function create(): \Illuminate\View\View
     {
         $buses = Bus::all();
-        $sopirs = Sopir::with('user')->where('status', 'aktif')->get();
-        $rutes = Rute::with('asalTerminal', 'tujuanTerminal')->get();
-        return view('jadwal.create', compact('buses', 'sopirs', 'rutes'));
+        $sopirs = Sopir::with("user")->where("status", "aktif")->get();
+        $conductors = Sopir::with("user")->where("status", "aktif")->get();
+        $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
+        return view("jadwal.create", compact("buses", "sopirs", "conductors", "rutes"));
     }
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
-            'bus_id' => 'required|exists:bus,id',
-            'sopir_id' => 'required|exists:sopir,id',
-            'rute_id' => 'required|exists:rute,id',
-            'tanggal_berangkat' => 'required|date|after:today',
-            'jam_berangkat' => 'required|date_format:H:i',
-            'status' => 'required|in:aktif,tidak_aktif',
-            'is_recurring' => 'nullable|boolean',
-            'recurring_type' => 'nullable|in:daily,weekly',
-            'recurring_count' => 'nullable|integer|min:1|max:90',
+            "bus_id" => "required|exists:bus,id",
+            "sopir_id" => "required|exists:sopir,id",
+            "conductor_id" => "nullable|exists:sopir,id",
+            "rute_id" => "required|exists:rute,id",
+            "tanggal_berangkat" => "required|date|after:today",
+            "jam_berangkat" => "required|date_format:H:i",
+            "status" => "required|in:aktif,tidak_aktif",
+            "is_recurring" => "nullable|boolean",
+            "recurring_type" => "nullable|in:daily,weekly",
+            "recurring_count" => "nullable|integer|min:1|max:90",
         ]);
 
         if ($request->is_recurring) {
             $jadwals = [];
             $tanggal = Carbon::parse($request->tanggal_berangkat);
-            $interval = $request->recurring_type === 'weekly' ? 7 : 1;
+            $interval = $request->recurring_type === "weekly" ? 7 : 1;
 
             for ($i = 0; $i < $request->recurring_count; $i++) {
                 $jadwals[] = [
-                    'bus_id' => $request->bus_id,
-                    'sopir_id' => $request->sopir_id,
-                    'rute_id' => $request->rute_id,
-                    'tanggal_berangkat' => $tanggal->toDateString(),
-                    'jam_berangkat' => $request->jam_berangkat,
-                    'status' => $request->status,
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    "bus_id" => $request->bus_id,
+                    "sopir_id" => $request->sopir_id,
+                    "conductor_id" => $request->conductor_id,
+                    "rute_id" => $request->rute_id,
+                    "tanggal_berangkat" => $tanggal->toDateString(),
+                    "jam_berangkat" => $request->jam_berangkat,
+                    "status" => $request->status,
+                    "created_at" => now(),
+                    "updated_at" => now(),
                 ];
                 $tanggal->addDays($interval);
             }
 
             Jadwal::insert($jadwals);
-            $message = count($jadwals) . ' jadwal berhasil ditambahkan';
+            $message = count($jadwals) . " jadwal berhasil ditambahkan";
         } else {
-            Jadwal::create($request->only(['bus_id', 'sopir_id', 'rute_id', 'tanggal_berangkat', 'jam_berangkat', 'status']));
-            $message = 'Jadwal berhasil ditambahkan';
+            Jadwal::create($request->only(["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"]));
+            $message = "Jadwal berhasil ditambahkan";
         }
 
-        return redirect()->route('admin/jadwal.index')->with('success', $message);
+        return redirect()->route("admin/jadwal.index")->with("success", $message);
     }
 
     public function show(Jadwal $jadwal): \Illuminate\View\View
     {
-        $jadwal->load('bus', 'sopir.user', 'rute.asalTerminal', 'rute.tujuanTerminal');
-        return view('jadwal.show', compact('jadwal'));
+        $jadwal->load("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal");
+        return view("jadwal.show", compact("jadwal"));
     }
 
     public function edit(Jadwal $jadwal): \Illuminate\View\View
     {
         $buses = Bus::all();
-        $sopirs = Sopir::with('user')->where('status', 'aktif')->get();
-        $rutes = Rute::with('asalTerminal', 'tujuanTerminal')->get();
-        return view('jadwal.edit', compact('jadwal', 'buses', 'sopirs', 'rutes'));
+        $sopirs = Sopir::with("user")->where("status", "aktif")->get();
+        $conductors = Sopir::with("user")->where("status", "aktif")->get();
+        $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
+        return view("jadwal.edit", compact("jadwal", "buses", "sopirs", "conductors", "rutes"));
     }
 
     public function update(Request $request, Jadwal $jadwal): \Illuminate\Http\RedirectResponse
     {
         $request->validate([
-            'bus_id' => 'required|exists:bus,id',
-            'sopir_id' => 'required|exists:sopir,id',
-            'rute_id' => 'required|exists:rute,id',
-            'tanggal_berangkat' => 'required|date',
-            'jam_berangkat' => 'required|date_format:H:i',
-            'status' => 'required|in:aktif,tidak_aktif',
+            "bus_id" => "required|exists:bus,id",
+            "sopir_id" => "required|exists:sopir,id",
+            "conductor_id" => "nullable|exists:sopir,id",
+            "rute_id" => "required|exists:rute,id",
+            "tanggal_berangkat" => "required|date",
+            "jam_berangkat" => "required|date_format:H:i",
+            "status" => "required|in:aktif,tidak_aktif",
         ]);
 
         $jadwal->update($request->all());
 
-        return redirect()->route('admin/jadwal.index')->with('success', 'Jadwal berhasil diperbarui');
+        return redirect()->route("admin/jadwal.index")->with("success", "Jadwal berhasil diperbarui");
     }
 
     public function destroy(Jadwal $jadwal): \Illuminate\Http\RedirectResponse
     {
         $jadwal->delete();
 
-        return redirect()->route('admin/jadwal.index')->with('success', 'Jadwal berhasil dihapus');
+        return redirect()->route("admin/jadwal.index")->with("success", "Jadwal berhasil dihapus");
     }
 }

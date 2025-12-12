@@ -54,7 +54,8 @@
     <div x-show="isOpen"
          x-transition
          @click.away="closeCalendar"
-         class="absolute z-50 mt-2 w-full min-w-[280px] rounded-md border border-border bg-popover p-3 shadow-md"
+         class="absolute mt-2 w-full min-w-[280px] rounded-md border border-border bg-popover p-3 shadow-md"
+         style="z-index: 50;"
          x-cloak>
 
         <!-- Header -->
@@ -216,7 +217,10 @@
                         this.$el.querySelector('input[type="hidden"]').dispatchEvent(event);
                     });
 
-                    this.closeCalendar();
+                    // Close calendar after short delay to ensure selection is registered
+                    setTimeout(() => {
+                        this.closeCalendar();
+                    }, 100);
                 },
 
                 prevMonth() {
@@ -243,6 +247,13 @@
 
                 closeCalendar() {
                     this.isOpen = false;
+                },
+
+                // Ensure calendar closes when clicking outside
+                handleClickOutside(event) {
+                    if (this.isOpen && !this.$el.contains(event.target)) {
+                        this.closeCalendar();
+                    }
                 }
             }));
         });

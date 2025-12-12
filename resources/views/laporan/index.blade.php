@@ -1,21 +1,22 @@
 <x-admin-layout>
     <x-slot name="header">
-        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <div>
-                <h2 class="text-xl sm:text-2xl font-bold">Analytics Dashboard</h2>
-                <p class="text-sm text-muted-foreground mt-1">Overview performa bisnis dan statistik</p>
-            </div>
-            <div>
-                <form method="GET" action="{{ route('admin/laporan.index') }}" class="flex items-center gap-2">
-                    <select name="periode" onchange="this.form.submit()" class="rounded-md border-input bg-background px-3 py-2 text-sm">
-                        <option value="7" {{ $periode == '7' ? 'selected' : '' }}>7 Hari Terakhir</option>
-                        <option value="30" {{ $periode == '30' ? 'selected' : '' }}>30 Hari Terakhir</option>
-                        <option value="60" {{ $periode == '60' ? 'selected' : '' }}>60 Hari Terakhir</option>
-                        <option value="90" {{ $periode == '90' ? 'selected' : '' }}>90 Hari Terakhir</option>
-                    </select>
-                </form>
-            </div>
-        </div>
+        <x-ui.breadcrumb.breadcrumb>
+            <x-ui.breadcrumb.list class="text-xs">
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.link href="{{ route('dashboard') }}">
+                        Home
+                    </x-ui.breadcrumb.link>
+                </x-ui.breadcrumb.item>
+                <x-ui.breadcrumb.separator>
+                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                </x-ui.breadcrumb.separator>
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.page>
+                        Analytics
+                    </x-ui.breadcrumb.page>
+                </x-ui.breadcrumb.item>
+            </x-ui.breadcrumb.list>
+        </x-ui.breadcrumb.breadcrumb>
     </x-slot>
 
     <div class="p-4 sm:p-6 space-y-6">

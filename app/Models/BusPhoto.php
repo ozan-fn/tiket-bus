@@ -6,10 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class BusPhoto extends Model
 {
-    protected $fillable = [
-        'bus_id',
-        'path',
-    ];
+    protected $table = "bus_photos";
+
+    protected $fillable = ["bus_id", "path"];
 
     public function bus()
     {

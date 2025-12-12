@@ -11,6 +11,8 @@ use App\Http\Controllers\PemesananController;
 use App\Http\Controllers\KelasBusController;
 use App\Http\Controllers\JadwalKelasBusController;
 use App\Http\Controllers\LaporanController;
+use App\Http\Controllers\ScanController;
+use App\Http\Controllers\CekKursiController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
@@ -37,12 +39,21 @@ Route::middleware("auth")->group(function () {
 });
 
 // =================== ADMIN/OWNER/AGENT ROUTES ===================
+Route::bind("terminalPhoto", function ($value) {
+    return \App\Models\TerminalPhoto::findOrFail($value);
+});
+
+Route::bind("busPhoto", function ($value) {
+    return \App\Models\BusPhoto::findOrFail($value);
+});
+
 Route::middleware(["auth", "verified", "role:owner|agent"])
     ->prefix("admin")
     ->name("admin/")
     ->group(function () {
         // Bus Management
         Route::resource("bus", BusController::class)->parameters(["bus" => "bus"]);
+        Route::delete("bus-photo/{busPhoto}", [BusController::class, "destroyPhoto"])->name("bus-photo.destroy");
 
         // Fasilitas Management
         Route::resource("fasilitas", FasilitasController::class)->parameters(["fasilitas" => "fasilitas"]);
@@ -53,6 +64,7 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
 
         // Terminal Management
         Route::resource("terminal", TerminalController::class)->parameters(["terminal" => "terminal"]);
+        Route::delete("terminal-photo/{terminalPhoto}", [TerminalController::class, "destroyPhoto"])->name("terminal-photo.destroy");
 
         // Rute Management
         Route::resource("rute", RuteController::class)->parameters(["rute" => "rute"]);
@@ -60,8 +72,21 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         // Jadwal Management
         Route::resource("jadwal", JadwalController::class)->parameters(["jadwal" => "jadwal"]);
 
+        // Pemesanan Tiket (Agent Booking)
+        Route::get("pemesanan", [PemesananController::class, "adminIndex"])->name("pemesanan.index");
+        Route::get("pemesanan/create/{jadwal}", [PemesananController::class, "adminCreate"])->name("pemesanan.create");
+        Route::post("pemesanan/store/{jadwal}", [PemesananController::class, "adminStore"])->name("pemesanan.store");
+
         // History Pemesanan
         Route::get("history-pemesanan", [PemesananController::class, "history"])->name("history-pemesanan");
+
+        // Scan Tiket
+        Route::get("scan", [ScanController::class, "index"])->name("scan.index");
+        Route::post("scan/verify", [ScanController::class, "verifyTicket"])->name("scan.verify");
+
+        // Cek Ketersediaan Kursi
+        Route::get("cek-kursi", [CekKursiController::class, "index"])->name("cek-kursi.index");
+        Route::get("cek-kursi/get-kursi", [CekKursiController::class, "getKursi"])->name("cek-kursi.get-kursi");
 
         // Kelas Bus Management
         Route::resource("kelas-bus", KelasBusController::class)->parameters(["kelas-bus" => "kelasBus"]);

@@ -5,16 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\KelasBus;
 use App\Models\Bus;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class KelasBusController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $kelasBus = KelasBus::with("bus")->paginate(10);
-        return view("kelas-bus.index", compact("kelasBus"));
+        $search = $request->input("search");
+        $dateFrom = $request->input("date_from");
+        $dateTo = $request->input("date_to");
+
+        $kelasBus = QueryBuilder::for(KelasBus::with("bus"))
+            ->where(function ($q) use ($search) {
+                if ($search) {
+                    $q->where("nama_kelas", "like", "%{$search}%")
+                        ->orWhere("harga", "like", "%{$search}%")
+                        ->orWhereHas("bus", function ($q2) use ($search) {
+                            $q2->where("nama", "like", "%{$search}%")->orWhere("plat_nomor", "like", "%{$search}%");
+                        });
+                }
+            })
+            ->when($dateFrom, function ($query) use ($dateFrom) {
+                return $query->whereDate("created_at", ">=", $dateFrom);
+            })
+            ->when($dateTo, function ($query) use ($dateTo) {
+                return $query->whereDate("created_at", "<=", $dateTo);
+            })
+            ->allowedSorts(["nama_kelas", "harga", "created_at"])
+            ->defaultSort("-created_at")
+            ->paginate(10)
+            ->withQueryString();
+
+        $sort = $request->input("sort", "-created_at");
+        $order = strpos($sort, "-") === 0 ? "desc" : "asc";
+        $sortField = ltrim($sort, "-");
+
+        return view("kelas-bus.index", compact("kelasBus", "search", "sort", "order", "sortField", "dateFrom", "dateTo"));
     }
 
     /**

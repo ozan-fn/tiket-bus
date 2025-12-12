@@ -10,15 +10,15 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('sopir', function (Blueprint $table) {
+        Schema::create("sopir", function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
-            $table->string('nik');
-            $table->string('nomor_sim');
-            $table->string('alamat')->nullable();
-            $table->string('telepon')->nullable();
-            $table->date('tanggal_lahir')->nullable();
-            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+            $table->foreignId("user_id")->constrained("users")->onDelete("cascade");
+            $table->string("nik");
+            $table->string("nomor_sim");
+            $table->string("alamat")->nullable();
+            $table->string("telepon")->nullable();
+            $table->date("tanggal_lahir")->nullable();
+            $table->enum("status", ["aktif", "tidak_aktif"])->default("aktif");
             $table->timestamps();
         });
     }
@@ -28,6 +28,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('sopir');
+        Schema::dropIfExists("sopir");
     }
 };
