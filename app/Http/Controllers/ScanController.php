@@ -11,7 +11,7 @@ class ScanController extends Controller
 {
     public function index(): View
     {
-        return view("pemesanan.scan");
+        return view("admin.scan.index");
     }
 
     public function verifyTicket(Request $request): JsonResponse
