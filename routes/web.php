@@ -13,6 +13,7 @@ use App\Http\Controllers\JadwalKelasBusController;
 use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\CekKursiController;
+use App\Http\Controllers\PembayaranManualController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
@@ -76,6 +77,9 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         Route::get("pemesanan", [PemesananController::class, "adminIndex"])->name("pemesanan.index");
         Route::get("pemesanan/create/{jadwal}", [PemesananController::class, "adminCreate"])->name("pemesanan.create");
         Route::post("pemesanan/store/{jadwal}", [PemesananController::class, "adminStore"])->name("pemesanan.store");
+
+        // Pembayaran Manual
+        Route::get("pembayaran-manual", [PembayaranManualController::class, "index"])->name("pembayaran-manual");
 
         // History Pemesanan
         Route::get("history-pemesanan", [PemesananController::class, "history"])->name("history-pemesanan");

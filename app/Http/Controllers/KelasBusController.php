@@ -3,29 +3,23 @@
 namespace App\Http\Controllers;
 
 use App\Models\KelasBus;
-use App\Models\Bus;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class KelasBusController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index(Request $request)
+    public function index(Request $request): View
     {
         $search = $request->input("search");
         $dateFrom = $request->input("date_from");
         $dateTo = $request->input("date_to");
 
-        $kelasBus = QueryBuilder::for(KelasBus::with("bus"))
+        $kelasBus = QueryBuilder::for(KelasBus::class)
             ->where(function ($q) use ($search) {
                 if ($search) {
-                    $q->where("nama_kelas", "like", "%{$search}%")
-                        ->orWhere("harga", "like", "%{$search}%")
-                        ->orWhereHas("bus", function ($q2) use ($search) {
-                            $q2->where("nama", "like", "%{$search}%")->orWhere("plat_nomor", "like", "%{$search}%");
-                        });
+                    $q->where("nama_kelas", "like", "%{$search}%");
                 }
             })
             ->when($dateFrom, function ($query) use ($dateFrom) {
@@ -34,7 +28,7 @@ class KelasBusController extends Controller
             ->when($dateTo, function ($query) use ($dateTo) {
                 return $query->whereDate("created_at", "<=", $dateTo);
             })
-            ->allowedSorts(["nama_kelas", "harga", "created_at"])
+            ->allowedSorts(["nama_kelas", "jumlah_kursi", "created_at"])
             ->defaultSort("-created_at")
             ->paginate(10)
             ->withQueryString();
@@ -46,71 +40,48 @@ class KelasBusController extends Controller
         return view("kelas-bus.index", compact("kelasBus", "search", "sort", "order", "sortField", "dateFrom", "dateTo"));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(): View
     {
-        $buses = Bus::all();
-        return view("kelas-bus.create", compact("buses"));
+        return view("kelas-bus.create");
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        $validated = $request->validate([
-            "bus_id" => "required|exists:bus,id",
-            "nama_kelas" => "required|string|max:50",
-            "deskripsi" => "nullable|string",
+        $request->validate([
+            "nama_kelas" => "required|string|max:255",
             "jumlah_kursi" => "required|integer|min:1",
+            "deskripsi" => "nullable|string",
         ]);
 
-        KelasBus::create($validated);
+        KelasBus::create($request->only("nama_kelas", "jumlah_kursi", "deskripsi"));
 
         return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil ditambahkan");
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(KelasBus $kelasBus)
+    public function show(KelasBus $kelasBus): View
     {
-        $kelasBus->load("bus", "kursi");
         return view("kelas-bus.show", compact("kelasBus"));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(KelasBus $kelasBus)
+    public function edit(KelasBus $kelasBus): View
     {
-        $buses = Bus::all();
-        return view("kelas-bus.edit", compact("kelasBus", "buses"));
+        return view("kelas-bus.edit", compact("kelasBus"));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, KelasBus $kelasBus)
+    public function update(Request $request, KelasBus $kelasBus): RedirectResponse
     {
-        $validated = $request->validate([
-            "bus_id" => "required|exists:bus,id",
-            "nama_kelas" => "required|string|max:50",
-            "deskripsi" => "nullable|string",
+        $request->validate([
+            "nama_kelas" => "required|string|max:255",
             "jumlah_kursi" => "required|integer|min:1",
+            "deskripsi" => "nullable|string",
         ]);
 
-        $kelasBus->update($validated);
+        $kelasBus->update($request->only("nama_kelas", "jumlah_kursi", "deskripsi"));
 
         return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil diperbarui");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(KelasBus $kelasBus)
+    public function destroy(KelasBus $kelasBus): RedirectResponse
     {
         $kelasBus->delete();
 

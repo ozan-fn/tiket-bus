@@ -6,18 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class KelasBus extends Model
 {
-    protected $table = 'kelas_bus';
-    protected $fillable = [
-        'bus_id',
-        'nama_kelas',
-        'deskripsi',
-        'jumlah_kursi',
-    ];
-
-    public function bus()
-    {
-        return $this->belongsTo(Bus::class);
-    }
+    protected $table = "kelas_bus";
+    protected $fillable = ["nama_kelas", "deskripsi", "jumlah_kursi"];
 
     public function kursi()
     {
