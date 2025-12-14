@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Bus;
 use App\Models\BusPhoto;
+use App\Models\KelasBus;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -18,7 +19,7 @@ class BusController extends Controller
         $dateFrom = $request->input("date_from");
         $dateTo = $request->input("date_to");
 
-        $bus = QueryBuilder::for(Bus::with("fasilitas", "photos"))
+        $bus = QueryBuilder::for(Bus::with("fasilitas", "photos", "kelasBus"))
             ->where(function ($q) use ($search) {
                 if ($search) {
                     $q->where("nama", "like", "%{$search}%")->orWhere("plat_nomor", "like", "%{$search}%");
@@ -45,7 +46,8 @@ class BusController extends Controller
     public function create(): View
     {
         $fasilitas = \App\Models\Fasilitas::all();
-        return view("bus.create", compact("fasilitas"));
+        $kelasBus = \App\Models\KelasBus::all();
+        return view("bus.create", compact("fasilitas", "kelasBus"));
     }
 
     public function store(Request $request): RedirectResponse
@@ -56,12 +58,26 @@ class BusController extends Controller
             "plat_nomor" => "required|string|max:255|unique:bus",
             "fasilitas_ids" => "array",
             "fasilitas_ids.*" => "exists:fasilitas,id",
+            "kelas_bus_data" => "array",
+            "kelas_bus_data.*.kelas_id" => "required|exists:kelas_bus,id",
+            "kelas_bus_data.*.jumlah_kursi" => "required|integer|min:1",
             "foto" => "array",
             "foto.*" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
         $bus = Bus::create($request->only(["nama", "kapasitas", "plat_nomor"]));
         $bus->fasilitas()->sync($request->fasilitas_ids ?? []);
+
+        // Simpan kelas bus yang dipilih
+        if ($request->has("kelas_bus_data") && is_array($request->kelas_bus_data)) {
+            foreach ($request->kelas_bus_data as $kelasData) {
+                // Update atau create kelas bus dengan jumlah kursi spesifik untuk bus ini
+                // Disimpan sebagai relasi pivot dengan jumlah kursi
+                $bus->kelasBus()->attach($kelasData["kelas_id"], [
+                    "jumlah_kursi" => $kelasData["jumlah_kursi"],
+                ]);
+            }
+        }
 
         if ($request->hasFile("foto")) {
             foreach ($request->file("foto") as $file) {
@@ -78,15 +94,16 @@ class BusController extends Controller
 
     public function show(Bus $bus): View
     {
-        $bus->load("fasilitas", "photos");
+        $bus->load("fasilitas", "photos", "kelasBus");
         return view("bus.show", compact("bus"));
     }
 
     public function edit(Bus $bus): View
     {
         $fasilitas = \App\Models\Fasilitas::all();
-        $bus->load("fasilitas", "photos");
-        return view("bus.edit", compact("bus", "fasilitas"));
+        $kelasBus = \App\Models\KelasBus::all();
+        $bus->load("fasilitas", "photos", "kelasBus");
+        return view("bus.edit", compact("bus", "fasilitas", "kelasBus"));
     }
 
     public function update(Request $request, Bus $bus): RedirectResponse
@@ -97,6 +114,9 @@ class BusController extends Controller
             "plat_nomor" => "required|string|max:255|unique:bus,plat_nomor," . $bus->id,
             "fasilitas_ids" => "array",
             "fasilitas_ids.*" => "exists:fasilitas,id",
+            "kelas_bus_data" => "array",
+            "kelas_bus_data.*.kelas_id" => "required|exists:kelas_bus,id",
+            "kelas_bus_data.*.jumlah_kursi" => "required|integer|min:1",
             "foto" => "array",
             "foto.*" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
@@ -104,8 +124,18 @@ class BusController extends Controller
         $bus->update($request->only(["nama", "kapasitas", "plat_nomor"]));
         $bus->fasilitas()->sync($request->fasilitas_ids ?? []);
 
+        // Sinkronisasi kelas bus
+        $kelasBusData = [];
+        if ($request->has("kelas_bus_data") && is_array($request->kelas_bus_data)) {
+            foreach ($request->kelas_bus_data as $kelasData) {
+                $kelasBusData[$kelasData["kelas_id"]] = [
+                    "jumlah_kursi" => $kelasData["jumlah_kursi"],
+                ];
+            }
+        }
+        $bus->kelasBus()->sync($kelasBusData);
+
         if ($request->hasFile("foto")) {
-            // Upload foto baru (foto lama tetap ada)
             foreach ($request->file("foto") as $file) {
                 $path = $file->store("bus_foto", "public");
                 BusPhoto::create([

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * Class Bus
- * 
+ *
  * @property int $id
  * @property string $nama
  * @property string $plat_nomor
@@ -21,33 +21,31 @@ use Illuminate\Database\Eloquent\Model;
  * @property string|null $keterangan
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
- * 
+ *
  * @property Collection|Fasilitas[] $fasilitas
+ * @property Collection|KelasBus[] $kelasBus
  * @property Collection|Jadwal[] $jadwals
  *
  * @package App\Models
  */
 class Bus extends Model
 {
-    protected $table = 'bus';
+    protected $table = "bus";
 
     protected $casts = [
-        'kapasitas' => 'int'
+        "kapasitas" => "int",
     ];
 
-    protected $fillable = [
-        'nama',
-        'plat_nomor',
-        'kapasitas',
-        'status',
-        'keterangan'
-    ];
+    protected $fillable = ["nama", "plat_nomor", "kapasitas", "status", "keterangan"];
 
     public function fasilitas()
     {
-        return $this->belongsToMany(Fasilitas::class)
-            ->withPivot('id')
-            ->withTimestamps();
+        return $this->belongsToMany(Fasilitas::class)->withPivot("id")->withTimestamps();
+    }
+
+    public function kelasBus()
+    {
+        return $this->belongsToMany(KelasBus::class, "bus_kelas_bus")->withPivot("jumlah_kursi")->withTimestamps();
     }
 
     public function jadwals()
@@ -58,10 +56,5 @@ class Bus extends Model
     public function photos()
     {
         return $this->hasMany(BusPhoto::class);
-    }
-
-    public function kelasBus()
-    {
-        return $this->hasMany(KelasBus::class);
     }
 }
