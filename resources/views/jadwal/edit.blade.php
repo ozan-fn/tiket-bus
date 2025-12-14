@@ -251,6 +251,54 @@
                             </div>
                         </div>
 
+                        <!-- Harga Tiket Section -->
+                        <div class="mt-8 pt-8 border-t border-border">
+                            <h3 class="font-semibold mb-4 flex items-center gap-2">
+                                <x-lucide-tag class="w-4 h-4" />
+                                Kelola Harga Tiket per Kelas
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                @forelse($kelasBuses as $kelasBus)
+                                    @php
+                                        $existingPrice = $jadwalKelasBuses->firstWhere('kelas_bus_id', $kelasBus->id);
+                                    @endphp
+                                    <div class="space-y-2 p-4 border rounded-lg bg-muted/30">
+                                        <div class="flex items-center justify-between">
+                                            <x-ui.label for="harga_{{ $kelasBus->id }}">
+                                                <div class="flex items-center gap-2">
+                                                    <x-lucide-armchair class="w-4 h-4" />
+                                                    {{ $kelasBus->nama_kelas }}
+                                                </div>
+                                            </x-ui.label>
+                                            @if($existingPrice)
+                                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Sudah Ada</span>
+                                            @endif
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-muted-foreground">Rp</span>
+                                            <x-ui.input
+                                                type="number"
+                                                name="harga[{{ $kelasBus->id }}]"
+                                                id="harga_{{ $kelasBus->id }}"
+                                                placeholder="0"
+                                                min="0"
+                                                step="1000"
+                                                :value="old('harga.' . $kelasBus->id, $existingPrice?->harga)"
+                                            />
+                                        </div>
+                                        @if($existingPrice)
+                                            <p class="text-xs text-muted-foreground">Harga saat ini: Rp {{ number_format($existingPrice->harga, 0, ',', '.') }}</p>
+                                        @else
+                                            <p class="text-xs text-muted-foreground">Belum ada harga untuk kelas ini</p>
+                                        @endif
+                                    </div>
+                                @empty
+                                    <p class="text-muted-foreground col-span-2">Belum ada kelas bus. Buat kelas bus terlebih dahulu di menu Kelas Bus.</p>
+                                @endforelse
+                            </div>
+                        </div>
+
                         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
                             <a href="{{ route('admin/jadwal.index') }}" class="w-full sm:w-auto">
                                 <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">

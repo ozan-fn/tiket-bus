@@ -1,52 +1,90 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-foreground">{{ __('Daftar Akun') }}</h2>
+        <p class="text-sm text-muted-foreground mt-1">{{ __('Buat akun baru untuk mengakses sistem') }}</p>
+    </div>
+
+    <form method="POST" action="{{ route('register') }}" class="space-y-4">
         @csrf
 
         <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+        <div class="space-y-2">
+            <x-ui.label for="name">{{ __('Nama Lengkap') }}</x-ui.label>
+            <x-ui.input
+                id="name"
+                type="text"
+                name="name"
+                :value="old('name')"
+                required
+                autofocus
+                autocomplete="name"
+                placeholder="Masukkan nama lengkap Anda"
+                class="bg-background text-foreground placeholder:text-muted-foreground" />
+            <x-input-error :messages="$errors->get('name')" class="mt-2 text-destructive" />
         </div>
 
         <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="space-y-2">
+            <x-ui.label for="email">{{ __('Email') }}</x-ui.label>
+            <x-ui.input
+                id="email"
+                type="email"
+                name="email"
+                :value="old('email')"
+                required
+                autocomplete="username"
+                placeholder="nama@contoh.com"
+                class="bg-background text-foreground placeholder:text-muted-foreground" />
+            <x-input-error :messages="$errors->get('email')" class="mt-2 text-destructive" />
         </div>
 
         <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
+        <div class="space-y-2">
+            <x-ui.label for="password">{{ __('Password') }}</x-ui.label>
+            <x-ui.input
+                id="password"
+                type="password"
+                name="password"
+                required
+                autocomplete="new-password"
+                placeholder="Minimal 8 karakter"
+                class="bg-background text-foreground placeholder:text-muted-foreground" />
+            <x-input-error :messages="$errors->get('password')" class="mt-2 text-destructive" />
         </div>
 
         <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
-
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
-
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        <div class="space-y-2">
+            <x-ui.label for="password_confirmation">{{ __('Konfirmasi Password') }}</x-ui.label>
+            <x-ui.input
+                id="password_confirmation"
+                type="password"
+                name="password_confirmation"
+                required
+                autocomplete="new-password"
+                placeholder="Ulangi password Anda"
+                class="bg-background text-foreground placeholder:text-muted-foreground" />
+            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2 text-destructive" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
+        <!-- Submit Button -->
+        <div class="pt-4">
+            <x-ui.button.button class="w-full justify-center">
+                {{ __('Daftar') }}
+            </x-ui.button.button>
+        </div>
 
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
+        <!-- Login Link -->
+        <div class="text-center pt-4 border-t border-border
+">
+            <p class="text-sm text-muted-foreground">
+                {{ __('Sudah memiliki akun?') }}
+                <a
+                    href="{{ route('login') }}"
+                    class="text-primary font-medium hover:opacity-80 transition"
+                >
+                    {{ __('Masuk di sini') }}
+                </a>
+            </p>
         </div>
     </form>
 </x-guest-layout>

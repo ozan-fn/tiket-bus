@@ -214,36 +214,95 @@
                             <!-- Pilihan Kursi & Kelas -->
                             <div>
                                 <h3 class="font-semibold mb-4 flex items-center gap-2">
-                                    <x-lucide-chair class="w-4 h-4" />
+                                    <x-lucide-armchair class="w-4 h-4" />
                                     Pilih Kursi & Kelas
                                 </h3>
 
-                                <div class="space-y-4">
+                                <!-- Legend -->
+                                <div class="grid grid-cols-3 gap-4 mb-6 p-4 bg-muted/30 rounded-lg">
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded border-2 border-primary bg-primary/10"></div>
+                                        <span class="text-xs font-medium">Tersedia</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded border-2 border-destructive bg-destructive/10 opacity-50"></div>
+                                        <span class="text-xs font-medium">Terjual</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <div class="w-6 h-6 rounded border-2 border-emerald-500 bg-emerald-500/10"></div>
+                                        <span class="text-xs font-medium">Dipilih</span>
+                                    </div>
+                                </div>
+
+                                <div class="space-y-8">
                                     @forelse($jadwal->jadwalKelasBus as $jkb)
-                                        <div class="p-4 border rounded-lg">
-                                            <p class="font-semibold mb-3">{{ $jkb->kelasBus->nama_kelas }}</p>
-                                            <div class="grid grid-cols-auto gap-3">
-                                                @foreach($jkb->kelasBus->kursi as $kursi)
-                                                    <label class="flex items-center gap-2 cursor-pointer p-2 rounded-md hover:bg-accent">
-                                                        <input
-                                                            type="radio"
-                                                            name="kursi_id"
-                                                            value="{{ $kursi->id }}"
-                                                            data-jadwal-kelas="{{ $jkb->id }}"
-                                                            data-harga="{{ $jkb->harga }}"
-                                                            @if(in_array($kursi->id, $kursiTerpakai)) disabled @endif
-                                                            {{ old('kursi_id') == $kursi->id ? 'checked' : '' }}
-                                                            required
-                                                        />
-                                                        <span class="text-sm font-medium {{ in_array($kursi->id, $kursiTerpakai) ? 'text-muted-foreground line-through' : '' }}">
-                                                            {{ $kursi->nomor_kursi }}
-                                                        </span>
-                                                    </label>
-                                                @endforeach
+                                        <div class="p-6 border-2 rounded-lg hover:border-accent transition-colors">
+                                            <div class="flex items-center justify-between mb-4">
+                                                <h4 class="font-bold text-lg">{{ $jkb->kelasBus->nama_kelas }}</h4>
+                                                <div class="text-right">
+                                                    <p class="text-xs text-muted-foreground">Harga per kursi</p>
+                                                    <p class="font-bold text-lg text-primary">Rp {{ number_format($jkb->harga, 0, ',', '.') }}</p>
+                                                </div>
+                                            </div>
+
+                                            <!-- Bus Layout Visualization -->
+                                            <div class="bg-gradient-to-b from-muted/50 to-background p-6 rounded-lg mb-4 border border-border/50">
+                                                <!-- Depan Bus -->
+                                                <div class="text-center mb-4 pb-4 border-b border-dashed border-border/50">
+                                                    <div class="inline-block px-3 py-1 bg-secondary text-secondary-foreground text-xs font-semibold rounded">
+                                                        <x-lucide-navigation class="w-4 h-4 inline mr-1" /> DEPAN BUS
+                                                    </div>
+                                                </div>
+
+                                                <!-- Kursi Grid -->
+                                                <div class="grid gap-3" style="grid-template-columns: repeat(4, 1fr);">
+                                                    @forelse($jkb->kelasBus->kursi as $kursi)
+                                                        <label class="cursor-pointer group">
+                                                            <input
+                                                                type="radio"
+                                                                name="kursi_id"
+                                                                value="{{ $kursi->id }}"
+                                                                data-jadwal-kelas="{{ $jkb->id }}"
+                                                                data-harga="{{ $jkb->harga }}"
+                                                                data-nomor="{{ $kursi->nomor_kursi }}"
+                                                                @if(in_array($kursi->id, $kursiTerpakai)) disabled @endif
+                                                                {{ old('kursi_id') == $kursi->id ? 'checked' : '' }}
+                                                                class="hidden peer"
+                                                                required
+                                                            />
+                                                            <div class="aspect-square flex items-center justify-center rounded-lg font-bold text-sm transition-all duration-200
+                                                                {{ in_array($kursi->id, $kursiTerpakai)
+                                                                    ? 'bg-destructive/20 border-2 border-destructive text-muted-foreground cursor-not-allowed opacity-50'
+                                                                    : 'bg-white border-2 border-primary hover:bg-primary/5 group-hover:shadow-md'
+                                                                }}
+                                                                peer-checked:bg-emerald-500 peer-checked:border-emerald-600 peer-checked:text-white peer-checked:shadow-lg peer-checked:scale-105
+                                                            ">
+                                                                {{ $kursi->nomor_kursi }}
+                                                            </div>
+                                                        </label>
+                                                    @empty
+                                                        <p class="text-muted-foreground col-span-4 text-center py-4">Tidak ada kursi</p>
+                                                    @endforelse
+                                                </div>
+
+                                                <!-- Belakang Bus -->
+                                                <div class="text-center mt-4 pt-4 border-t border-dashed border-border/50">
+                                                    <div class="inline-block px-3 py-1 bg-secondary text-secondary-foreground text-xs font-semibold rounded">
+                                                        BELAKANG BUS
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Informasi Kursi -->
+                                            <div class="text-xs text-muted-foreground">
+                                                <p>Total kursi tersedia: <span class="font-semibold">{{ $jkb->kelasBus->kursi->count() - count(array_filter($kursiTerpakai, fn($id) => $this->keluarObjekKursi($id, $jkb->kelasBus->id))) }}</span> / <span class="font-semibold">{{ $jkb->kelasBus->kursi->count() }}</span></p>
                                             </div>
                                         </div>
                                     @empty
-                                        <p class="text-muted-foreground">Tidak ada kelas bus yang tersedia</p>
+                                        <div class="text-center py-12 bg-muted/30 rounded-lg">
+                                            <x-lucide-inbox class="w-8 h-8 mx-auto text-muted-foreground mb-2" />
+                                            <p class="text-muted-foreground">Tidak ada kelas bus yang tersedia</p>
+                                        </div>
                                     @endforelse
 
                                     <input type="hidden" name="jadwal_kelas_bus_id" id="jadwal_kelas_bus_id" />
@@ -291,9 +350,16 @@
             radio.addEventListener('change', function() {
                 const jadwalKelas = this.getAttribute('data-jadwal-kelas');
                 const harga = parseInt(this.getAttribute('data-harga'));
+                const nomorKursi = this.getAttribute('data-nomor');
 
                 document.getElementById('jadwal_kelas_bus_id').value = jadwalKelas;
                 document.getElementById('total-harga').textContent = 'Rp ' + harga.toLocaleString('id-ID');
+
+                // Show selected seat in summary
+                const seatSummary = document.getElementById('selected-seat-summary');
+                if (seatSummary) {
+                    seatSummary.innerHTML = `<span class="text-emerald-600 font-semibold">Kursi ${nomorKursi} dipilih</span>`;
+                }
             });
         });
 
@@ -301,8 +367,14 @@
         const checkedRadio = document.querySelector('input[name="kursi_id"]:checked');
         if (checkedRadio) {
             const harga = parseInt(checkedRadio.getAttribute('data-harga'));
+            const nomorKursi = checkedRadio.getAttribute('data-nomor');
             document.getElementById('jadwal_kelas_bus_id').value = checkedRadio.getAttribute('data-jadwal-kelas');
             document.getElementById('total-harga').textContent = 'Rp ' + harga.toLocaleString('id-ID');
+
+            const seatSummary = document.getElementById('selected-seat-summary');
+            if (seatSummary) {
+                seatSummary.innerHTML = `<span class="text-emerald-600 font-semibold">Kursi ${nomorKursi} dipilih</span>`;
+            }
         }
     </script>
     @endpush

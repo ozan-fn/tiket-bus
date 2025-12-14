@@ -157,6 +157,7 @@
                             ['label' => 'Transaksi', 'type' => 'section', 'roles' => ['owner', 'agent']],
                             ['label' => 'Beli Tiket', 'route' => 'admin/pemesanan.index', 'icon' => 'ticket', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'History Pemesanan', 'route' => 'admin/history-pemesanan', 'icon' => 'clipboard-list', 'type' => 'menu', 'roles' => ['owner', 'agent']],
+                            ['label' => 'Pembayaran Manual', 'route' => 'admin/pembayaran-manual', 'icon' => 'wallet', 'type' => 'menu', 'roles' => ['owner', 'agent']],
                             ['label' => 'Pricing', 'type' => 'section', 'roles' => ['owner', 'agent']],
                             ['label' => 'Harga Tiket', 'route' => 'admin/jadwal-kelas-bus.index', 'icon' => 'tag', 'type' => 'menu', 'roles' => ['owner', 'agent']],
                             ['label' => 'Scan', 'type' => 'section', 'roles' => ['agent']],

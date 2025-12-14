@@ -1,31 +1,37 @@
 <x-guest-layout>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+    <div class="mb-6">
+        <h2 class="text-2xl font-bold text-foreground">{{ __('Verifikasi Email') }}</h2>
+        <p class="text-sm text-muted-foreground mt-1">{{ __('Terima kasih telah mendaftar! Sebelum memulai, harap verifikasi alamat email Anda dengan mengklik link yang kami kirimkan.') }}</p>
     </div>
 
     @if (session('status') == 'verification-link-sent')
-        <div class="mb-4 font-medium text-sm text-green-600">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+        <div class="mb-4 p-4 bg-accent/10 border border-accent rounded-lg">
+            <p class="text-sm font-medium text-accent">
+                {{ __('Link verifikasi baru telah dikirim ke alamat email yang Anda daftarkan.') }}
+            </p>
         </div>
     @endif
 
-    <div class="mt-4 flex items-center justify-between">
+    <div class="space-y-4">
         <form method="POST" action="{{ route('verification.send') }}">
             @csrf
-
-            <div>
-                <x-primary-button>
-                    {{ __('Resend Verification Email') }}
-                </x-primary-button>
-            </div>
+            <x-ui.button.button class="w-full justify-center">
+                {{ __('Kirim Ulang Email Verifikasi') }}
+            </x-ui.button.button>
         </form>
 
         <form method="POST" action="{{ route('logout') }}">
             @csrf
-
-            <button type="submit" class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                {{ __('Log Out') }}
-            </button>
+            <x-ui.button.button variant="outline" class="w-full justify-center">
+                {{ __('Keluar') }}
+            </x-ui.button.button>
         </form>
+    </div>
+
+    <!-- Info Box -->
+    <div class="mt-6 pt-6 border-t border-border">
+        <p class="text-xs text-muted-foreground">
+            {{ __('Jika Anda tidak menerima email, silakan periksa folder spam atau coba kirim ulang link verifikasi di atas.') }}
+        </p>
     </div>
 </x-guest-layout>

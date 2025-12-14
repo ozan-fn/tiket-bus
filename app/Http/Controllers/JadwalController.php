@@ -68,7 +68,8 @@ class JadwalController extends Controller
         $sopirs = Sopir::with("user")->where("status", "aktif")->get();
         $conductors = Sopir::with("user")->where("status", "aktif")->get();
         $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
-        return view("jadwal.create", compact("buses", "sopirs", "conductors", "rutes"));
+        $kelasBuses = \App\Models\KelasBus::all();
+        return view("jadwal.create", compact("buses", "sopirs", "conductors", "rutes", "kelasBuses"));
     }
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
@@ -78,12 +79,14 @@ class JadwalController extends Controller
             "sopir_id" => "required|exists:sopir,id",
             "conductor_id" => "nullable|exists:sopir,id",
             "rute_id" => "required|exists:rute,id",
-            "tanggal_berangkat" => "required|date|after:today",
+            "tanggal_berangkat" => "required|date_format:Y-m-d",
             "jam_berangkat" => "required|date_format:H:i",
             "status" => "required|in:aktif,tidak_aktif",
             "is_recurring" => "nullable|boolean",
             "recurring_type" => "nullable|in:daily,weekly",
             "recurring_count" => "nullable|integer|min:1|max:90",
+            "harga" => "nullable|array",
+            "harga.*" => "nullable|numeric|min:0",
         ]);
 
         if ($request->is_recurring) {
@@ -106,14 +109,47 @@ class JadwalController extends Controller
                 $tanggal->addDays($interval);
             }
 
-            Jadwal::insert($jadwals);
+            $createdJadwals = Jadwal::insert($jadwals);
+
+            // Add pricing for recurring schedules if provided
+            if ($request->has("harga") && is_array($request->harga)) {
+                $jadwalsData = Jadwal::where("bus_id", $request->bus_id)->where("rute_id", $request->rute_id)->where("tanggal_berangkat", ">=", $request->tanggal_berangkat)->orderBy("tanggal_berangkat")->limit($request->recurring_count)->get();
+
+                foreach ($jadwalsData as $jadwal) {
+                    $this->addPricingToJadwal($jadwal, $request->harga);
+                }
+            }
+
             $message = count($jadwals) . " jadwal berhasil ditambahkan";
         } else {
-            Jadwal::create($request->only(["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"]));
+            $jadwal = Jadwal::create($request->only(["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"]));
+
+            // Add pricing if provided
+            if ($request->has("harga") && is_array($request->harga)) {
+                $this->addPricingToJadwal($jadwal, $request->harga);
+            }
+
             $message = "Jadwal berhasil ditambahkan";
         }
 
         return redirect()->route("admin/jadwal.index")->with("success", $message);
+    }
+
+    private function addPricingToJadwal(Jadwal $jadwal, array $harga)
+    {
+        foreach ($harga as $kelasBusId => $hargaValue) {
+            if ($hargaValue !== null && $hargaValue !== "") {
+                \App\Models\JadwalKelasBus::firstOrCreate(
+                    [
+                        "jadwal_id" => $jadwal->id,
+                        "kelas_bus_id" => $kelasBusId,
+                    ],
+                    [
+                        "harga" => $hargaValue,
+                    ],
+                );
+            }
+        }
     }
 
     public function show(Jadwal $jadwal): \Illuminate\View\View
@@ -128,7 +164,9 @@ class JadwalController extends Controller
         $sopirs = Sopir::with("user")->where("status", "aktif")->get();
         $conductors = Sopir::with("user")->where("status", "aktif")->get();
         $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
-        return view("jadwal.edit", compact("jadwal", "buses", "sopirs", "conductors", "rutes"));
+        $kelasBuses = \App\Models\KelasBus::all();
+        $jadwalKelasBuses = $jadwal->jadwalKelasBus()->get();
+        return view("jadwal.edit", compact("jadwal", "buses", "sopirs", "conductors", "rutes", "kelasBuses", "jadwalKelasBuses"));
     }
 
     public function update(Request $request, Jadwal $jadwal): \Illuminate\Http\RedirectResponse
@@ -141,9 +179,16 @@ class JadwalController extends Controller
             "tanggal_berangkat" => "required|date",
             "jam_berangkat" => "required|date_format:H:i",
             "status" => "required|in:aktif,tidak_aktif",
+            "harga" => "nullable|array",
+            "harga.*" => "nullable|numeric|min:0",
         ]);
 
         $jadwal->update($request->all());
+
+        // Update pricing if provided
+        if ($request->has("harga") && is_array($request->harga)) {
+            $this->addPricingToJadwal($jadwal, $request->harga);
+        }
 
         return redirect()->route("admin/jadwal.index")->with("success", "Jadwal berhasil diperbarui");
     }

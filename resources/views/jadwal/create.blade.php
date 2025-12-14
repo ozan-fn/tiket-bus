@@ -65,7 +65,7 @@
                                     class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
                                     <option value="">Pilih Bus</option>
                                     @foreach($buses as $bus)
-                                        <option value="{{ $bus->id }}">{{ $bus->nama }}</option>
+                                        <option value="{{ $bus->id }}" {{ old('bus_id') == $bus->id ? 'selected' : '' }}>{{ $bus->nama }}</option>
                                     @endforeach
                                 </select>
                                 @error('bus_id')
@@ -93,7 +93,7 @@
                                         class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
                                         <option value="">Pilih Sopir</option>
                                         @foreach($sopirs as $sopir)
-                                            <option value="{{ $sopir->id }}">{{ $sopir->user->name }}</option>
+                                            <option value="{{ $sopir->id }}" {{ old('sopir_id') == $sopir->id ? 'selected' : '' }}>{{ $sopir->user->name }}</option>
                                         @endforeach
                                     </select>
                                     @error('sopir_id')
@@ -118,7 +118,7 @@
                                         class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
                                         <option value="">Pilih Kondektur (Opsional)</option>
                                         @foreach($conductors as $conductor)
-                                            <option value="{{ $conductor->id }}">{{ $conductor->user->name }} - {{ $conductor->nomor_sim }}</option>
+                                            <option value="{{ $conductor->id }}" {{ old('conductor_id') == $conductor->id ? 'selected' : '' }}>{{ $conductor->user->name }} - {{ $conductor->nomor_sim }}</option>
                                         @endforeach
                                     </select>
                                     @error('conductor_id')
@@ -145,7 +145,7 @@
                                         class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
                                         <option value="">Pilih Rute</option>
                                         @foreach($rutes as $rute)
-                                            <option value="{{ $rute->id }}">
+                                            <option value="{{ $rute->id }}" {{ old('rute_id') == $rute->id ? 'selected' : '' }}>
                                                 {{ $rute->asalTerminal->nama_terminal ?? '-' }} → {{ $rute->tujuanTerminal->nama_terminal ?? '-' }}
                                             </option>
                                         @endforeach
@@ -173,6 +173,7 @@
                                         name="tanggal_berangkat"
                                         id="tanggal_berangkat"
                                         placeholder="Pilih tanggal berangkat..."
+                                        :value="old('tanggal_berangkat')"
                                         required
                                     />
                                     @error('tanggal_berangkat')
@@ -196,6 +197,7 @@
                                         name="jam_berangkat"
                                         id="jam_berangkat"
                                         placeholder="HH:MM"
+                                        :value="old('jam_berangkat')"
                                         required
                                     />
                                     @error('jam_berangkat')
@@ -221,8 +223,8 @@
                                     id="status"
                                     required
                                     class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
-                                    <option value="aktif">Aktif</option>
-                                    <option value="tidak_aktif">Tidak Aktif</option>
+                                    <option value="aktif" {{ old('status') == 'aktif' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="tidak_aktif" {{ old('status') == 'tidak_aktif' ? 'selected' : '' }}>Tidak Aktif</option>
                                 </select>
                                 @error('status')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
@@ -241,6 +243,7 @@
                                         id="is_recurring"
                                         value="1"
                                         class="w-4 h-4 rounded border-input"
+                                        {{ old('is_recurring') ? 'checked' : '' }}
                                     />
                                     <span class="text-sm font-medium">Buat Jadwal Berulang</span>
                                 </label>
@@ -261,8 +264,8 @@
                                             name="recurring_type"
                                             id="recurring_type"
                                             class="w-full rounded-md border border-input bg-background dark:bg-input/30 dark:text-foreground dark:border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-ring/50">
-                                            <option value="daily">Harian</option>
-                                            <option value="weekly">Mingguan</option>
+                                            <option value="daily" {{ old('recurring_type') == 'daily' ? 'selected' : '' }}>Harian</option>
+                                            <option value="weekly" {{ old('recurring_type') == 'weekly' ? 'selected' : '' }}>Mingguan</option>
                                         </select>
                                         @error('recurring_type')
                                             <p class="text-sm text-destructive mt-1">{{ $message }}</p>
@@ -279,17 +282,54 @@
                                         </x-ui.label>
                                         <x-ui.input
                                             type="number"
-                                            id="recurring_count"
                                             name="recurring_count"
+                                            id="recurring_count"
+                                            placeholder="Contoh: 7"
                                             min="1"
                                             max="90"
-                                            placeholder="Contoh: 7"
+                                            :value="old('recurring_count')"
                                         />
                                         @error('recurring_count')
                                             <p class="text-sm text-destructive mt-1">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Harga Tiket Section -->
+                        <div class="mt-8 pt-8 border-t border-border">
+                            <h3 class="font-semibold mb-4 flex items-center gap-2">
+                                <x-lucide-tag class="w-4 h-4" />
+                                Tentukan Harga Tiket per Kelas (Opsional)
+                            </h3>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                @forelse($kelasBuses as $kelasBus)
+                                    <div class="space-y-2 p-4 border rounded-lg bg-muted/30">
+                                        <x-ui.label for="harga_{{ $kelasBus->id }}">
+                                            <div class="flex items-center gap-2">
+                                                <x-lucide-armchair class="w-4 h-4" />
+                                                {{ $kelasBus->nama_kelas }}
+                                            </div>
+                                        </x-ui.label>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-muted-foreground">Rp</span>
+                                            <x-ui.input
+                                                type="number"
+                                                name="harga[{{ $kelasBus->id }}]"
+                                                id="harga_{{ $kelasBus->id }}"
+                                                placeholder="0"
+                                                min="0"
+                                                step="1000"
+                                                :value="old('harga.' . $kelasBus->id)"
+                                            />
+                                        </div>
+                                        <p class="text-xs text-muted-foreground">Biarkan kosong jika tidak ingin menambah harga sekarang</p>
+                                    </div>
+                                @empty
+                                    <p class="text-muted-foreground col-span-2">Belum ada kelas bus. Buat kelas bus terlebih dahulu di menu Kelas Bus.</p>
+                                @endforelse
                             </div>
                         </div>
 

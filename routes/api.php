@@ -120,4 +120,8 @@ Route::middleware(["auth:sanctum", "role:owner|agent"])->group(function () {
     // Pembayaran manual approval
     Route::post("pembayaran/{id}/approve", [App\Http\Controllers\Api\PembayaranController::class, "approveManual"]);
     Route::post("pembayaran/{id}/reject", [App\Http\Controllers\Api\PembayaranController::class, "rejectManual"]);
+
+    // Pembayaran manual upload bukti dan list pending
+    Route::post("pembayaran/{id}/upload-bukti", [App\Http\Controllers\Api\PembayaranController::class, "uploadBukti"]);
+    Route::get("pembayaran/manual/pending", [App\Http\Controllers\Api\PembayaranController::class, "getPembayaranManualPending"]);
 });

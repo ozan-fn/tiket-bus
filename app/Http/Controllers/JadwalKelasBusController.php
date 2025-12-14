@@ -34,8 +34,7 @@ class JadwalKelasBusController extends Controller
                         ->orWhereHas("kelasBus", function ($q2) use ($search) {
                             $q2->where("nama_kelas", "like", "%{$search}%");
                         })
-                        ->orWhere("harga", "like", "%{$search}%")
-                        ->orWhere("kursi_tersedia", "like", "%{$search}%");
+                        ->orWhere("harga", "like", "%{$search}%");
                 }
             })
             ->when($dateFrom, function ($query) use ($dateFrom) {
