@@ -47,26 +47,7 @@
                                 <p class="text-sm text-muted-foreground">Masukkan nama kelas bus yang akan ditawarkan</p>
                             </div>
 
-                            <!-- Jumlah Kursi -->
-                            <div class="space-y-2">
-                                <x-ui.label for="jumlah_kursi">
-                                    Jumlah Kursi
-                                    <span class="text-red-500">*</span>
-                                </x-ui.label>
-                                <x-ui.input
-                                    type="number"
-                                    id="jumlah_kursi"
-                                    name="jumlah_kursi"
-                                    value="{{ old('jumlah_kursi', $kelasBus->jumlah_kursi) }}"
-                                    placeholder="Contoh: 20"
-                                    min="1"
-                                    required
-                                />
-                                @error('jumlah_kursi')
-                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
-                                @enderror
-                                <p class="text-sm text-muted-foreground">Masukkan jumlah kursi yang tersedia di kelas ini</p>
-                            </div>
+
 
                             <!-- Deskripsi -->
                             <div class="space-y-2">

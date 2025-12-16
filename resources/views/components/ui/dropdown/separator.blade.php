@@ -1,1 +1,1 @@
-<div data-slot="dropdown-menu-separator" class="h-px bg-border my-1 -mx-1"></div>
+<div data-slot="dropdown-menu-separator" class="bg-border mx-2 my-1 h-px"></div>

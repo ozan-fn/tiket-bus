@@ -49,30 +49,86 @@
                         @csrf
 
                         <div class="space-y-6">
-                            <!-- User -->
+                            <!-- Data Akun Baru -->
                             <div class="space-y-2">
-                                <x-ui.label for="user_id">
+                                <x-ui.label for="name">
                                     <div class="flex items-center gap-2">
                                         <x-lucide-user class="w-4 h-4" />
-                                        User
+                                        Nama Lengkap
                                     </div>
                                     <span class="text-red-500">*</span>
                                 </x-ui.label>
-                                <select
-                                    name="user_id"
-                                    id="user_id"
+                                <x-ui.input
+                                    type="text"
+                                    id="name"
+                                    name="name"
+                                    value="{{ old('name') }}"
+                                    placeholder="Masukkan nama lengkap"
                                     required
-                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
-                                </select>
-                                <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
-                                    Cari dan pilih user untuk sopir ini
-                                </p>
-                                @error('user_id')
-                                    <p class="text-sm text-destructive mt-1 flex items-center gap-1">
-                                        <x-lucide-alert-circle class="w-4 h-4" />
-                                        {{ $message }}
-                                    </p>
+                                />
+                                @error('name')
+                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="email">
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-mail class="w-4 h-4" />
+                                        Email
+                                    </div>
+                                    <span class="text-red-500">*</span>
+                                </x-ui.label>
+                                <x-ui.input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    value="{{ old('email') }}"
+                                    placeholder="Masukkan email"
+                                    required
+                                />
+                                @error('email')
+                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="password">
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-lock class="w-4 h-4" />
+                                        Password
+                                    </div>
+                                    <span class="text-red-500">*</span>
+                                </x-ui.label>
+                                <x-ui.input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    placeholder="Masukkan password"
+                                    required
+                                />
+                                @error('password')
+                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="password_confirmation">
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-lock class="w-4 h-4" />
+                                        Konfirmasi Password
+                                    </div>
+                                    <span class="text-red-500">*</span>
+                                </x-ui.label>
+                                <x-ui.input
+                                    type="password"
+                                    id="password_confirmation"
+                                    name="password_confirmation"
+                                    placeholder="Konfirmasi password"
+                                    required
+                                />
+                                @error('password_confirmation')
+                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
                                 @enderror
                             </div>
 

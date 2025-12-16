@@ -124,12 +124,96 @@
     }
 }
 
+/* TomSelect Light Mode Styling */
+.ts-wrapper {
+    background-color: var(--input, #b4b2a7) !important;
+    border-color: var(--border, #dad9d4) !important;
+    color: var(--foreground, #3d3929) !important;
+    padding: 0;
+    height: 36px;
+}
+
+.ts-wrapper.focus {
+    background-color: var(--input, #b4b2a7) !important;
+    border-color: var(--ring, #c96442) !important;
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.1) !important;
+}
+
+.ts-control {
+    background-color: var(--input, #b4b2a7) !important;
+    border-color: var(--border, #dad9d4) !important;
+    color: var(--foreground, #3d3929) !important;
+    padding: 4px;
+    height: 36px;
+}
+
+.ts-control.focus {
+    background-color: var(--input, #b4b2a7) !important;
+    border-color: var(--ring, #c96442) !important;
+    box-shadow: 0 0 0 3px rgba(201, 100, 66, 0.1) !important;
+}
+
+.ts-control input {
+    color: var(--foreground, #3d3929) !important;
+    background-color: transparent !important;
+}
+
+.ts-control input::placeholder {
+    color: var(--muted-foreground, #83827d) !important;
+}
+
+.ts-dropdown {
+    background-color: var(--popover, #ffffff) !important;
+    border-color: var(--border, #dad9d4) !important;
+    color: var(--foreground, #3d3929) !important;
+    box-shadow: 0 4px 6px -1px hsl(0 0% 0% / 0.1) !important;
+}
+
+.ts-dropdown-content {
+    color: var(--foreground, #3d3929) !important;
+    background-color: var(--popover, #ffffff) !important;
+}
+
+.ts-dropdown-content .option {
+    color: var(--foreground, #3d3929) !important;
+    background-color: transparent !important;
+    padding: 0.5rem 0.5rem !important;
+    border-radius: 0.25rem !important;
+}
+
+.ts-dropdown-content .option:hover {
+    background-color: var(--muted, #ede9de) !important;
+    color: var(--accent-foreground, #28261b) !important;
+}
+
+.ts-dropdown-content .option.active {
+    background-color: var(--muted, #ede9de) !important;
+    color: var(--accent-foreground, #28261b) !important;
+}
+
+.ts-dropdown-content .option.selected {
+    background-color: var(--muted, #ede9de) !important;
+    color: var(--accent-foreground, #28261b) !important;
+}
+
+.ts-control .item {
+    background-color: var(--secondary, #e9e6dc) !important;
+    color: var(--secondary-foreground, #535146) !important;
+    border-radius: 0.25rem !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+.ts-control .item.remove:hover {
+    background-color: rgba(201, 100, 66, 0.1) !important;
+}
+
 /* TomSelect Dark Mode Styling */
 .dark .ts-wrapper {
     background-color: rgba(82, 81, 74, 0.3) !important;
     border-color: var(--border, #3e3e38) !important;
     color: var(--foreground, #c3c0b6) !important;
     padding: 0;
+    height: 36px;
 }
 
 .dark .ts-wrapper.focus {
@@ -143,6 +227,7 @@
     border-color: var(--border, #3e3e38) !important;
     color: var(--foreground, #c3c0b6) !important;
     padding: 4px;
+    height: 36px;
 }
 
 .dark .ts-control.focus {

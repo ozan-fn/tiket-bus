@@ -55,7 +55,9 @@ class SopirController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            "user_id" => "required|exists:users,id|unique:sopir,user_id",
+            "name" => "required|string|max:255",
+            "email" => "required|email|max:255|unique:users",
+            "password" => "required|string|min:8|confirmed",
             "nik" => "required|string|max:255|unique:sopir",
             "nomor_sim" => "required|string|max:255|unique:sopir",
             "alamat" => "nullable|string",
@@ -64,7 +66,20 @@ class SopirController extends Controller
             "status" => "required|in:aktif,tidak_aktif",
         ]);
 
-        Sopir::create($request->all());
+        $user = User::create([
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" => bcrypt($request->password),
+        ]);
+
+        Sopir::create([
+            "nik" => $request->nik,
+            "nomor_sim" => $request->nomor_sim,
+            "alamat" => $request->alamat,
+            "telepon" => $request->telepon,
+            "tanggal_lahir" => $request->tanggal_lahir,
+            "status" => $request->status,
+        ]);
 
         return redirect()->route("admin/sopir.index")->with("success", "Sopir berhasil ditambahkan");
     }
@@ -83,7 +98,6 @@ class SopirController extends Controller
     public function update(Request $request, Sopir $sopir): RedirectResponse
     {
         $request->validate([
-            "user_id" => "required|exists:users,id|unique:sopir,user_id," . $sopir->id,
             "nik" => "required|string|max:255|unique:sopir,nik," . $sopir->id,
             "nomor_sim" => "required|string|max:255|unique:sopir,nomor_sim," . $sopir->id,
             "alamat" => "nullable|string",
@@ -92,7 +106,14 @@ class SopirController extends Controller
             "status" => "required|in:aktif,tidak_aktif",
         ]);
 
-        $sopir->update($request->all());
+        $sopir->update([
+            "nik" => $request->nik,
+            "nomor_sim" => $request->nomor_sim,
+            "alamat" => $request->alamat,
+            "telepon" => $request->telepon,
+            "tanggal_lahir" => $request->tanggal_lahir,
+            "status" => $request->status,
+        ]);
 
         return redirect()->route("admin/sopir.index")->with("success", "Sopir berhasil diperbarui");
     }

@@ -102,7 +102,7 @@
                                 <x-ui.table.row>
                                     <x-ui.table.head class="w-12 sm:w-16">No</x-ui.table.head>
                                     <x-table.sortable-header name="nama_kelas">Nama Kelas</x-table.sortable-header>
-                                    <x-table.sortable-header name="jumlah_kursi" class="hidden md:table-cell">Jumlah Kursi</x-table.sortable-header>
+
                                     <x-table.sortable-header name="created_at" class="hidden md:table-cell">Tanggal Dibuat</x-table.sortable-header>
                                     <x-ui.table.head class="text-right">Aksi</x-ui.table.head>
                                 </x-ui.table.row>
@@ -122,9 +122,7 @@
                                                 </div>
                                             </div>
                                         </x-ui.table.cell>
-                                        <x-ui.table.cell class="hidden md:table-cell text-sm">
-                                            {{ $item->jumlah_kursi }} Kursi
-                                        </x-ui.table.cell>
+
                                         <x-ui.table.cell class="hidden md:table-cell text-sm text-muted-foreground">
                                             {{ $item->created_at->format('d M Y') }}
                                         </x-ui.table.cell>
@@ -221,7 +219,7 @@
                                                     </div>
                                                     <div class="min-w-0 flex-1">
                                                         <p class="font-medium text-sm truncate">{{ $item->nama_kelas }}</p>
-                                                        <p class="text-xs text-muted-foreground">{{ $item->jumlah_kursi }} Kursi • {{ $item->created_at->format('d M Y') }}</p>
+                                                        <p class="text-xs text-muted-foreground">{{ $item->created_at->format('d M Y') }}</p>
                                                     </div>
                                                 </div>
                                                 <div class="flex items-center justify-end gap-1 shrink-0">

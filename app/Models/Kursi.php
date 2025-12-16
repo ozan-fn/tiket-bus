@@ -8,17 +8,17 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kursi extends Model
 {
-    protected $table = 'kursi';
+    protected $table = "kursi";
 
     protected $fillable = [
-        'kelas_bus_id',
-        'nomor_kursi',
-        'index', // Menambahkan kolom index ke fillable
+        "bus_kelas_bus_id",
+        "nomor_kursi",
+        "index", // Menambahkan kolom index ke fillable
     ];
 
-    public function kelasBus(): BelongsTo
+    public function busKelasBus(): BelongsTo
     {
-        return $this->belongsTo(KelasBus::class, 'kelas_bus_id');
+        return $this->belongsTo(BusKelasBus::class, "bus_kelas_bus_id");
     }
 
     public function tikets(): HasMany

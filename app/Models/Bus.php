@@ -48,6 +48,11 @@ class Bus extends Model
         return $this->belongsToMany(KelasBus::class, "bus_kelas_bus")->withPivot("jumlah_kursi")->withTimestamps();
     }
 
+    public function busKelasBus()
+    {
+        return $this->hasMany(BusKelasBus::class);
+    }
+
     public function jadwals()
     {
         return $this->hasMany(Jadwal::class);

@@ -49,11 +49,10 @@ class KelasBusController extends Controller
     {
         $request->validate([
             "nama_kelas" => "required|string|max:255",
-            "jumlah_kursi" => "required|integer|min:1",
             "deskripsi" => "nullable|string",
         ]);
 
-        KelasBus::create($request->only("nama_kelas", "jumlah_kursi", "deskripsi"));
+        KelasBus::create($request->only("nama_kelas", "deskripsi"));
 
         return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil ditambahkan");
     }
@@ -72,11 +71,10 @@ class KelasBusController extends Controller
     {
         $request->validate([
             "nama_kelas" => "required|string|max:255",
-            "jumlah_kursi" => "required|integer|min:1",
             "deskripsi" => "nullable|string",
         ]);
 
-        $kelasBus->update($request->only("nama_kelas", "jumlah_kursi", "deskripsi"));
+        $kelasBus->update($request->only("nama_kelas", "deskripsi"));
 
         return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil diperbarui");
     }

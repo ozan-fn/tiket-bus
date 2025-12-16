@@ -12,16 +12,12 @@ return new class extends Migration {
     {
         Schema::create("kursi", function (Blueprint $table) {
             $table->id();
-            $table->foreignId("kelas_bus_id")->constrained("kelas_bus")->onDelete("cascade");
+            $table->foreignId("bus_kelas_bus_id")->constrained("bus_kelas_bus")->onDelete("cascade");
             $table->string("nomor_kursi"); // Contoh: "A1", "B5", "15"
             $table->integer("index"); // Kolom untuk menyimpan urutan kursi
             $table->timestamps();
 
-            $table->unique(["kelas_bus_id", "nomor_kursi"]);
-        });
-
-        Schema::table("tiket", function (Blueprint $table) {
-            $table->foreign("kursi_id")->references("id")->on("kursi")->onDelete("cascade");
+            $table->unique(["bus_kelas_bus_id", "nomor_kursi"]);
         });
     }
 
@@ -30,10 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::table("tiket", function (Blueprint $table) {
-            $table->dropForeignKeyIfExists(["kursi_id"]);
-        });
-
         Schema::dropIfExists("kursi");
     }
 };

@@ -50,11 +50,7 @@
                         <p class="text-base font-semibold">{{ $kelasBus->nama_kelas }}</p>
                     </div>
 
-                    <!-- Jumlah Kursi -->
-                    <div class="border-b border-border pb-6">
-                        <p class="text-sm font-medium text-muted-foreground mb-2">Jumlah Kursi</p>
-                        <p class="text-base font-semibold">{{ $kelasBus->jumlah_kursi }} Kursi</p>
-                    </div>
+
 
                     <!-- Deskripsi -->
                     @if($kelasBus->deskripsi)

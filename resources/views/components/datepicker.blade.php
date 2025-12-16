@@ -21,10 +21,8 @@
     max: '{{ $max }}'
 })">
     <div class="relative">
-        <!-- Hidden input for form submission in YYYY-MM-DD format -->
         <input type="hidden" name="{{ $name }}" x-model="hiddenValue" />
 
-        <!-- Display input -->
         <input
             type="text"
             id="{{ $inputId }}"
@@ -50,15 +48,13 @@
         </div>
     </div>
 
-    <!-- Calendar Dropdown -->
     <div x-show="isOpen"
          x-transition
          @click.away="closeCalendar"
-         class="absolute mt-2 w-full min-w-[280px] rounded-md border border-border bg-popover p-3 shadow-md"
+         class="absolute mt-2 w-auto rounded-md border border-border bg-popover p-3 shadow-md"
          style="z-index: 50;"
          x-cloak>
 
-        <!-- Header -->
         <div class="flex items-center justify-between mb-3">
             <button type="button" @click="prevMonth" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -73,14 +69,12 @@
             </button>
         </div>
 
-        <!-- Weekdays -->
-        <div class="grid grid-cols-7 gap-1 mb-2">
+        <div class="grid grid-cols-7 gap-1 mb-1">
             <template x-for="day in weekdays" :key="day">
                 <div class="text-center text-xs font-medium text-muted-foreground h-8 flex items-center justify-center" x-text="day"></div>
             </template>
         </div>
 
-        <!-- Days -->
         <div class="grid grid-cols-7 gap-1">
             <template x-for="day in days" :key="day.date">
                 <button
@@ -108,9 +102,27 @@
         document.addEventListener('alpine:init', () => {
             Alpine.data('datepicker', ({ inputId, value, min, max }) => ({
                 isOpen: false,
-                currentMonth: new Date().getMonth(),
-                currentYear: new Date().getFullYear(),
-                selectedDate: value ? new Date(value) : null,
+                currentMonth: (() => {
+                    if (value) {
+                        const parts = value.split('-');
+                        if (parts.length === 3) return Number(parts[1]) - 1;
+                    }
+                    return new Date().getMonth();
+                })(),
+                currentYear: (() => {
+                    if (value) {
+                        const parts = value.split('-');
+                        if (parts.length === 3) return Number(parts[0]);
+                    }
+                    return new Date().getFullYear();
+                })(),
+                selectedDate: value ? (() => {
+                    const parts = value.split('-');
+                    if (parts.length === 3) {
+                        return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+                    }
+                    return null;
+                })() : null,
                 displayValue: '',
                 hiddenValue: value || '',
                 weekdays: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
@@ -119,14 +131,20 @@
                     if (this.selectedDate) {
                         this.displayValue = this.formatDate(this.selectedDate);
                         this.hiddenValue = value;
-                        this.currentMonth = this.selectedDate.getMonth();
-                        this.currentYear = this.selectedDate.getFullYear();
                     }
                 },
 
                 get monthYear() {
                     const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
                     return `${months[this.currentMonth]} ${this.currentYear}`;
+                },
+
+                // Fungsi baru untuk format ISO lokal agar tidak kena masalah timezone (H-1)
+                formatLocalISO(date) {
+                    const year = date.getFullYear();
+                    const month = String(date.getMonth() + 1).padStart(2, '0');
+                    const day = String(date.getDate()).padStart(2, '0');
+                    return `${year}-${month}-${day}`;
                 },
 
                 get days() {
@@ -142,7 +160,7 @@
                         const date = new Date(this.currentYear, this.currentMonth - 1, day);
                         days.push({
                             day,
-                            date: date.toISOString().split('T')[0],
+                            date: this.formatLocalISO(date), // Perbaikan: Gunakan LocalISO
                             isOtherMonth: true,
                             isToday: this.isToday(date),
                             isSelected: this.isSelected(date),
@@ -155,7 +173,7 @@
                         const date = new Date(this.currentYear, this.currentMonth, day);
                         days.push({
                             day,
-                            date: date.toISOString().split('T')[0],
+                            date: this.formatLocalISO(date), // Perbaikan: Gunakan LocalISO
                             isOtherMonth: false,
                             isToday: this.isToday(date),
                             isSelected: this.isSelected(date),
@@ -169,7 +187,7 @@
                         const date = new Date(this.currentYear, this.currentMonth + 1, day);
                         days.push({
                             day,
-                            date: date.toISOString().split('T')[0],
+                            date: this.formatLocalISO(date), // Perbaikan: Gunakan LocalISO
                             isOtherMonth: true,
                             isToday: this.isToday(date),
                             isSelected: this.isSelected(date),
@@ -207,17 +225,15 @@
                     if (day.disabled) return;
 
                     const [year, month, dayNum] = day.date.split('-');
-                    this.selectedDate = new Date(year, month - 1, dayNum);
+                    this.selectedDate = new Date(Number(year), Number(month) - 1, Number(dayNum));
                     this.displayValue = this.formatDate(this.selectedDate);
-                    this.hiddenValue = day.date; // YYYY-MM-DD format for backend
+                    this.hiddenValue = day.date;
 
-                    // Dispatch change event
                     this.$nextTick(() => {
                         const event = new Event('change', { bubbles: true });
                         this.$el.querySelector('input[type="hidden"]').dispatchEvent(event);
                     });
 
-                    // Close calendar after short delay to ensure selection is registered
                     setTimeout(() => {
                         this.closeCalendar();
                     }, 100);
@@ -249,7 +265,6 @@
                     this.isOpen = false;
                 },
 
-                // Ensure calendar closes when clicking outside
                 handleClickOutside(event) {
                     if (this.isOpen && !this.$el.contains(event.target)) {
                         this.closeCalendar();

@@ -15,6 +15,7 @@ return new class extends Migration {
             $table->foreignId("user_id")->constrained("users")->onDelete("cascade");
             $table->foreignId("jadwal_kelas_bus_id")->constrained("jadwal_kelas_bus")->onDelete("cascade");
             $table->unsignedBigInteger("kursi_id")->nullable();
+            $table->foreign("kursi_id")->references("id")->on("kursi")->onDelete("cascade");
             $table->string("nik");
             $table->string("nama_penumpang");
             $table->date("tanggal_lahir")->nullable();

@@ -6,21 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class JadwalKelasBus extends Model
 {
-    protected $table = 'jadwal_kelas_bus';
-    protected $fillable = [
-        'jadwal_id',
-        'kelas_bus_id',
-        'harga',
-    ];
+    protected $table = "jadwal_kelas_bus";
+    protected $fillable = ["jadwal_id", "bus_kelas_bus_id", "harga"];
 
     public function jadwal()
     {
         return $this->belongsTo(Jadwal::class);
     }
 
-    public function kelasBus()
+    public function busKelasBus()
     {
-        return $this->belongsTo(KelasBus::class);
+        return $this->belongsTo(BusKelasBus::class);
     }
 
     public function tikets()

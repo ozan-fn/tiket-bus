@@ -1,13 +1,15 @@
-@props(['variant' => 'default', 'inset' => false, 'as' => 'button'])
+@props(['variant' => 'default', 'inset' => false, 'as' => 'button', 'active' => false])
+
+@php
+    $active = filter_var($active, FILTER_VALIDATE_BOOLEAN);
+@endphp
 
 <{{ $as }}
-    data-slot="dropdown-menu-item"
     {{ $attributes }}
-    class="relative flex items-center gap-2 rounded-sm px-2 py-1.5 text-sm cursor-pointer
-        outline-none select-none dark:text-foreground
-        {{ $variant === 'destructive' ? 'text-destructive focus:bg-destructive/10 dark:focus:bg-destructive/20' : 'focus:bg-accent focus:text-accent-foreground dark:focus:bg-accent/80 dark:focus:text-accent-foreground' }}
-        {{ $inset ? 'pl-8' : '' }}
-        [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0 [&_svg]:pointer-events-none"
+    data-slot="dropdown-menu-item"
+    data-inset="{{ $inset ? 'true' : 'false' }}"
+    data-variant="{{ $variant }}"
+    class="flex w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground {{ $active ? 'bg-accent' : '' }} {{ $variant === 'destructive' ? 'text-destructive hover:bg-destructive/10 focus:bg-destructive/10' : '' }} {{ $inset ? 'pl-8' : '' }}"
 >
     {{ $slot }}
 </{{ $as }}>

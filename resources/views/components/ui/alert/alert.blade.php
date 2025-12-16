@@ -1,10 +1,13 @@
 @props([
     'variant' => 'default',
     'class' => '',
+    'icon' => null,
+    'title' => null,
+    'description' => null,
 ])
 
 @php
-    
+
     $variantClasses = [
         'default' => 'bg-card text-card-foreground',
         'destructive' => 'text-destructive bg-card [&>svg]:text-current *:data-[slot=alert-description]:text-destructive/90',
@@ -21,7 +24,9 @@
     {{ $attributes->merge(['class' => $finalClasses]) }}
 >
 
-    {{ $icon }}
+    @if($icon)
+        {{ $icon }}
+    @endif
 
     <div class="col-start-2 grid justify-items-start gap-1 text-sm">
         @if($title)
@@ -30,14 +35,12 @@
             </div>
         @endif
 
-    
         @if($description)
             <div data-slot="alert-description" class="text-muted-foreground [&_p]:leading-relaxed">
                 {!! $description !!}
             </div>
         @endif
 
-      
         @if(!$title && !$description)
             <div data-slot="alert-description" class="text-muted-foreground [&_p]:leading-relaxed">
                 {!! $slot !!}

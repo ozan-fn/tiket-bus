@@ -49,282 +49,79 @@
             <form method="POST" action="{{ route('admin/bus.store') }}" enctype="multipart/form-data" id="busForm">
                 @csrf
 
-                <!-- Tab Navigation -->
-                <div class="flex gap-2 mb-6 border-b border-border overflow-x-auto">
-                    <button type="button" data-tab="informasi" class="tab-button active px-4 py-2 border-b-2 border-primary text-sm font-medium text-primary whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                            <x-lucide-info class="w-4 h-4" />
-                            Informasi Bus
+                <x-ui.tabs :default="'informasi'">
+                    <x-ui.tabs.list class="mb-4 border-b border-border overflow-x-auto gap-x-2">
+                        <x-ui.tabs.trigger value="informasi">
+                            <x-lucide-info class="w-4 h-4" /> Informasi Bus
+                        </x-ui.tabs.trigger>
+                        <x-ui.tabs.trigger value="fasilitas">
+                            <x-lucide-sparkles class="w-4 h-4" /> Fasilitas
+                        </x-ui.tabs.trigger>
+                        <x-ui.tabs.trigger value="kelas">
+                            <x-lucide-armchair class="w-4 h-4" /> Kelas Bus
+                        </x-ui.tabs.trigger>
+                        <x-ui.tabs.trigger value="foto">
+                            <x-lucide-image class="w-4 h-4" /> Foto
+                        </x-ui.tabs.trigger>
+                    </x-ui.tabs.list>
+
+                    <x-ui.tabs.content value="informasi" class="space-y-6">
+                        @include('bus.partials._form_informasi')
+                        <div class="flex justify-end mt-6">
+                            {{-- HAPUS x-ui.tabs.trigger, GANTI DENGAN INI: --}}
+                            <x-ui.button type="button" variant="primary" @click="tab = 'fasilitas'">
+                                Next
+                            </x-ui.button>
                         </div>
-                    </button>
-                    <button type="button" data-tab="fasilitas" class="tab-button px-4 py-2 border-b-2 border-transparent text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                            <x-lucide-sparkles class="w-4 h-4" />
-                            Fasilitas
+                    </x-ui.tabs.content>
+
+                    <x-ui.tabs.content value="fasilitas" class="space-y-6">
+                        @include('bus.partials._form_fasilitas')
+                        <div class="flex justify-between mt-6">
+                            <x-ui.button type="button" variant="secondary" @click="tab = 'informasi'">
+                                Previous
+                            </x-ui.button>
+
+                            <x-ui.button type="button" variant="primary" @click="tab = 'kelas'">
+                                Next
+                            </x-ui.button>
                         </div>
-                    </button>
-                    <button type="button" data-tab="kelas" class="tab-button px-4 py-2 border-b-2 border-transparent text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                            <x-lucide-armchair class="w-4 h-4" />
-                            Kelas Bus
+                    </x-ui.tabs.content>
+
+                    <x-ui.tabs.content value="kelas" class="space-y-6">
+                        @include('bus.partials._form_kelas')
+                        <div class="flex justify-between mt-6">
+                            <x-ui.button type="button" variant="secondary" @click="tab = 'fasilitas'">
+                                Previous
+                            </x-ui.button>
+
+                            <x-ui.button type="button" variant="primary" @click="tab = 'foto'">
+                                Next
+                            </x-ui.button>
                         </div>
-                    </button>
-                    <button type="button" data-tab="foto" class="tab-button px-4 py-2 border-b-2 border-transparent text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap">
-                        <div class="flex items-center gap-2">
-                            <x-lucide-image class="w-4 h-4" />
-                            Foto
+                    </x-ui.tabs.content>
+
+                    <x-ui.tabs.content value="foto" class="space-y-6">
+                        @include('bus.partials._form_foto')
+                        <div class="flex justify-between mt-6">
+                            <x-ui.button type="button" variant="secondary" @click="tab = 'kelas'">
+                                Previous
+                            </x-ui.button>
+
+                            <x-ui.button type="submit" variant="primary">
+                                Create
+                            </x-ui.button>
                         </div>
-                    </button>
-                </div>
-
-                <!-- Tab Content -->
-                <!-- Tab 1: Informasi Bus -->
-                <div id="tab-informasi" class="tab-content space-y-6">
-                    <x-ui.card>
-                        <x-ui.card.header>
-                            <x-ui.card.title>Informasi Dasar Bus</x-ui.card.title>
-                            <x-ui.card.description>Masukkan detail identitas bus yang akan ditambahkan</x-ui.card.description>
-                        </x-ui.card.header>
-                        <x-ui.card.content>
-                            <div class="space-y-6">
-                                <!-- Nama Bus -->
-                                <div class="space-y-2">
-                                    <x-ui.label for="nama">
-                                        <div class="flex items-center gap-2">
-                                            <x-lucide-bus class="w-4 h-4" />
-                                            Nama Bus
-                                            <span class="text-red-500">*</span>
-                                        </div>
-                                    </x-ui.label>
-                                    <x-ui.input
-                                        type="text"
-                                        id="nama"
-                                        name="nama"
-                                        value="{{ old('nama') }}"
-                                        placeholder="Contoh: Haryanto Executive, Pahala Kencana"
-                                        required
-                                        class="@error('nama') border-red-500 @enderror"
-                                    />
-                                    @error('nama')
-                                        <p class="text-sm text-destructive flex items-center gap-1">
-                                            <x-lucide-alert-circle class="w-4 h-4" />
-                                            {{ $message }}
-                                        </p>
-                                    @enderror
-                                    <p class="text-xs text-muted-foreground">Masukkan nama merek atau nama armada bus</p>
-                                </div>
-
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <!-- Kapasitas -->
-                                    <div class="space-y-2">
-                                        <x-ui.label for="kapasitas">
-                                            <div class="flex items-center gap-2">
-                                                <x-lucide-users class="w-4 h-4" />
-                                                Kapasitas Kursi
-                                                <span class="text-red-500">*</span>
-                                            </div>
-                                        </x-ui.label>
-                                        <x-ui.input
-                                            type="number"
-                                            id="kapasitas"
-                                            name="kapasitas"
-                                            value="{{ old('kapasitas') }}"
-                                            placeholder="Contoh: 40"
-                                            min="1"
-                                            required
-                                            class="@error('kapasitas') border-red-500 @enderror"
-                                        />
-                                        @error('kapasitas')
-                                            <p class="text-sm text-destructive flex items-center gap-1">
-                                                <x-lucide-alert-circle class="w-4 h-4" />
-                                                {{ $message }}
-                                            </p>
-                                        @enderror
-                                        <p class="text-xs text-muted-foreground">Total jumlah kursi di bus</p>
-                                    </div>
-
-                                    <!-- Plat Nomor -->
-                                    <div class="space-y-2">
-                                        <x-ui.label for="plat_nomor">
-                                            <div class="flex items-center gap-2">
-                                                <x-lucide-hash class="w-4 h-4" />
-                                                Plat Nomor
-                                                <span class="text-red-500">*</span>
-                                            </div>
-                                        </x-ui.label>
-                                        <x-ui.input
-                                            type="text"
-                                            id="plat_nomor"
-                                            name="plat_nomor"
-                                            value="{{ old('plat_nomor') }}"
-                                            placeholder="Contoh: B 1234 XYZ"
-                                            required
-                                            class="@error('plat_nomor') border-red-500 @enderror"
-                                        />
-                                        @error('plat_nomor')
-                                            <p class="text-sm text-destructive flex items-center gap-1">
-                                                <x-lucide-alert-circle class="w-4 h-4" />
-                                                {{ $message }}
-                                            </p>
-                                        @enderror
-                                        <p class="text-xs text-muted-foreground">Nomor identitas kendaraan</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </x-ui.card.content>
-                    </x-ui.card>
-                </div>
-
-                <!-- Tab 2: Fasilitas -->
-                <div id="tab-fasilitas" class="tab-content hidden space-y-6">
-                    <x-ui.card>
-                        <x-ui.card.header>
-                            <x-ui.card.title>Fasilitas Bus</x-ui.card.title>
-                            <x-ui.card.description>Pilih fasilitas yang tersedia di bus ini</x-ui.card.description>
-                        </x-ui.card.header>
-                        <x-ui.card.content>
-                            <div class="space-y-2">
-                                <x-ui.label>
-                                    <div class="flex items-center gap-2">
-                                        <x-lucide-sparkles class="w-4 h-4" />
-                                        Pilih Fasilitas
-                                    </div>
-                                </x-ui.label>
-                                <select
-                                    name="fasilitas_ids[]"
-                                    id="fasilitas_ids"
-                                    multiple
-                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                                >
-                                    @foreach($fasilitas as $fasilitasItem)
-                                        <option value="{{ $fasilitasItem->id }}" {{ in_array($fasilitasItem->id, old('fasilitas_ids', [])) ? 'selected' : '' }}>
-                                            {{ $fasilitasItem->nama }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
-                                    Tekan Ctrl (Windows) atau Cmd (Mac) untuk memilih lebih dari satu
-                                </p>
-                            </div>
-
-                            <!-- Fasilitas Preview -->
-                            <div class="mt-6 space-y-3">
-                                <h4 class="text-sm font-semibold">Fasilitas yang Dipilih:</h4>
-                                <div id="fasilitas-preview" class="flex flex-wrap gap-2">
-                                    @foreach($fasilitas as $fasilitasItem)
-                                        @if(in_array($fasilitasItem->id, old('fasilitas_ids', [])))
-                                            <x-ui.badge>
-                                                <x-lucide-check class="w-3 h-3 mr-1" />
-                                                {{ $fasilitasItem->nama }}
-                                            </x-ui.badge>
-                                        @endif
-                                    @endforeach
-                                </div>
-                            </div>
-                        </x-ui.card.content>
-                    </x-ui.card>
-                </div>
-
-                <!-- Tab 3: Kelas Bus -->
-                <div id="tab-kelas" class="tab-content hidden space-y-6">
-                    <x-ui.card>
-                        <x-ui.card.header>
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <x-ui.card.title>Kelas Bus</x-ui.card.title>
-                                    <x-ui.card.description>Tambahkan kelas bus dan tentukan jumlah kursi untuk setiap kelas</x-ui.card.description>
-                                </div>
-                                <x-ui.button type="button" size="sm" onclick="addKelasBusRow()">
-                                    <x-lucide-plus class="w-4 h-4 mr-2" />
-                                    Tambah Kelas
-                                </x-ui.button>
-                            </div>
-                        </x-ui.card.header>
-                        <x-ui.card.content>
-                            <div id="kelas-bus-container" class="space-y-4">
-                                <!-- Template will be cloned here -->
-                            </div>
-
-                            <!-- Kelas Bus Summary -->
-                            <div class="mt-6 p-4 rounded-lg bg-muted/50 border border-border">
-                                <h4 class="text-sm font-semibold mb-2 flex items-center gap-2">
-                                    <x-lucide-info class="w-4 h-4" />
-                                    Ringkasan Kelas Bus
-                                </h4>
-                                <div id="kelas-summary" class="text-sm text-muted-foreground">
-                                    <p>Belum ada kelas yang ditambahkan</p>
-                                </div>
-                            </div>
-                        </x-ui.card.content>
-                    </x-ui.card>
-                </div>
-
-                <!-- Tab 4: Foto -->
-                <div id="tab-foto" class="tab-content hidden space-y-6">
-                    <x-ui.card>
-                        <x-ui.card.header>
-                            <x-ui.card.title>Foto Bus</x-ui.card.title>
-                            <x-ui.card.description>Unggah foto atau gambar bus dari berbagai sudut</x-ui.card.description>
-                        </x-ui.card.header>
-                        <x-ui.card.content>
-                            <div class="space-y-4">
-                                <!-- Upload Area -->
-                                <div class="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary hover:bg-primary/5 transition-all cursor-pointer bg-muted/30">
-                                    <x-lucide-upload class="h-12 w-12 text-muted-foreground mx-auto mb-3" />
-                                    <label for="foto" class="cursor-pointer">
-                                        <span class="text-sm text-primary hover:underline font-medium">Klik untuk upload</span>
-                                        <span class="text-sm text-muted-foreground"> atau drag & drop</span>
-                                    </label>
-                                    <input
-                                        type="file"
-                                        name="foto[]"
-                                        id="foto"
-                                        multiple
-                                        accept="image/*"
-                                        class="hidden"
-                                    />
-                                    <p class="text-xs text-muted-foreground mt-2 flex items-center justify-center gap-1">
-                                        <x-lucide-file-image class="w-3 h-3" />
-                                        PNG, JPG, JPEG, GIF (Max. 2MB per file)
-                                    </p>
-                                </div>
-
-                                @error('foto')
-                                    <x-ui.alert variant="destructive">
-                                        <x-lucide-alert-circle class="w-5 h-5" />
-                                        <x-ui.alert.title>Error Upload</x-ui.alert.title>
-                                        <x-ui.alert.description>{{ $message }}</x-ui.alert.description>
-                                    </x-ui.alert>
-                                @enderror
-
-                                <!-- Preview -->
-                                <div>
-                                    <h4 class="text-sm font-semibold mb-3 flex items-center gap-2">
-                                        <x-lucide-image class="w-4 h-4" />
-                                        Preview Foto
-                                    </h4>
-                                    <div id="preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-                                </div>
-                            </div>
-                        </x-ui.card.content>
-                    </x-ui.card>
-                </div>
-
-                <!-- Form Actions -->
-                <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 sticky bottom-0 bg-background border-t border-border p-4 rounded-b-lg">
-                    <a href="{{ route('admin/bus.index') }}" class="w-full sm:w-auto">
-                        <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
-                            <x-lucide-x class="w-4 h-4 mr-2" />
-                            Batal
-                        </x-ui.button>
-                    </a>
-                    <x-ui.button type="submit" class="w-full sm:w-auto">
-                        <x-lucide-save class="w-4 h-4 mr-2" />
-                        Simpan Bus
-                    </x-ui.button>
-                </div>
+                    </x-ui.tabs.content>
+                </x-ui.tabs>
             </form>
+            {{-- Alert info jika tombol Next tidak bisa diklik --}}
+            <x-ui.alert.alert
+                variant="default"
+                :title="'Kenapa tombol Next tidak bisa diklik?'"
+                :description="'Tombol Next pada stepper (tabs) akan nonaktif jika ada isian yang wajib diisi namun belum lengkap. Pastikan semua field pada step saat ini sudah terisi dengan benar sebelum melanjutkan ke step berikutnya. Jika ada field yang kosong atau tidak valid, periksa kembali dan lengkapi terlebih dahulu.'"
+                class="mt-6"
+            />
         </div>
     </div>
 
@@ -360,26 +157,6 @@
     <script>
         let kelasBusCount = 0;
 
-        // Tab Navigation
-        document.querySelectorAll('.tab-button').forEach(button => {
-            button.addEventListener('click', function() {
-                const tabName = this.dataset.tab;
-
-                document.querySelectorAll('.tab-button').forEach(btn => {
-                    btn.classList.remove('active', 'border-primary', 'text-primary');
-                    btn.classList.add('border-transparent', 'text-muted-foreground');
-                });
-
-                document.querySelectorAll('.tab-content').forEach(content => {
-                    content.classList.add('hidden');
-                });
-
-                this.classList.add('active', 'border-primary', 'text-primary');
-                this.classList.remove('border-transparent', 'text-muted-foreground');
-                document.getElementById('tab-' + tabName).classList.remove('hidden');
-            });
-        });
-
         // Fasilitas Selection
         document.getElementById('fasilitas_ids').addEventListener('change', function() {
             const selected = Array.from(this.selectedOptions).map(opt => opt.text);
@@ -404,12 +181,14 @@
 
             kelasBusCount++;
             updateKelasSummary();
+            updateKelasSelectOptions();
         }
 
         // Remove Kelas Bus Row
         function removeKelasBusRow(button) {
             button.closest('.kelas-bus-row').remove();
             updateKelasSummary();
+            updateKelasSelectOptions();
         }
 
         // Update Kelas Summary
@@ -439,10 +218,33 @@
             summary.innerHTML = html;
         }
 
+        // Disable duplicate kelas in select
+        function updateKelasSelectOptions() {
+            const rows = document.querySelectorAll('.kelas-bus-row');
+            const selectedValues = Array.from(rows)
+                .map(row => row.querySelector('select').value)
+                .filter(val => val !== '');
+
+            rows.forEach(row => {
+                const select = row.querySelector('select');
+                const currentValue = select.value;
+                Array.from(select.options).forEach(option => {
+                    if (option.value === '' || option.value === currentValue) {
+                        option.disabled = false;
+                    } else {
+                        option.disabled = selectedValues.includes(option.value);
+                    }
+                });
+            });
+        }
+
         // Monitor input changes
         document.addEventListener('change', function(e) {
             if (e.target.matches('.kelas-select, .kelas-kursi')) {
                 updateKelasSummary();
+            }
+            if (e.target.matches('.kelas-select')) {
+                updateKelasSelectOptions();
             }
         });
 
@@ -498,6 +300,40 @@
             });
 
             input.files = selectedFiles.files;
+        });
+
+        // Form validation: prevent duplicate kelas & jumlah kursi < 1
+        document.getElementById('busForm').addEventListener('submit', function(e) {
+            let valid = true;
+            let kelasValues = [];
+            let kursiValid = true;
+            let duplicate = false;
+
+            const rows = document.querySelectorAll('.kelas-bus-row');
+            rows.forEach(row => {
+                const select = row.querySelector('select');
+                const input = row.querySelector('input[type="number"]');
+                if (select.value === '' || kelasValues.includes(select.value)) {
+                    duplicate = true;
+                }
+                kelasValues.push(select.value);
+
+                if (input.value === '' || isNaN(input.value) || Number(input.value) < 1) {
+                    kursiValid = false;
+                }
+            });
+
+            if (duplicate) {
+                alert('Tidak boleh ada kelas yang sama pada baris berbeda.');
+                valid = false;
+            }
+            if (!kursiValid) {
+                alert('Jumlah kursi harus diisi dan minimal 1 pada setiap baris.');
+                valid = false;
+            }
+            if (!valid) {
+                e.preventDefault();
+            }
         });
     </script>
     @endpush

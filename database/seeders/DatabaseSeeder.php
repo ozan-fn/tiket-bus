@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use Illuminate\Support\Facades\Log;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -61,6 +61,9 @@ class DatabaseSeeder extends Seeder
             "email" => "user@example.com",
         ]);
         $user->assignRole("passenger");
+
+        $this->command->info("hehe");
+        return;
 
         // Fasilitas
         $ac = \App\Models\Fasilitas::create(["nama" => "AC", "icon" => "snowflake"]);
