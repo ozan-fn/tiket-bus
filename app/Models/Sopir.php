@@ -40,11 +40,6 @@ class Sopir extends Model
 
     protected $fillable = ["user_id", "nik", "nomor_sim", "alamat", "telepon", "tanggal_lahir", "status"];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class, "user_id");
-    }
-
     public function jadwals()
     {
         return $this->hasMany(Jadwal::class);
@@ -53,5 +48,10 @@ class Sopir extends Model
     public function conductorJadwals()
     {
         return $this->hasMany(Jadwal::class, "conductor_id");
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\UserController;
+
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\ProfileController;
@@ -52,6 +54,18 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
     ->prefix("admin")
     ->name("admin/")
     ->group(function () {
+        // User Management (Owner Only)
+        Route::middleware("role:owner")->group(function () {
+            Route::resource("user", UserController::class)->names([
+                "index" => "user.index",
+                "create" => "user.create",
+                "store" => "user.store",
+                "edit" => "user.edit",
+                "update" => "user.update",
+                "destroy" => "user.destroy",
+            ]);
+        });
+
         // Bus Management
         Route::resource("bus", BusController::class)->parameters(["bus" => "bus"]);
         Route::delete("bus-photo/{busPhoto}", [BusController::class, "destroyPhoto"])->name("bus-photo.destroy");

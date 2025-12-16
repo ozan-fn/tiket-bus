@@ -147,7 +147,7 @@
                             ['label' => 'Bus', 'route' => 'admin/bus.index', 'icon' => 'bus', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Fasilitas', 'route' => 'admin/fasilitas.index', 'icon' => 'sparkles', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Kelas Bus', 'route' => 'admin/kelas-bus.index', 'icon' => 'layers', 'type' => 'menu', 'roles' => ['owner']],
-                            ['label' => 'Sopir', 'route' => 'admin/sopir.index', 'icon' => 'user-round', 'type' => 'menu', 'roles' => ['owner']],
+                            ['label' => 'User', 'route' => 'admin/user.index', 'icon' => 'users', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Rute & Jadwal', 'type' => 'section', 'roles' => ['owner',  'conductor']],
                             ['label' => 'Terminal', 'route' => 'admin/terminal.index', 'icon' => 'building-2', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Rute', 'route' => 'admin/rute.index', 'icon' => 'route', 'type' => 'menu', 'roles' => ['owner']],
@@ -162,6 +162,7 @@
                             ['label' => 'Harga Tiket', 'route' => 'admin/jadwal-kelas-bus.index', 'icon' => 'tag', 'type' => 'menu', 'roles' => ['owner', 'agent']],
                             ['label' => 'Scan', 'type' => 'section', 'roles' => ['agent']],
                             ['label' => 'Scan Tiket', 'route' => 'admin/scan.index', 'icon' => 'qr-code', 'type' => 'menu', 'roles' => ['agent']],
+                            ['label' => 'User', 'route' => 'admin/user.index', 'icon' => 'users', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'Pemeriksaan', 'type' => 'section', 'roles' => ['agent']],
                             ['label' => 'Cek Kursi', 'route' => 'admin/cek-kursi.index', 'icon' => 'armchair', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'Laporan', 'type' => 'section', 'roles' => ['owner']],
@@ -197,12 +198,28 @@
                         <button @click="open = !open" class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
                             <x-ui.avatar>
                                 <x-ui.avatar.avatar-fallback class="bg-primary text-primary-foreground font-semibold">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                    @if(auth()->check())
+                                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                    @else
+                                        GU
+                                    @endif
                                 </x-ui.avatar.avatar-fallback>
                             </x-ui.avatar>
                             <div class="flex-1 min-w-0 text-left">
-                                <p class="text-sm font-medium truncate">{{ auth()->user()->name }}</p>
-                                <p class="text-xs text-muted-foreground truncate">{{ auth()->user()->email }}</p>
+                                <p class="text-sm font-medium truncate">
+                                    @if(auth()->check())
+                                        {{ auth()->user()->name }}
+                                    @else
+                                        Guest
+                                    @endif
+                                </p>
+                                <p class="text-xs text-muted-foreground truncate">
+                                    @if(auth()->check())
+                                        {{ auth()->user()->email }}
+                                    @else
+                                        guest@example.com
+                                    @endif
+                                </p>
                             </div>
                             <x-lucide-chevron-right class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" x-bind:class="open ? 'rotate-90' : ''" />
                         </button>
