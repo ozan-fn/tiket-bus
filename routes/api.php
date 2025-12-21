@@ -21,6 +21,12 @@ Route::get("terminal/{id}", [App\Http\Controllers\Api\TerminalController::class,
 Route::get("rute", [App\Http\Controllers\Api\RuteController::class, "index"]);
 Route::get("rute/{id}", [App\Http\Controllers\Api\RuteController::class, "show"]);
 
+// Banner - public endpoints (singular & plural)
+// Public list (singular path)
+Route::get("banner", [App\Http\Controllers\BannerController::class, "publicIndex"]);
+// Public show (singular path) - returns a single banner by id (implement `publicShow` in controller)
+Route::get("banner/{id}", [App\Http\Controllers\BannerController::class, "publicShow"]);
+
 // Jadwal
 Route::get("jadwal", [App\Http\Controllers\Api\JadwalController::class, "index"]);
 Route::get("jadwal/{id}", [App\Http\Controllers\Api\JadwalController::class, "show"]);
@@ -31,6 +37,7 @@ Route::get("kursi/{kursi_id}/check", [App\Http\Controllers\Api\KursiController::
 
 // Tiket Public (cek by kode)
 Route::get("tiket/{kode_tiket}", [App\Http\Controllers\Api\TiketController::class, "show"]);
+Route::get("tiket/{kode_tiket}/verify", [App\Http\Controllers\Api\TiketController::class, "verify"]);
 
 // Pembayaran Callback (dari payment gateway)
 Route::post("pembayaran/callback", [App\Http\Controllers\Api\PembayaranController::class, "callback"]);
@@ -70,58 +77,14 @@ Route::middleware(["auth:sanctum"])->group(function () {
     Route::post("upload/bukti-pembayaran", [App\Http\Controllers\Api\UploadController::class, "uploadBuktiPembayaran"]);
 });
 
-// =================== ADMIN/AGENT ENDPOINTS ===================
-Route::middleware(["auth:sanctum", "role:owner|agent"])->group(function () {
-    // Bus Management
-    Route::post("bus", [App\Http\Controllers\Api\BusController::class, "store"]);
-    Route::put("bus/{id}", [App\Http\Controllers\Api\BusController::class, "update"]);
-    Route::delete("bus/{id}", [App\Http\Controllers\Api\BusController::class, "destroy"]);
+// =================== DRIVER ENDPOINTS ===================
+Route::middleware(["auth:sanctum", "role:driver"])->group(function () {
+    Route::get("driver", [App\Http\Controllers\Api\DriverController::class, "index"]);
+    Route::get("driver/kursi/{jadwal}", [App\Http\Controllers\Api\DriverController::class, "kursi"]);
+    Route::post("driver/verify/{kode}", [App\Http\Controllers\Api\DriverController::class, "verify"]);
+});
 
-    // Fasilitas Management
-    Route::post("fasilitas", [App\Http\Controllers\Api\FasilitasController::class, "store"]);
-    Route::put("fasilitas/{id}", [App\Http\Controllers\Api\FasilitasController::class, "update"]);
-    Route::delete("fasilitas/{id}", [App\Http\Controllers\Api\FasilitasController::class, "destroy"]);
-
-    // Terminal Management
-    Route::post("terminal", [App\Http\Controllers\Api\TerminalController::class, "store"]);
-    Route::put("terminal/{id}", [App\Http\Controllers\Api\TerminalController::class, "update"]);
-    Route::delete("terminal/{id}", [App\Http\Controllers\Api\TerminalController::class, "destroy"]);
-
-    // Rute Management
-    Route::post("rute", [App\Http\Controllers\Api\RuteController::class, "store"]);
-    Route::put("rute/{id}", [App\Http\Controllers\Api\RuteController::class, "update"]);
-    Route::delete("rute/{id}", [App\Http\Controllers\Api\RuteController::class, "destroy"]);
-
-    // Sopir Management
-    Route::apiResource("sopir", App\Http\Controllers\Api\SopirController::class);
-
-    // Kelas Bus Management
-    Route::apiResource("kelas-bus", App\Http\Controllers\Api\KelasBusController::class);
-
-    // Jadwal Management
-    Route::post("jadwal", [App\Http\Controllers\Api\JadwalController::class, "store"]);
-    Route::put("jadwal/{id}", [App\Http\Controllers\Api\JadwalController::class, "update"]);
-    Route::delete("jadwal/{id}", [App\Http\Controllers\Api\JadwalController::class, "destroy"]);
-
-    // Jadwal Kelas Bus Management
-    Route::apiResource("jadwal-kelas-bus", App\Http\Controllers\Api\JadwalKelasBusController::class);
-
-    // Laporan & Analytics
-    Route::get("laporan/tiket", [App\Http\Controllers\Api\LaporanController::class, "tiket"]);
-    Route::get("laporan/pendapatan", [App\Http\Controllers\Api\LaporanController::class, "pendapatan"]);
-    Route::get("laporan/penumpang", [App\Http\Controllers\Api\LaporanController::class, "penumpang"]);
-
-    // Upload (Admin/Agent)
-    Route::post("upload/bus-photo", [App\Http\Controllers\Api\UploadController::class, "uploadBusPhoto"]);
-    Route::delete("upload/bus-photo/{id}", [App\Http\Controllers\Api\UploadController::class, "deleteBusPhoto"]);
-    Route::post("upload/terminal-photo", [App\Http\Controllers\Api\UploadController::class, "uploadTerminalPhoto"]);
-    Route::delete("upload/terminal-photo/{id}", [App\Http\Controllers\Api\UploadController::class, "deleteTerminalPhoto"]);
-
-    // Pembayaran manual approval
-    Route::post("pembayaran/{id}/approve", [App\Http\Controllers\Api\PembayaranController::class, "approveManual"]);
-    Route::post("pembayaran/{id}/reject", [App\Http\Controllers\Api\PembayaranController::class, "rejectManual"]);
-
-    // Pembayaran manual upload bukti dan list pending
-    Route::post("pembayaran/{id}/upload-bukti", [App\Http\Controllers\Api\PembayaranController::class, "uploadBukti"]);
-    Route::get("pembayaran/manual/pending", [App\Http\Controllers\Api\PembayaranController::class, "getPembayaranManualPending"]);
+// =================== OWNER ENDPOINTS ===================
+Route::middleware(["auth:sanctum", "role:owner"])->group(function () {
+    Route::apiResource("banners", App\Http\Controllers\BannerController::class);
 });
