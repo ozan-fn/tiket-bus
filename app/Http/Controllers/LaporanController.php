@@ -95,7 +95,7 @@ class LaporanController extends Controller
         $endDate = $request->input("end_date", now()->format("Y-m-d"));
         $status = $request->input("status");
 
-        $query = Tiket::with(["jadwalKelasBus.jadwal.rute.asalTerminal", "jadwalKelasBus.jadwal.rute.tujuanTerminal", "jadwalKelasBus.kelasBus", "user"])->whereBetween("waktu_pesan", [$startDate, $endDate]);
+        $query = Tiket::with(["jadwalKelasBus.jadwal.rute.asalTerminal", "jadwalKelasBus.jadwal.rute.tujuanTerminal", "jadwalKelasBus.kelasBus", "user", "pembayaran"])->whereBetween("waktu_pesan", [$startDate, $endDate]);
 
         if ($status) {
             $query->where("status", $status);
@@ -105,9 +105,10 @@ class LaporanController extends Controller
 
         // Summary
         $totalTiket = $query->count();
-        $totalPendapatan = Tiket::whereBetween("waktu_pesan", [$startDate, $endDate])
-            ->whereIn("status", ["dibayar", "digunakan"])
-            ->sum("harga");
+        $totalPendapatan = Tiket::join("pembayaran", "tiket.id", "=", "pembayaran.tiket_id")
+            ->whereIn("pembayaran.status", ["dibayar", "selesai"])
+            ->whereBetween("pembayaran.waktu_bayar", [$startDate, $endDate])
+            ->sum("tiket.harga");
 
         return view("laporan.tiket", compact("tikets", "totalTiket", "totalPendapatan", "startDate", "endDate", "status"));
     }
@@ -128,22 +129,24 @@ class LaporanController extends Controller
             default => "%Y-%m-%d",
         };
 
-        $pendapatan = Tiket::select(DB::raw("DATE_FORMAT(waktu_pesan, '{$format}') as periode"), DB::raw("COUNT(*) as jumlah_tiket"), DB::raw("SUM(harga) as total_pendapatan"))
-            ->whereIn("status", ["dibayar", "digunakan"])
-            ->whereBetween("waktu_pesan", [$startDate, $endDate])
+        $pendapatan = Tiket::select(DB::raw("DATE_FORMAT(pembayaran.waktu_bayar, '{$format}') as periode"), DB::raw("COUNT(*) as jumlah_tiket"), DB::raw("SUM(tiket.harga) as total_pendapatan"))
+            ->join("pembayaran", "tiket.id", "=", "pembayaran.tiket_id")
+            ->whereIn("pembayaran.status", ["dibayar", "selesai"])
+            ->whereBetween("pembayaran.waktu_bayar", [$startDate, $endDate])
             ->groupBy("periode")
             ->orderBy("periode")
             ->get();
 
         // Pendapatan per Rute
         $pendapatanPerRute = Tiket::select("asal.nama_terminal as asal", "tujuan.nama_terminal as tujuan", DB::raw("COUNT(tiket.id) as jumlah_tiket"), DB::raw("SUM(tiket.harga) as total_pendapatan"))
+            ->join("pembayaran", "tiket.id", "=", "pembayaran.tiket_id")
             ->join("jadwal_kelas_bus", "tiket.jadwal_kelas_bus_id", "=", "jadwal_kelas_bus.id")
             ->join("jadwal", "jadwal_kelas_bus.jadwal_id", "=", "jadwal.id")
             ->join("rute", "jadwal.rute_id", "=", "rute.id")
             ->join("terminal as asal", "rute.asal_terminal_id", "=", "asal.id")
             ->join("terminal as tujuan", "rute.tujuan_terminal_id", "=", "tujuan.id")
-            ->whereIn("tiket.status", ["dibayar", "digunakan"])
-            ->whereBetween("tiket.waktu_pesan", [$startDate, $endDate])
+            ->whereIn("pembayaran.status", ["dibayar", "selesai"])
+            ->whereBetween("pembayaran.waktu_bayar", [$startDate, $endDate])
             ->groupBy("asal.nama_terminal", "tujuan.nama_terminal")
             ->orderByDesc("total_pendapatan")
             ->get();
@@ -164,12 +167,12 @@ class LaporanController extends Controller
 
         // Total Penumpang
         $totalPenumpang = Tiket::whereBetween("waktu_pesan", [$startDate, $endDate])
-            ->whereIn("status", ["dibayar", "digunakan"])
+            ->whereIn("status", ["dibayar", "selesai"])
             ->count();
 
         // Penumpang per Hari
         $penumpangPerHari = Tiket::select(DB::raw("DATE(waktu_pesan) as tanggal"), DB::raw("COUNT(*) as jumlah"))
-            ->whereIn("status", ["dibayar", "digunakan"])
+            ->whereIn("status", ["dibayar", "selesai"])
             ->whereBetween("waktu_pesan", [$startDate, $endDate])
             ->groupBy("tanggal")
             ->orderBy("tanggal")
@@ -182,7 +185,7 @@ class LaporanController extends Controller
             ->join("rute", "jadwal.rute_id", "=", "rute.id")
             ->join("terminal as asal", "rute.asal_terminal_id", "=", "asal.id")
             ->join("terminal as tujuan", "rute.tujuan_terminal_id", "=", "tujuan.id")
-            ->whereIn("tiket.status", ["dibayar", "digunakan"])
+            ->whereIn("tiket.status", ["dibayar", "selesai"])
             ->whereBetween("tiket.waktu_pesan", [$startDate, $endDate])
             ->groupBy("asal.nama_terminal", "tujuan.nama_terminal")
             ->orderByDesc("jumlah_penumpang")
@@ -191,7 +194,7 @@ class LaporanController extends Controller
         // Top Penumpang (User yang paling sering pesan)
         $topPenumpang = Tiket::select("users.name", "users.email", DB::raw("COUNT(tiket.id) as total_tiket"), DB::raw("SUM(tiket.harga) as total_pengeluaran"))
             ->join("users", "tiket.user_id", "=", "users.id")
-            ->whereIn("tiket.status", ["dibayar", "digunakan"])
+            ->whereIn("tiket.status", ["dibayar", "selesai"])
             ->whereBetween("tiket.waktu_pesan", [$startDate, $endDate])
             ->groupBy("users.id", "users.name", "users.email")
             ->orderByDesc("total_tiket")
