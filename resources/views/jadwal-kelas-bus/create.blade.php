@@ -83,9 +83,9 @@
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <!-- Kelas Bus -->
+                                <!-- Bus Kelas Bus -->
                                 <div class="space-y-2">
-                                    <x-ui.label for="kelas_bus_id">
+                                    <x-ui.label for="bus_kelas_bus_id">
                                         <div class="flex items-center gap-2">
                                             <x-lucide-layers class="w-4 h-4" />
                                             Kelas Bus
@@ -93,14 +93,14 @@
                                         <span class="text-red-500">*</span>
                                     </x-ui.label>
                                     <select
-                                        name="kelas_bus_id"
-                                        id="kelas_bus_id"
+                                        name="bus_kelas_bus_id"
+                                        id="bus_kelas_bus_id"
                                         required
                                         class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
                                         <option value="">Pilih Kelas Bus</option>
-                                        @foreach($kelasBuses as $kelas)
-                                            <option value="{{ $kelas->id }}" {{ old('kelas_bus_id') == $kelas->id ? 'selected' : '' }}>
-                                                {{ $kelas->nama_kelas }} - {{ $kelas->bus->nama }} ({{ $kelas->jumlah_kursi }} kursi)
+                                        @foreach($busKelasBus as $item)
+                                            <option value="{{ $item->id }}" {{ old('bus_kelas_bus_id') == $item->id ? 'selected' : '' }}>
+                                                {{ $item->kelasBus->nama_kelas }} - {{ $item->bus->nama }} ({{ $item->kelasBus->jumlah_kursi }} kursi)
                                             </option>
                                         @endforeach
                                     </select>
@@ -108,7 +108,7 @@
                                         <x-lucide-info class="w-3 h-3" />
                                         Pilih kelas bus yang tersedia
                                     </p>
-                                    @error('kelas_bus_id')
+                                    @error('bus_kelas_bus_id')
                                         <p class="text-sm text-destructive mt-1 flex items-center gap-1">
                                             <x-lucide-alert-circle class="w-4 h-4" />
                                             {{ $message }}

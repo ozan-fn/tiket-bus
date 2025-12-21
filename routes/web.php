@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 
+use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BusController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\ProfileController;
@@ -77,6 +78,10 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         Route::get("sopir/search-users", [SopirController::class, "searchUsers"])->name("sopir.search-users");
         Route::resource("sopir", SopirController::class)->parameters(["sopir" => "sopir"]);
 
+        // Banner Management
+        Route::resource("banner", BannerController::class)->parameters(["banner" => "banner"]);
+        Route::post("banner/{banner}/order/{direction}", [BannerController::class, "order"])->name("banner.order");
+
         // Terminal Management
         Route::resource("terminal", TerminalController::class)->parameters(["terminal" => "terminal"]);
         Route::delete("terminal-photo/{terminalPhoto}", [TerminalController::class, "destroyPhoto"])->name("terminal-photo.destroy");
@@ -93,10 +98,19 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         Route::post("pemesanan/store/{jadwal}", [PemesananController::class, "adminStore"])->name("pemesanan.store");
 
         // Pembayaran Manual
-        Route::get("pembayaran-manual", [PembayaranManualController::class, "index"])->name("pembayaran-manual");
+        Route::get("pembayaran-manual", [PembayaranManualController::class, "index"])->name("pembayaran-manual.index");
+        Route::get("pembayaran-manual/{pembayaran}", [PembayaranManualController::class, "show"])->name("pembayaran-manual.show");
+        Route::get("pembayaran-manual/{pembayaran}/edit", [PembayaranManualController::class, "edit"])->name("pembayaran-manual.edit");
+        Route::put("pembayaran-manual/{pembayaran}", [PembayaranManualController::class, "update"])->name("pembayaran-manual.update");
 
         // History Pemesanan
         Route::get("history-pemesanan", [PemesananController::class, "history"])->name("history-pemesanan");
+
+        // Pesan Tiket (Agent Booking)
+        Route::get("pemesanan", [PemesananController::class, "adminIndex"])->name("pemesanan.index");
+        Route::get("pemesanan/create/{jadwal}", [PemesananController::class, "adminCreate"])->name("pemesanan.create");
+        Route::post("pemesanan/store/{jadwal}", [PemesananController::class, "adminStore"])->name("pemesanan.store");
+        Route::get("pemesanan/{tiket}", [PemesananController::class, "adminShow"])->name("pemesanan.show");
 
         // Scan Tiket
         Route::get("scan", [ScanController::class, "index"])->name("scan.index");

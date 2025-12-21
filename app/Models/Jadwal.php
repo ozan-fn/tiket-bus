@@ -69,4 +69,14 @@ class Jadwal extends Model
     {
         return $this->hasMany(JadwalKelasBus::class);
     }
+
+    public function scopeActive($query)
+    {
+        return $query->whereIn("status", ["aktif", "tersedia"])->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) >= NOW()");
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) < NOW()");
+    }
 }

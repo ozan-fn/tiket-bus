@@ -117,6 +117,14 @@
                             </a>
                         </li>
                     </ul>
+
+                    <!-- Banner Section -->
+                    <section class="mt-8">
+                        <h2 class="mb-4 font-medium">Banner</h2>
+                        <div id="banner-carousel" class="space-y-4">
+                            <!-- Banners will be loaded here -->
+                        </div>
+                    </section>
                 </div>
                 <div class="bg-[#fff2f2] dark:bg-[#1D0002] relative lg:-ml-px -mb-px lg:mb-0 rounded-t-lg lg:rounded-t-none lg:rounded-r-lg aspect-[335/376] lg:aspect-auto w-full lg:w-[438px] shrink-0 overflow-hidden">
                     {{-- Laravel Logo --}}
@@ -273,5 +281,33 @@
         @if (Route::has('login'))
             <div class="h-14.5 hidden lg:block"></div>
         @endif
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('/api/banners')
+                    .then(response => response.json())
+                    .then(banners => {
+                        const container = document.getElementById('banner-carousel');
+                        if (banners.length > 0) {
+                            banners.forEach(banner => {
+                                const bannerDiv = document.createElement('div');
+                                bannerDiv.className = 'bg-white dark:bg-[#161615] border border-[#e3e3e0] dark:border-[#3E3E3A] rounded-lg p-4 shadow-sm';
+                                bannerDiv.innerHTML = `
+                                    <h3 class="font-medium mb-2">${banner.title}</h3>
+                                    ${banner.description ? `<p class="text-sm text-[#706f6c] dark:text-[#A1A09A] mb-2">${banner.description}</p>` : ''}
+                                    ${banner.image ? `<img src="/storage/${banner.image}" alt="${banner.title}" class="w-full h-32 object-cover rounded">` : ''}
+                                `;
+                                container.appendChild(bannerDiv);
+                            });
+                        } else {
+                            container.innerHTML = '<p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Tidak ada banner tersedia.</p>';
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error loading banners:', error);
+                        document.getElementById('banner-carousel').innerHTML = '<p class="text-sm text-[#706f6c] dark:text-[#A1A09A]">Gagal memuat banner.</p>';
+                    });
+            });
+        </script>
     </body>
 </html>

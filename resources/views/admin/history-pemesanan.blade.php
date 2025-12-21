@@ -176,7 +176,7 @@
                                             <p class="text-xs text-muted-foreground">{{ $tiket->waktu_pesan->format('d/m/Y H:i') }}</p>
                                         </x-ui.table.cell>
                                         <x-ui.table.cell class="text-right">
-                                            <a href="{{ route('pemesanan.show', $tiket->id) }}">
+                                            <a href="{{ route('admin/pemesanan.show', $tiket) }}">
                                                 <x-ui.button variant="ghost" size="icon">
                                                     <x-lucide-eye class="w-4 h-4" />
                                                 </x-ui.button>

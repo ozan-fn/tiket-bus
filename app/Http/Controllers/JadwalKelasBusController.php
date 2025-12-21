@@ -64,9 +64,9 @@ class JadwalKelasBusController extends Controller
             ->where("tanggal_berangkat", ">=", now())
             ->get();
 
-        $kelasBuses = KelasBus::with("bus")->get();
+        $busKelasBus = \App\Models\BusKelasBus::with("bus", "kelasBus")->get();
 
-        return view("jadwal-kelas-bus.create", compact("jadwals", "kelasBuses"));
+        return view("jadwal-kelas-bus.create", compact("jadwals", "busKelasBus"));
     }
 
     /**
@@ -76,12 +76,12 @@ class JadwalKelasBusController extends Controller
     {
         $validated = $request->validate([
             "jadwal_id" => "required|exists:jadwal,id",
-            "kelas_bus_id" => "required|exists:kelas_bus,id",
+            "bus_kelas_bus_id" => "required|exists:bus_kelas_bus,id",
             "harga" => "required|numeric|min:0",
         ]);
 
         // Check if combination already exists
-        $exists = JadwalKelasBus::where("jadwal_id", $validated["jadwal_id"])->where("kelas_bus_id", $validated["kelas_bus_id"])->exists();
+        $exists = JadwalKelasBus::where("jadwal_id", $validated["jadwal_id"])->where("bus_kelas_bus_id", $validated["bus_kelas_bus_id"])->exists();
 
         if ($exists) {
             return redirect()->back()->withInput()->with("error", "Kombinasi jadwal dan kelas bus sudah ada");
@@ -108,9 +108,9 @@ class JadwalKelasBusController extends Controller
     public function edit(JadwalKelasBus $jadwalKelasBu)
     {
         $jadwals = Jadwal::with(["bus", "rute.asalTerminal", "rute.tujuanTerminal"])->get();
-        $kelasBuses = KelasBus::with("bus")->get();
+        $busKelasBus = \App\Models\BusKelasBus::with("bus", "kelasBus")->get();
 
-        return view("jadwal-kelas-bus.edit", compact("jadwalKelasBu", "jadwals", "kelasBuses"));
+        return view("jadwal-kelas-bus.edit", compact("jadwalKelasBu", "jadwals", "busKelasBus"));
     }
 
     /**
@@ -120,12 +120,12 @@ class JadwalKelasBusController extends Controller
     {
         $validated = $request->validate([
             "jadwal_id" => "required|exists:jadwal,id",
-            "kelas_bus_id" => "required|exists:kelas_bus,id",
+            "bus_kelas_bus_id" => "required|exists:bus_kelas_bus,id",
             "harga" => "required|numeric|min:0",
         ]);
 
         // Check if combination already exists (excluding current record)
-        $exists = JadwalKelasBus::where("jadwal_id", $validated["jadwal_id"])->where("kelas_bus_id", $validated["kelas_bus_id"])->where("id", "!=", $jadwalKelasBu->id)->exists();
+        $exists = JadwalKelasBus::where("jadwal_id", $validated["jadwal_id"])->where("bus_kelas_bus_id", $validated["bus_kelas_bus_id"])->where("id", "!=", $jadwalKelasBu->id)->exists();
 
         if ($exists) {
             return redirect()->back()->withInput()->with("error", "Kombinasi jadwal dan kelas bus sudah ada");

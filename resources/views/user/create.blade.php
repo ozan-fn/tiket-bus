@@ -114,26 +114,7 @@
                                 @enderror
                             </div>
 
-                            <!-- Konfirmasi Password -->
-                            <div class="space-y-2">
-                                <x-ui.label for="password_confirmation">
-                                    <div class="flex items-center gap-2">
-                                        <x-lucide-lock class="w-4 h-4" />
-                                        Konfirmasi Password
-                                    </div>
-                                    <span class="text-red-500">*</span>
-                                </x-ui.label>
-                                <x-ui.input
-                                    type="password"
-                                    id="password_confirmation"
-                                    name="password_confirmation"
-                                    placeholder="Konfirmasi password"
-                                    required
-                                />
-                                @error('password_confirmation')
-                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            <!-- Konfirmasi Password dihapus — menggunakan satu field password tanpa konfirmasi -->
 
                             <!-- Role -->
                             <div class="space-y-2">

@@ -187,6 +187,7 @@
                     <div class="mt-6">
                         {{ $jadwals->links('vendor.pagination.shadcn') }}
                     </div>
+
                 @else
                     <div class="text-center py-12">
                         <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">

@@ -98,9 +98,9 @@
                                 </p>
                             </div>
 
-                            <!-- Kelas Bus -->
+                            <!-- Bus Kelas Bus -->
                             <div class="space-y-2">
-                                <x-ui.label for="kelas_bus_id">
+                                <x-ui.label for="bus_kelas_bus_id">
                                     <div class="flex items-center gap-2">
                                         <x-lucide-armchair class="w-4 h-4" />
                                         Kelas Bus
@@ -108,19 +108,19 @@
                                     <span class="text-red-500">*</span>
                                 </x-ui.label>
                                 <select
-                                    name="kelas_bus_id"
-                                    id="kelas_bus_id"
-                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring @error('kelas_bus_id') border-red-500 @enderror"
+                                    name="bus_kelas_bus_id"
+                                    id="bus_kelas_bus_id"
+                                    class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring @error('bus_kelas_bus_id') border-red-500 @enderror"
                                     required
                                 >
                                     <option value="">Pilih Kelas Bus</option>
-                                    @foreach($kelasBuses as $kelasBus)
-                                        <option value="{{ $kelasBus->id }}" {{ old('kelas_bus_id', $jadwalKelasBu->kelas_bus_id) == $kelasBus->id ? 'selected' : '' }}>
-                                            {{ $kelasBus->bus->nama }} - {{ $kelasBus->nama_kelas }} ({{ $kelasBus->jumlah_kursi }} kursi)
+                                    @foreach($busKelasBus as $item)
+                                        <option value="{{ $item->id }}" {{ old('bus_kelas_bus_id', $jadwalKelasBu->bus_kelas_bus_id) == $item->id ? 'selected' : '' }}>
+                                            {{ $item->bus->nama }} - {{ $item->kelasBus->nama_kelas }} ({{ $item->kelasBus->jumlah_kursi }} kursi)
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('kelas_bus_id')
+                                @error('bus_kelas_bus_id')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
                                         <x-lucide-alert-circle class="w-4 h-4" />
                                         {{ $message }}
@@ -239,7 +239,7 @@
             create: false
         });
 
-        const kelasSelect = new TomSelect('#kelas_bus_id', {
+        const kelasSelect = new TomSelect('#bus_kelas_bus_id', {
             placeholder: 'Pilih Kelas Bus',
             allowEmptyOption: true,
             create: false

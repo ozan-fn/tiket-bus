@@ -19,6 +19,11 @@ class JadwalKelasBus extends Model
         return $this->belongsTo(BusKelasBus::class);
     }
 
+    public function kelasBus()
+    {
+        return $this->hasOneThrough(KelasBus::class, BusKelasBus::class, "kelas_bus_id", "id", "bus_kelas_bus_id", "id");
+    }
+
     public function tikets()
     {
         return $this->hasMany(Tiket::class);

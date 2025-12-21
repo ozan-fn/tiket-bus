@@ -16,12 +16,13 @@
 @endphp
 
 <div
+    x-data="{ error: false }"
     data-slot="avatar"
 class="relative flex shrink-0 overflow-hidden rounded-full {{ $sizes[$size] }} {{ $ringClass }} {{ $class }}"
 >
     {{ $slot }}
 
     @if ($status)
-        <x-ui.avatar.avatar-status :size="$size" :status="$status" />
+        <x-ui.avatar.status :size="$size" :status="$status" />
     @endif
 </div>

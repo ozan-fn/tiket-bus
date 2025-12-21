@@ -59,7 +59,7 @@ class UserController extends Controller
         $request->validate([
             "name" => "required|string|max:255",
             "email" => "required|email|max:255|unique:users",
-            "password" => "required|string|min:8|confirmed",
+            "password" => "required|string|min:8",
             "role" => "required|exists:roles,name",
             "nik" => "required_if:role,driver|string",
             "nomor_sim" => "required_if:role,driver|string",
@@ -106,7 +106,7 @@ class UserController extends Controller
         $request->validate([
             "name" => "required|string|max:255",
             "email" => "required|email|max:255|unique:users,email," . $user->id,
-            "password" => "nullable|string|min:8|confirmed",
+            "password" => "nullable|string|min:8",
             "role" => "required|exists:roles,name",
             "nik" => "required_if:role,driver|string",
             "nomor_sim" => "required_if:role,driver|string",

@@ -47,9 +47,30 @@ class PembayaranController extends Controller
             );
         }
 
-        // Idempotensi: jika sudah ada pembayaran pending/berhasil untuk tiket ini, kembalikan
+        // Cek apakah tiket sudah expired
+        $jadwal = $tiket->jadwalKelasBus?->jadwal;
+        if ($jadwal) {
+            $tanggalBerangkat = $jadwal->tanggal_berangkat;
+            $jamBerangkat = $jadwal->jam_berangkat;
+            $waktuBerangkat = $tanggalBerangkat->setTimeFromTimeString($jamBerangkat->format("H:i:s"));
+
+            if ($waktuBerangkat->isPast()) {
+                // Update status tiket ke batal
+                $tiket->update(["status" => "batal"]);
+
+                return response()->json(
+                    [
+                        "success" => false,
+                        "message" => "Tiket sudah expired dan dibatalkan",
+                    ],
+                    400,
+                );
+            }
+        }
+
+        // Idempotensi: jika sudah ada pembayaran dipesan/dibayar untuk tiket ini, kembalikan
         $existing = Pembayaran::where("tiket_id", $tiket->id)
-            ->whereIn("status", ["pending", "berhasil"])
+            ->whereIn("status", ["dipesan", "dibayar"])
             ->latest()
             ->first();
 
@@ -58,7 +79,7 @@ class PembayaranController extends Controller
                 return response()->json(
                     [
                         "success" => false,
-                        "message" => "Tiket sudah memiliki pembayaran berhasil",
+                        "message" => "Tiket sudah memiliki pembayaran dibayar",
                     ],
                     409,
                 );
@@ -89,7 +110,7 @@ class PembayaranController extends Controller
             "tiket_id" => $tiket->id,
             "metode" => $request->metode,
             "nominal" => $tiket->harga,
-            "status" => "pending",
+            "status" => "dipesan",
             "kode_transaksi" => $kodeTransaksi,
         ]);
 
@@ -144,8 +165,8 @@ class PembayaranController extends Controller
             $pembayaran->update(["external_id" => $invoiceData["id"] ?? null]);
         }
 
-        // Catatan: semua metode pembayaran dimulai dengan 'pending'.
-        // Perubahan ke 'berhasil' dilakukan via callback/payment gateway atau verifikasi admin.
+        // Catatan: semua metode pembayaran dimulai dengan 'dipesan'.
+        // Perubahan ke 'dibayar' dilakukan via callback/payment gateway atau verifikasi admin.
 
         // Siapkan response
         $responseData = [
@@ -268,10 +289,10 @@ class PembayaranController extends Controller
 
         // Handle status PAID
         if ($status === "PAID") {
-            if ($pembayaran->status !== "berhasil") {
+            if ($pembayaran->status !== "dibayar") {
                 $paidAt = $request->input("paid_at");
                 $pembayaran->update([
-                    "status" => "berhasil",
+                    "status" => "dibayar",
                     "waktu_bayar" => $paidAt ? \Carbon\Carbon::parse($paidAt) : now(),
                 ]);
 
@@ -282,8 +303,8 @@ class PembayaranController extends Controller
         }
         // Handle status EXPIRED
         elseif ($status === "EXPIRED") {
-            if ($pembayaran->status !== "berhasil") {
-                $pembayaran->update(["status" => "gagal"]);
+            if ($pembayaran->status !== "dibayar") {
+                $pembayaran->update(["status" => "batal"]);
 
                 // Optional: batal tiket jika expired
                 if ($pembayaran->tiket && $pembayaran->tiket->status === "dipesan") {
@@ -313,7 +334,7 @@ class PembayaranController extends Controller
             );
         }
 
-        if ($pembayaran->status === "berhasil") {
+        if ($pembayaran->status === "dibayar") {
             return response()->json(
                 [
                     "success" => true,
@@ -323,7 +344,7 @@ class PembayaranController extends Controller
             );
         }
 
-        if ($pembayaran->status === "gagal") {
+        if ($pembayaran->status === "batal") {
             return response()->json(
                 [
                     "success" => false,
@@ -334,7 +355,7 @@ class PembayaranController extends Controller
         }
 
         $pembayaran->update([
-            "status" => "berhasil",
+            "status" => "dibayar",
             "waktu_bayar" => now(),
         ]);
 
@@ -366,7 +387,7 @@ class PembayaranController extends Controller
             );
         }
 
-        if ($pembayaran->status === "berhasil") {
+        if ($pembayaran->status === "dibayar") {
             return response()->json(
                 [
                     "success" => false,
@@ -376,8 +397,8 @@ class PembayaranController extends Controller
             );
         }
 
-        if ($pembayaran->status !== "gagal") {
-            $pembayaran->update(["status" => "gagal"]);
+        if ($pembayaran->status !== "batal") {
+            $pembayaran->update(["status" => "batal"]);
         }
 
         // Release kursi dengan menandai tiket batal
@@ -440,10 +461,10 @@ class PembayaranController extends Controller
         $xenditStatus = strtoupper($invoiceData["status"] ?? "");
 
         // Sync status jika berbeda
-        if ($xenditStatus === "PAID" && $pembayaran->status !== "berhasil") {
+        if ($xenditStatus === "PAID" && $pembayaran->status !== "dibayar") {
             $paidAt = $invoiceData["paid_at"] ?? null;
             $pembayaran->update([
-                "status" => "berhasil",
+                "status" => "dibayar",
                 "waktu_bayar" => $paidAt ? \Carbon\Carbon::parse($paidAt) : now(),
             ]);
 
@@ -462,8 +483,8 @@ class PembayaranController extends Controller
                     "waktu_bayar" => $pembayaran->waktu_bayar,
                 ],
             ]);
-        } elseif ($xenditStatus === "EXPIRED" && $pembayaran->status !== "gagal") {
-            $pembayaran->update(["status" => "gagal"]);
+        } elseif ($xenditStatus === "EXPIRED" && $pembayaran->status !== "batal") {
+            $pembayaran->update(["status" => "batal"]);
 
             if ($pembayaran->tiket && $pembayaran->tiket->status === "dipesan") {
                 $pembayaran->tiket->update(["status" => "batal"]);
@@ -530,7 +551,7 @@ class PembayaranController extends Controller
         // Update database
         $pembayaran->update([
             "bukti_pembayaran" => $path,
-            "status" => "pending", // Set status ke pending untuk review admin/agent
+            "status" => "dipesan", // Set status ke dipesan untuk review admin/agent
         ]);
 
         return response()->json([
@@ -553,7 +574,7 @@ class PembayaranController extends Controller
     {
         $pembayarans = Pembayaran::with(["tiket.jadwalKelasBus.jadwal.rute", "user"])
             ->whereIn("metode", ["transfer", "tunai"])
-            ->where("status", "pending")
+            ->where("status", "dipesan")
             ->whereNotNull("bukti_pembayaran")
             ->orderBy("created_at", "desc")
             ->get();

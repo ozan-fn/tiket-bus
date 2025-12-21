@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use Carbon\Carbon;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -57,12 +58,32 @@ class ProfileController
     {
         $user = $request->user();
         $data = $request->only(["name", "email", "nik", "tanggal_lahir", "jenis_kelamin", "nomor_telepon"]);
+        // Convert empty string to null for jenis_kelamin
+        if (isset($data["jenis_kelamin"]) && $data["jenis_kelamin"] === "") {
+            $data["jenis_kelamin"] = null;
+        }
+        // Convert empty string to null for tanggal_lahir
+        if (isset($data["tanggal_lahir"]) && $data["tanggal_lahir"] === "") {
+            $data["tanggal_lahir"] = null;
+        }
+        // Parse tanggal_lahir safely
+        if (isset($data["tanggal_lahir"]) && $data["tanggal_lahir"] !== null) {
+            try {
+                $data["tanggal_lahir"] = Carbon::parse($data["tanggal_lahir"])->format("Y-m-d");
+            } catch (\Exception $e) {
+                $data["tanggal_lahir"] = null;
+            }
+        }
+        // Clean jenis_kelamin
+        if (isset($data["jenis_kelamin"]) && $data["jenis_kelamin"] !== null && !in_array($data["jenis_kelamin"], ["L", "P"])) {
+            $data["jenis_kelamin"] = null;
+        }
         $rules = [
             "name" => "required|string|max:255",
             "email" => "required|email|max:255|unique:users,email," . $user->id,
             "nik" => "nullable|string|max:16",
-            "tanggal_lahir" => "nullable|date",
-            "jenis_kelamin" => "nullable|in:L,P",
+            "tanggal_lahir" => "nullable",
+            "jenis_kelamin" => "nullable",
             "nomor_telepon" => "nullable|string|max:20",
         ];
         $validator = \Validator::make($data, $rules);

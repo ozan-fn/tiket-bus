@@ -52,17 +52,39 @@
          x-transition
          @click.away="closeCalendar"
          class="absolute mt-2 w-auto rounded-md border border-border bg-popover p-3 shadow-md"
-         style="z-index: 50;"
+         style="z-index: 50; min-width: 280px;"
          x-cloak>
 
-        <div class="flex items-center justify-between mb-3">
-            <button type="button" @click="prevMonth" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
+        <div class="flex items-center justify-between mb-3 gap-2">
+            <button type="button" @click="prevMonth" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m15 18-6-6 6-6"/>
                 </svg>
             </button>
-            <div class="text-sm font-medium" x-text="monthYear"></div>
-            <button type="button" @click="nextMonth" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8">
+
+            <div class="flex items-center gap-1 w-full justify-center">
+                <select
+                    x-model="currentMonth"
+                    @click.stop
+                    class="h-8 w-[100px] rounded-md border border-input bg-background px-2 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+                >
+                    <template x-for="(month, index) in monthNames" :key="index">
+                        <option :value="index" x-text="month" :selected="currentMonth === index"></option>
+                    </template>
+                </select>
+
+                <select
+                    x-model="currentYear"
+                    @click.stop
+                    class="h-8 w-[80px] rounded-md border border-input bg-background px-2 py-1 text-sm shadow-sm focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring cursor-pointer"
+                >
+                    <template x-for="year in years" :key="year">
+                        <option :value="year" x-text="year" :selected="currentYear === year"></option>
+                    </template>
+                </select>
+            </div>
+
+            <button type="button" @click="nextMonth" class="inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-8 w-8 shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="m9 18 6-6-6-6"/>
                 </svg>
@@ -126,6 +148,7 @@
                 displayValue: '',
                 hiddenValue: value || '',
                 weekdays: ['Min', 'Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab'],
+                monthNames: ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'],
 
                 init() {
                     if (this.selectedDate) {
@@ -134,12 +157,26 @@
                     }
                 },
 
-                get monthYear() {
-                    const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
-                    return `${months[this.currentMonth]} ${this.currentYear}`;
+                // Menghasilkan daftar tahun dinamis
+                get years() {
+                    let startYear = new Date().getFullYear() - 100;
+                    let endYear = new Date().getFullYear() + 20;
+
+                    if (min) {
+                        startYear = new Date(min).getFullYear();
+                    }
+                    if (max) {
+                        endYear = new Date(max).getFullYear();
+                    }
+
+                    let years = [];
+                    for (let i = startYear; i <= endYear; i++) {
+                        years.push(i);
+                    }
+                    // Balik urutan jika ingin tahun terbaru di atas, atau biarkan asc
+                    return years.reverse();
                 },
 
-                // Fungsi baru untuk format ISO lokal agar tidak kena masalah timezone (H-1)
                 formatLocalISO(date) {
                     const year = date.getFullYear();
                     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -148,19 +185,22 @@
                 },
 
                 get days() {
-                    const firstDay = new Date(this.currentYear, this.currentMonth, 1);
-                    const lastDay = new Date(this.currentYear, this.currentMonth + 1, 0);
-                    const prevLastDay = new Date(this.currentYear, this.currentMonth, 0);
+                    // Paksa konversi ke Number agar kalkulasi tanggal benar saat dropdown berubah
+                    const year = Number(this.currentYear);
+                    const month = Number(this.currentMonth);
+
+                    const firstDay = new Date(year, month, 1);
+                    const lastDay = new Date(year, month + 1, 0);
+                    const prevLastDay = new Date(year, month, 0);
                     const days = [];
 
-                    // Previous month days
                     const firstDayOfWeek = firstDay.getDay();
                     for (let i = firstDayOfWeek - 1; i >= 0; i--) {
                         const day = prevLastDay.getDate() - i;
-                        const date = new Date(this.currentYear, this.currentMonth - 1, day);
+                        const date = new Date(year, month - 1, day);
                         days.push({
                             day,
-                            date: this.formatLocalISO(date), // Perbaikan: Gunakan LocalISO
+                            date: this.formatLocalISO(date),
                             isOtherMonth: true,
                             isToday: this.isToday(date),
                             isSelected: this.isSelected(date),
@@ -168,12 +208,11 @@
                         });
                     }
 
-                    // Current month days
                     for (let day = 1; day <= lastDay.getDate(); day++) {
-                        const date = new Date(this.currentYear, this.currentMonth, day);
+                        const date = new Date(year, month, day);
                         days.push({
                             day,
-                            date: this.formatLocalISO(date), // Perbaikan: Gunakan LocalISO
+                            date: this.formatLocalISO(date),
                             isOtherMonth: false,
                             isToday: this.isToday(date),
                             isSelected: this.isSelected(date),
@@ -181,13 +220,12 @@
                         });
                     }
 
-                    // Next month days
                     const remainingDays = 42 - days.length;
                     for (let day = 1; day <= remainingDays; day++) {
-                        const date = new Date(this.currentYear, this.currentMonth + 1, day);
+                        const date = new Date(year, month + 1, day);
                         days.push({
                             day,
-                            date: this.formatLocalISO(date), // Perbaikan: Gunakan LocalISO
+                            date: this.formatLocalISO(date),
                             isOtherMonth: true,
                             isToday: this.isToday(date),
                             isSelected: this.isSelected(date),
@@ -226,6 +264,8 @@
 
                     const [year, month, dayNum] = day.date.split('-');
                     this.selectedDate = new Date(Number(year), Number(month) - 1, Number(dayNum));
+                    this.currentMonth = Number(month) - 1; // Sync dropdown
+                    this.currentYear = Number(year);       // Sync dropdown
                     this.displayValue = this.formatDate(this.selectedDate);
                     this.hiddenValue = day.date;
 

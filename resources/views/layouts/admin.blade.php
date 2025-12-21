@@ -148,6 +148,7 @@
                             ['label' => 'Fasilitas', 'route' => 'admin/fasilitas.index', 'icon' => 'sparkles', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Kelas Bus', 'route' => 'admin/kelas-bus.index', 'icon' => 'layers', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'User', 'route' => 'admin/user.index', 'icon' => 'users', 'type' => 'menu', 'roles' => ['owner']],
+                            ['label' => 'Banner', 'route' => 'admin/banner.index', 'icon' => 'image', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Rute & Jadwal', 'type' => 'section', 'roles' => ['owner',  'conductor']],
                             ['label' => 'Terminal', 'route' => 'admin/terminal.index', 'icon' => 'building-2', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Rute', 'route' => 'admin/rute.index', 'icon' => 'route', 'type' => 'menu', 'roles' => ['owner']],
@@ -157,7 +158,7 @@
                             ['label' => 'Transaksi', 'type' => 'section', 'roles' => ['owner', 'agent']],
                             ['label' => 'Beli Tiket', 'route' => 'admin/pemesanan.index', 'icon' => 'ticket', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'History Pemesanan', 'route' => 'admin/history-pemesanan', 'icon' => 'clipboard-list', 'type' => 'menu', 'roles' => ['owner', 'agent']],
-                            ['label' => 'Pembayaran Manual', 'route' => 'admin/pembayaran-manual', 'icon' => 'wallet', 'type' => 'menu', 'roles' => ['owner', 'agent']],
+                            ['label' => 'Pembayaran Manual', 'route' => 'admin/pembayaran-manual.index', 'icon' => 'wallet', 'type' => 'menu', 'roles' => ['owner', 'agent']],
                             ['label' => 'Pricing', 'type' => 'section', 'roles' => ['owner', 'agent']],
                             ['label' => 'Harga Tiket', 'route' => 'admin/jadwal-kelas-bus.index', 'icon' => 'tag', 'type' => 'menu', 'roles' => ['owner', 'agent']],
                             ['label' => 'Scan', 'type' => 'section', 'roles' => ['agent']],
@@ -174,22 +175,56 @@
                     @endphp
 
                     @foreach($menus as $menu)
-                        @if(in_array($userRole, $menu['roles']))
-                            @if($menu['type'] === 'section')
-                                <div class="pt-4 pb-2 px-3">
-                                    <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{{ $menu['label'] }}</h3>
-                                </div>
-                            @else
-                                <a href="{{ route($menu['route']) }}" class="group relative flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs($menu['route']) || request()->routeIs($menu['route'] . '*') ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground' }} transition-colors">
-                                    @if(request()->routeIs($menu['route']) || request()->routeIs($menu['route'] . '*'))
-                                        <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-foreground rounded-r-full"></span>
-                                    @endif
-                                    <x-dynamic-component :component="'lucide-' . $menu['icon']" class="w-5 h-5 shrink-0" />
-                                    {{ $menu['label'] }}
-                                </a>
+                            @if(in_array($userRole, $menu['roles']))
+                                @if($menu['type'] === 'section')
+                                    <div class="pt-4 pb-2 px-3">
+                                        <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{{ $menu['label'] }}</h3>
+                                    </div>
+                                @else
+                                    @php
+                                        // 1. Cek Exact Match (Kecocokan Tepat)
+                                        $isActive = request()->routeIs($menu['route']);
+
+                                        // 2. Logic Khusus Resource (hanya jika belum aktif dan route berakhiran .index)
+                                        if (!$isActive && \Illuminate\Support\Str::endsWith($menu['route'], '.index')) {
+                                            $baseRoute = \Illuminate\Support\Str::replace('.index', '', $menu['route']);
+
+                                            // PERBAIKAN DI SINI:
+                                            // Alih-alih pakai wildcard '.*' yang mengambil semuanya,
+                                            // Kita hanya cek spesifik ke action CRUD standar.
+                                            // Ini mencegah 'admin/laporan.tiket' dianggap anak dari 'admin/laporan.index'
+                                            $isActive = request()->routeIs([
+                                                $baseRoute . '.create',
+                                                $baseRoute . '.store',
+                                                $baseRoute . '.edit',
+                                                $baseRoute . '.update',
+                                                $baseRoute . '.show',
+                                                $baseRoute . '.destroy',
+                                                // Tambahkan action lain jika route resource punya method custom yang memang anaknya halaman ini
+                                            ]);
+                                        }
+
+                                        // 3. Fallback Wildcard (Opsional, hati-hati pakai ini jika struktur nama route mirip)
+                                        // Kita tambahkan pengecekan agar tidak menimpa logic di atas
+                                        if (!$isActive && !str_contains($menu['route'], '.index')) {
+                                            $isActive = request()->routeIs($menu['route'] . '*');
+                                        }
+                                    @endphp
+
+                                    <a href="{{ route($menu['route']) }}"
+                                       class="group relative flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors
+                                       {{ $isActive ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground' }}">
+
+                                        @if($isActive)
+                                            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-foreground rounded-r-full"></span>
+                                        @endif
+
+                                        <x-dynamic-component :component="'lucide-' . $menu['icon']" class="w-5 h-5 shrink-0" />
+                                        {{ $menu['label'] }}
+                                    </a>
+                                @endif
                             @endif
-                        @endif
-                    @endforeach
+                        @endforeach
                 </nav>
 
                 <!-- User Menu -->
@@ -197,13 +232,13 @@
                     <div x-data="{ open: false }" class="relative">
                         <button @click="open = !open" class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
                             <x-ui.avatar>
-                                <x-ui.avatar.avatar-fallback class="bg-primary text-primary-foreground font-semibold">
+                                <x-ui.avatar.fallback class="bg-primary text-primary-foreground font-semibold">
                                     @if(auth()->check())
                                         {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                                     @else
                                         GU
                                     @endif
-                                </x-ui.avatar.avatar-fallback>
+                                </x-ui.avatar.fallback>
                             </x-ui.avatar>
                             <div class="flex-1 min-w-0 text-left">
                                 <p class="text-sm font-medium truncate">

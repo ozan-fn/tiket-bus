@@ -44,9 +44,11 @@ class Tiket extends Model
         "tanggal_lahir" => "datetime",
         "harga" => "float",
         "waktu_pesan" => "datetime",
+        "is_hadir" => "boolean",
+        "waktu_scan" => "datetime",
     ];
 
-    protected $fillable = ["user_id", "jadwal_kelas_bus_id", "kursi_id", "nik", "nama_penumpang", "tanggal_lahir", "jenis_kelamin", "nomor_telepon", "email", "kode_tiket", "harga", "status", "waktu_pesan"];
+    protected $fillable = ["user_id", "jadwal_kelas_bus_id", "kursi_id", "nik", "nama_penumpang", "tanggal_lahir", "jenis_kelamin", "nomor_telepon", "email", "kode_tiket", "harga", "status", "waktu_pesan", "is_hadir", "waktu_scan"];
 
     public function user()
     {

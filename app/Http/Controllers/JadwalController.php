@@ -14,6 +14,15 @@ class JadwalController extends Controller
 {
     public function index(Request $request): \Illuminate\View\View
     {
+        // Update status jadwal expired jadi tidak_aktif
+        Jadwal::where("status", "aktif")
+            ->where(function ($q) {
+                $q->whereDate("tanggal_berangkat", "<", now()->toDateString())->orWhere(function ($q2) {
+                    $q2->whereDate("tanggal_berangkat", now()->toDateString())->whereTime("jam_berangkat", "<=", now()->toTimeString());
+                });
+            })
+            ->update(["status" => "tidak_aktif"]);
+
         $search = $request->input("search");
         $dateFrom = $request->input("date_from");
         $dateTo = $request->input("date_to");
@@ -31,8 +40,10 @@ class JadwalController extends Controller
                     $q->whereHas("bus", function ($q2) use ($search) {
                         $q2->where("nama", "like", "%{$search}%")->orWhere("plat_nomor", "like", "%{$search}%");
                     })
-                        ->orWhereHas("sopir.user", function ($q2) use ($search) {
-                            $q2->where("name", "like", "%{$search}%");
+                        ->orWhereHas("sopir", function ($q2) use ($search) {
+                            $q2->whereHas("user", function ($q3) use ($search) {
+                                $q3->where("name", "like", "%{$search}%");
+                            });
                         })
                         ->orWhereHas("rute.asalTerminal", function ($q2) use ($search) {
                             $q2->where("nama_terminal", "like", "%{$search}%")->orWhere("nama_kota", "like", "%{$search}%");
@@ -51,6 +62,7 @@ class JadwalController extends Controller
                 return $query->whereDate("created_at", "<=", $dateTo);
             })
             ->allowedSorts(["tanggal_berangkat", "status", "created_at"])
+            ->orderByRaw("CASE WHEN status = 'aktif' THEN 1 ELSE 2 END")
             ->defaultSort("-created_at")
             ->paginate(10)
             ->withQueryString();
@@ -139,15 +151,20 @@ class JadwalController extends Controller
     {
         foreach ($harga as $kelasBusId => $hargaValue) {
             if ($hargaValue !== null && $hargaValue !== "") {
-                \App\Models\JadwalKelasBus::firstOrCreate(
-                    [
-                        "jadwal_id" => $jadwal->id,
-                        "kelas_bus_id" => $kelasBusId,
-                    ],
-                    [
-                        "harga" => $hargaValue,
-                    ],
-                );
+                // Find bus_kelas_bus_id for this kelas_bus_id and bus_id
+                $busKelasBus = \App\Models\BusKelasBus::where("kelas_bus_id", $kelasBusId)->where("bus_id", $jadwal->bus_id)->first();
+
+                if ($busKelasBus) {
+                    \App\Models\JadwalKelasBus::firstOrCreate(
+                        [
+                            "jadwal_id" => $jadwal->id,
+                            "bus_kelas_bus_id" => $busKelasBus->id,
+                        ],
+                        [
+                            "harga" => $hargaValue,
+                        ],
+                    );
+                }
             }
         }
     }
@@ -165,7 +182,7 @@ class JadwalController extends Controller
         $conductors = Sopir::with("user")->where("status", "aktif")->get();
         $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
         $kelasBuses = \App\Models\KelasBus::all();
-        $jadwalKelasBuses = $jadwal->jadwalKelasBus()->get();
+        $jadwalKelasBuses = $jadwal->jadwalKelasBus()->with("kelasBus")->get();
         return view("jadwal.edit", compact("jadwal", "buses", "sopirs", "conductors", "rutes", "kelasBuses", "jadwalKelasBuses"));
     }
 

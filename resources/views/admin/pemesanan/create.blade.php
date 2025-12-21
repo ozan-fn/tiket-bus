@@ -28,7 +28,7 @@
     </x-slot>
 
     <div class="p-4 sm:p-6">
-        <div class="max-w-4xl mx-auto">
+        <div class="max-w-4xl mx-auto" x-data="{ openModal: false }">
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center justify-between">
@@ -64,7 +64,7 @@
                         </div>
                     </div>
 
-                    <form method="POST" action="{{ route('admin/pemesanan.store', $jadwal) }}">
+                    <form id="booking-form" method="POST" action="{{ route('admin/pemesanan.store', $jadwal) }}">
                         @csrf
 
                         <div class="space-y-6">
@@ -270,7 +270,7 @@
                                                                 class="hidden peer"
                                                                 required
                                                             />
-                                                            <div class="aspect-square flex items-center justify-center rounded-lg font-bold text-sm transition-all duration-200
+                                                            <div class="w-[58px] h-[58px] flex items-center justify-center rounded-lg font-bold text-sm transition-all duration-200
                                                                 {{ in_array($kursi->id, $kursiTerpakai)
                                                                     ? 'bg-destructive/20 border-2 border-destructive text-muted-foreground cursor-not-allowed opacity-50'
                                                                     : 'bg-white border-2 border-primary hover:bg-primary/5 group-hover:shadow-md'
@@ -295,7 +295,7 @@
 
                                             <!-- Informasi Kursi -->
                                             <div class="text-xs text-muted-foreground">
-                                                <p>Total kursi tersedia: <span class="font-semibold">{{ $jkb->kelasBus->kursi->count() - count(array_filter($kursiTerpakai, fn($id) => $this->keluarObjekKursi($id, $jkb->kelasBus->id))) }}</span> / <span class="font-semibold">{{ $jkb->kelasBus->kursi->count() }}</span></p>
+                                                <p>Total kursi tersedia: <span class="font-semibold">{{ $jkb->kelasBus->kursi->count() - count(array_filter($kursiTerpakai, fn($id) => in_array($id, $jkb->kelasBus->kursi->pluck('id')->toArray()))) }}</span> / <span class="font-semibold">{{ $jkb->kelasBus->kursi->count() }}</span></p>
                                             </div>
                                         </div>
                                     @empty
@@ -332,12 +332,30 @@
                                     Batal
                                 </x-ui.button>
                             </a>
-                            <x-ui.button type="submit" class="w-full sm:w-auto">
+                            <x-ui.button type="button" @click="openModal = true" class="w-full sm:w-auto">
                                 <x-lucide-save class="w-4 h-4 mr-2" />
                                 Pesan Tiket
                             </x-ui.button>
                         </div>
                     </form>
+
+                    <!-- Modal Konfirmasi Pembayaran -->
+                    <div x-show="openModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" @click.self="openModal = false">
+                        <div class="bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6">
+                            <h3 class="text-lg font-semibold mb-4">Konfirmasi Pembayaran</h3>
+                            <p class="text-sm text-gray-600 mb-6">
+                                Pastikan pembayaran sudah dilakukan sebelum melanjutkan. Tiket akan dibuat dan pembayaran akan ditandai sebagai berhasil.
+                            </p>
+                            <div class="flex justify-end gap-3">
+                                <x-ui.button type="button" variant="outline" @click="openModal = false">
+                                    Batal
+                                </x-ui.button>
+                                <x-ui.button type="button" @click="openModal = false; document.getElementById('booking-form').submit()">
+                                    Konfirmasi Pembayaran
+                                </x-ui.button>
+                            </div>
+                        </div>
+                    </div>
                 </x-ui.card.content>
             </x-ui.card>
         </div>

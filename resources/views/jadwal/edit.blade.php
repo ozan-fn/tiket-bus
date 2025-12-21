@@ -261,7 +261,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @forelse($kelasBuses as $kelasBus)
                                     @php
-                                        $existingPrice = $jadwalKelasBuses->firstWhere('kelas_bus_id', $kelasBus->id);
+                                        $existingPrice = $jadwalKelasBuses->firstWhere('kelasBus.id', $kelasBus->id);
                                     @endphp
                                     <div class="space-y-2 p-4 border rounded-lg bg-muted/30">
                                         <div class="flex items-center justify-between">

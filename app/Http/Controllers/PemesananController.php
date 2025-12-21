@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
+
 use App\Models\Jadwal;
 use App\Models\Tiket;
 use Illuminate\Http\Request;
@@ -74,7 +77,7 @@ class PemesananController extends Controller
 
     public function adminIndex(Request $request): View
     {
-        $jadwals = Jadwal::with("bus", "sopir.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus")
+        $jadwals = Jadwal::with("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus")
             ->where("status", "aktif")
             ->whereDate("tanggal_berangkat", ">=", now()->toDateString())
             ->when($request->asal, fn($q) => $q->whereHas("rute.asalTerminal", fn($q2) => $q2->where("nama_terminal", "like", "%" . $request->asal . "%")))
@@ -90,9 +93,7 @@ class PemesananController extends Controller
     public function adminCreate(Jadwal $jadwal): View
     {
         $jadwal->load("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus.kelasBus");
-        $kursiTerpakai = Tiket::where("jadwal_kelas_bus_id", $jadwal->jadwalKelasBus->first()?->id)
-            ->pluck("kursi_id")
-            ->toArray();
+        $kursiTerpakai = Tiket::whereHas("jadwalKelasBus", fn($q) => $q->where("jadwal_id", $jadwal->id))->pluck("kursi_id")->toArray();
         return view("admin.pemesanan.create", compact("jadwal", "kursiTerpakai"));
     }
 
@@ -135,7 +136,33 @@ class PemesananController extends Controller
             "waktu_pesan" => now(),
         ]);
 
-        return redirect()->route("admin/pemesanan.index")->with("success", "Tiket berhasil dipesan. Lanjutkan dengan pembayaran.");
+        // Buat pembayaran dengan status berhasil
+        \App\Models\Pembayaran::create([
+            "user_id" => auth()->id(),
+            "tiket_id" => $tiket->id,
+            "metode" => "tunai",
+            "nominal" => $tiket->harga,
+            "status" => "berhasil",
+            "waktu_bayar" => now(),
+            "kode_transaksi" => "ADM-" . strtoupper(uniqid()),
+        ]);
+
+        // Update status tiket ke dibayar
+        $tiket->update(["status" => "dibayar"]);
+
+        return redirect()->route("admin/pemesanan.show", $tiket)->with("success", "Tiket berhasil dipesan dan pembayaran dikonfirmasi.");
+    }
+
+    public function adminShow(Tiket $tiket): View
+    {
+        $tiket->load("jadwalKelasBus.jadwal.bus", "jadwalKelasBus.jadwal.sopir.user", "jadwalKelasBus.jadwal.rute.asalTerminal", "jadwalKelasBus.jadwal.rute.tujuanTerminal", "jadwalKelasBus.kelasBus", "kursi", "user", "pembayaran");
+
+        $qrCode = QrCode::create($tiket->kode_tiket);
+        $writer = new PngWriter();
+        $result = $writer->write($qrCode);
+        $qrCodeDataUri = $result->getDataUri();
+
+        return view("admin.pemesanan.show", compact("tiket", "qrCodeDataUri"));
     }
 
     public function history(Request $request): View
