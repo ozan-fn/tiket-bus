@@ -8,6 +8,7 @@ use App\Models\Sopir;
 use App\Models\Rute;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class JadwalController extends Controller
@@ -80,8 +81,8 @@ class JadwalController extends Controller
         $sopirs = Sopir::with("user")->where("status", "aktif")->get();
         $conductors = Sopir::with("user")->where("status", "aktif")->get();
         $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
-        $kelasBuses = \App\Models\KelasBus::all();
-        return view("jadwal.create", compact("buses", "sopirs", "conductors", "rutes", "kelasBuses"));
+
+        return view("jadwal.create", compact("buses", "sopirs", "conductors", "rutes"));
     }
 
     public function store(Request $request): \Illuminate\Http\RedirectResponse
@@ -101,77 +102,92 @@ class JadwalController extends Controller
             "harga.*" => "nullable|numeric|min:0",
         ]);
 
-        if ($request->is_recurring) {
-            $jadwals = [];
-            $tanggal = Carbon::parse($request->tanggal_berangkat);
-            $interval = $request->recurring_type === "weekly" ? 7 : 1;
-
-            for ($i = 0; $i < $request->recurring_count; $i++) {
-                $jadwals[] = [
-                    "bus_id" => $request->bus_id,
-                    "sopir_id" => $request->sopir_id,
-                    "conductor_id" => $request->conductor_id,
-                    "rute_id" => $request->rute_id,
-                    "tanggal_berangkat" => $tanggal->toDateString(),
-                    "jam_berangkat" => $request->jam_berangkat,
-                    "status" => $request->status,
-                    "created_at" => now(),
-                    "updated_at" => now(),
-                ];
-                $tanggal->addDays($interval);
-            }
-
-            $createdJadwals = Jadwal::insert($jadwals);
-
-            // Add pricing for recurring schedules if provided
-            if ($request->has("harga") && is_array($request->harga)) {
-                $jadwalsData = Jadwal::where("bus_id", $request->bus_id)->where("rute_id", $request->rute_id)->where("tanggal_berangkat", ">=", $request->tanggal_berangkat)->orderBy("tanggal_berangkat")->limit($request->recurring_count)->get();
-
-                foreach ($jadwalsData as $jadwal) {
-                    $this->addPricingToJadwal($jadwal, $request->harga);
+        // Validate that bus has the kelas bus for pricing
+        if ($request->has("harga") && is_array($request->harga)) {
+            foreach ($request->harga as $kelasBusId => $hargaValue) {
+                if ($hargaValue !== null && $hargaValue !== "") {
+                    $busKelasBus = \App\Models\BusKelasBus::where("kelas_bus_id", $kelasBusId)->where("bus_id", $request->bus_id)->first();
+                    if (!$busKelasBus) {
+                        return back()
+                            ->withErrors(["harga.{$kelasBusId}" => "Kelas bus ini tidak tersedia untuk bus yang dipilih."])
+                            ->withInput();
+                    }
                 }
             }
-
-            $message = count($jadwals) . " jadwal berhasil ditambahkan";
-        } else {
-            $jadwal = Jadwal::create($request->only(["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"]));
-
-            // Add pricing if provided
-            if ($request->has("harga") && is_array($request->harga)) {
-                $this->addPricingToJadwal($jadwal, $request->harga);
-            }
-
-            $message = "Jadwal berhasil ditambahkan";
         }
 
-        return redirect()->route("admin/jadwal.index")->with("success", $message);
+        return DB::transaction(function () use ($request) {
+            if ($request->is_recurring) {
+                $jadwals = [];
+                $tanggal = Carbon::parse($request->tanggal_berangkat);
+                $interval = $request->recurring_type === "weekly" ? 7 : 1;
+
+                for ($i = 0; $i < $request->recurring_count; $i++) {
+                    $jadwal = Jadwal::create([
+                        "bus_id" => $request->bus_id,
+                        "sopir_id" => $request->sopir_id,
+                        "conductor_id" => $request->conductor_id,
+                        "rute_id" => $request->rute_id,
+                        "tanggal_berangkat" => $tanggal->toDateString(),
+                        "jam_berangkat" => $request->jam_berangkat,
+                        "status" => $request->status,
+                    ]);
+
+                    // Add pricing for this jadwal if provided
+                    if ($request->has("harga") && is_array($request->harga)) {
+                        $this->addPricingToJadwal($jadwal, $request->harga);
+                    }
+
+                    $tanggal->addDays($interval);
+                }
+
+                $message = $request->recurring_count . " jadwal berhasil ditambahkan";
+            } else {
+                $jadwal = Jadwal::create($request->only(["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"]));
+
+                // Add pricing if provided
+                if ($request->has("harga") && is_array($request->harga)) {
+                    $this->addPricingToJadwal($jadwal, $request->harga);
+                }
+
+                $message = "Jadwal berhasil ditambahkan";
+            }
+
+            return redirect()->route("admin/jadwal.index")->with("success", $message);
+        });
     }
 
     private function addPricingToJadwal(Jadwal $jadwal, array $harga)
     {
-        foreach ($harga as $kelasBusId => $hargaValue) {
-            if ($hargaValue !== null && $hargaValue !== "") {
-                // Find bus_kelas_bus_id for this kelas_bus_id and bus_id
-                $busKelasBus = \App\Models\BusKelasBus::where("kelas_bus_id", $kelasBusId)->where("bus_id", $jadwal->bus_id)->first();
+        try {
+            foreach ($harga as $kelasBusId => $hargaValue) {
+                if ($hargaValue !== null && $hargaValue !== "") {
+                    // Find bus_kelas_bus_id for this kelas_bus_id and bus_id
+                    $busKelasBus = \App\Models\BusKelasBus::where("kelas_bus_id", $kelasBusId)->where("bus_id", $jadwal->bus_id)->first();
 
-                if ($busKelasBus) {
-                    \App\Models\JadwalKelasBus::firstOrCreate(
-                        [
-                            "jadwal_id" => $jadwal->id,
-                            "bus_kelas_bus_id" => $busKelasBus->id,
-                        ],
-                        [
-                            "harga" => $hargaValue,
-                        ],
-                    );
+                    if ($busKelasBus) {
+                        $jadwalKelasBus = \App\Models\JadwalKelasBus::updateOrCreate(
+                            [
+                                "jadwal_id" => $jadwal->id,
+                                "bus_kelas_bus_id" => $busKelasBus->id,
+                            ],
+                            [
+                                "harga" => $hargaValue,
+                            ],
+                        );
+                    } else {
+                        // Log if bus_kelas_bus not found
+                    }
                 }
             }
+        } catch (\Exception $e) {
+            throw $e; // Re-throw to rollback transaction
         }
     }
 
     public function show(Jadwal $jadwal): \Illuminate\View\View
     {
-        $jadwal->load("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal");
+        $jadwal->load("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus.kelasBus");
         return view("jadwal.show", compact("jadwal"));
     }
 
@@ -181,9 +197,8 @@ class JadwalController extends Controller
         $sopirs = Sopir::with("user")->where("status", "aktif")->get();
         $conductors = Sopir::with("user")->where("status", "aktif")->get();
         $rutes = Rute::with("asalTerminal", "tujuanTerminal")->get();
-        $kelasBuses = \App\Models\KelasBus::all();
-        $jadwalKelasBuses = $jadwal->jadwalKelasBus()->with("kelasBus")->get();
-        return view("jadwal.edit", compact("jadwal", "buses", "sopirs", "conductors", "rutes", "kelasBuses", "jadwalKelasBuses"));
+        $jadwal_id = $jadwal->id;
+        return view("jadwal.edit", compact("jadwal", "buses", "sopirs", "conductors", "rutes", "jadwal_id"));
     }
 
     public function update(Request $request, Jadwal $jadwal): \Illuminate\Http\RedirectResponse
@@ -200,14 +215,19 @@ class JadwalController extends Controller
             "harga.*" => "nullable|numeric|min:0",
         ]);
 
-        $jadwal->update($request->all());
+        return DB::transaction(function () use ($request, $jadwal) {
+            $jadwal->update($request->only(["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"]));
 
-        // Update pricing if provided
-        if ($request->has("harga") && is_array($request->harga)) {
-            $this->addPricingToJadwal($jadwal, $request->harga);
-        }
+            // Delete existing pricing
+            $jadwal->jadwalKelasBus()->delete();
 
-        return redirect()->route("admin/jadwal.index")->with("success", "Jadwal berhasil diperbarui");
+            // Add new pricing if provided
+            if ($request->has("harga") && is_array($request->harga)) {
+                $this->addPricingToJadwal($jadwal, $request->harga);
+            }
+
+            return redirect()->route("admin/jadwal.index")->with("success", "Jadwal berhasil diperbarui");
+        });
     }
 
     public function destroy(Jadwal $jadwal): \Illuminate\Http\RedirectResponse
@@ -215,5 +235,18 @@ class JadwalController extends Controller
         $jadwal->delete();
 
         return redirect()->route("admin/jadwal.index")->with("success", "Jadwal berhasil dihapus");
+    }
+
+    public function getKelasByBus(Request $request, Bus $bus): \Illuminate\Http\JsonResponse
+    {
+        $jadwalId = $request->input("jadwal_id");
+        $kelasBuses = $bus->kelasBus->map(function ($kelasBus) use ($jadwalId, $bus) {
+            $busKelasBus = \App\Models\BusKelasBus::where("bus_id", $bus->id)->where("kelas_bus_id", $kelasBus->id)->first();
+            $jadwalKelasBus = $jadwalId && $busKelasBus ? \App\Models\JadwalKelasBus::where("jadwal_id", $jadwalId)->where("bus_kelas_bus_id", $busKelasBus->id)->first() : null;
+            $kelasBus->harga = $jadwalKelasBus ? $jadwalKelasBus["harga"] : null;
+            return $kelasBus;
+        });
+
+        return response()->json($kelasBuses);
     }
 }

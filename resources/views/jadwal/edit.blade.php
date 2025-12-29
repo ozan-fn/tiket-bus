@@ -258,44 +258,8 @@
                                 Kelola Harga Tiket per Kelas
                             </h3>
 
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                @forelse($kelasBuses as $kelasBus)
-                                    @php
-                                        $existingPrice = $jadwalKelasBuses->firstWhere('kelasBus.id', $kelasBus->id);
-                                    @endphp
-                                    <div class="space-y-2 p-4 border rounded-lg bg-muted/30">
-                                        <div class="flex items-center justify-between">
-                                            <x-ui.label for="harga_{{ $kelasBus->id }}">
-                                                <div class="flex items-center gap-2">
-                                                    <x-lucide-armchair class="w-4 h-4" />
-                                                    {{ $kelasBus->nama_kelas }}
-                                                </div>
-                                            </x-ui.label>
-                                            @if($existingPrice)
-                                                <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Sudah Ada</span>
-                                            @endif
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="text-muted-foreground">Rp</span>
-                                            <x-ui.input
-                                                type="number"
-                                                name="harga[{{ $kelasBus->id }}]"
-                                                id="harga_{{ $kelasBus->id }}"
-                                                placeholder="0"
-                                                min="0"
-                                                step="1000"
-                                                :value="old('harga.' . $kelasBus->id, $existingPrice?->harga)"
-                                            />
-                                        </div>
-                                        @if($existingPrice)
-                                            <p class="text-xs text-muted-foreground">Harga saat ini: Rp {{ number_format($existingPrice->harga, 0, ',', '.') }}</p>
-                                        @else
-                                            <p class="text-xs text-muted-foreground">Belum ada harga untuk kelas ini</p>
-                                        @endif
-                                    </div>
-                                @empty
-                                    <p class="text-muted-foreground col-span-2">Belum ada kelas bus. Buat kelas bus terlebih dahulu di menu Kelas Bus.</p>
-                                @endforelse
+                            <div id="harga-container-edit" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <p class="text-muted-foreground col-span-2">Memuat kelas bus...</p>
                             </div>
                         </div>
 
@@ -348,6 +312,81 @@
             placeholder: 'Pilih Status',
             allowEmptyOption: false,
             create: false
+        });
+
+        // Load kelas bus for edit
+        function loadKelasBusForEdit(busId) {
+            const container = document.getElementById('harga-container-edit');
+
+            if (!busId) {
+                container.innerHTML = '<p class="text-muted-foreground col-span-2">Pilih bus terlebih dahulu untuk melihat kelas bus yang tersedia.</p>';
+                return;
+            }
+
+            // var jadwalid =  {{ $jadwal->id }}
+            fetch(`/admin/jadwal/get-kelas-by-bus/${busId}?jadwal_id=${ {{ $jadwal->id }} }`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Fetched data:', data);
+                    if (data.length === 0) {
+                        container.innerHTML = '<p class="text-muted-foreground col-span-2">Bus ini belum memiliki kelas bus yang dikonfigurasi.</p>';
+                        return;
+                    }
+
+                    let html = '';
+                    data.forEach(kelasBus => {
+                        const hasPrice = kelasBus.harga !== null && kelasBus.harga !== '';
+                        html += `
+                            <div class="space-y-2 p-4 border rounded-lg bg-muted/30">
+                                <div class="flex items-center justify-between">
+                                    <label for="harga_${kelasBus.id}" class="text-sm font-medium">
+                                        <div class="flex items-center gap-2">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                                            </svg>
+                                            ${kelasBus.nama_kelas}
+                                        </div>
+                                    </label>
+                                    ${hasPrice ? '<span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">Sudah Ada</span>' : ''}
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="text-muted-foreground">Rp</span>
+                                    <input
+                                        type="number"
+                                        name="harga[${kelasBus.id}]"
+                                        id="harga_${kelasBus.id}"
+                                        placeholder="0"
+                                        min="0"
+                                        step="1000"
+                                        value="${kelasBus.harga || ''}"
+                                        class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                    />
+                                </div>
+                                <p class="text-xs text-muted-foreground">${hasPrice ? `Harga saat ini: Rp ${new Intl.NumberFormat('id-ID').format(kelasBus.harga)}` : 'Belum ada harga untuk kelas ini'}</p>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error loading kelas bus:', error);
+                    container.innerHTML = '<p class="text-destructive col-span-2">Error memuat kelas bus.</p>';
+                });
+        }
+
+        // Initial load
+        document.addEventListener('DOMContentLoaded', function() {
+            const initialBusId = '{{ $jadwal->bus_id }}';
+            loadKelasBusForEdit(initialBusId);
+        });
+
+        // Load on bus change
+        document.getElementById('bus_id').addEventListener('change', function () {
+            const busId = this.value;
+            loadKelasBusForEdit(busId);
         });
     </script>
     @endpush

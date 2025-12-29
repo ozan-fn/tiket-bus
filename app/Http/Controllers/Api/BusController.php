@@ -16,17 +16,17 @@ class BusController extends Controller
         $query = Bus::query();
 
         // Conditional eager loading based on 'include' query parameter
-        if ($request->has('include')) {
-            $includes = explode(',', $request->include);
+        if ($request->has("include")) {
+            $includes = explode(",", $request->include);
             // Filter to only allowed relations for security
-            $allowed = ['fasilitas', 'jadwals'];
+            $allowed = ["fasilitas", "jadwals"];
             $validIncludes = array_intersect($includes, $allowed);
             if (!empty($validIncludes)) {
                 $query->with($validIncludes);
             }
         }
 
-        $perPage = $request->get('per_page', 10);
+        $perPage = $request->get("per_page", 10);
         $buses = $query->paginate($perPage);
         return response()->json($buses);
     }
@@ -35,31 +35,31 @@ class BusController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama' => 'required|string|max:255',
-            'plat_nomor' => 'required|string|max:50|unique:bus,plat_nomor',
-            'kapasitas' => 'required|integer|min:1',
-            'status' => 'required|in:aktif,nonaktif',
-            'keterangan' => 'nullable|string',
-            'fasilitas_ids' => 'nullable|array',
-            'fasilitas_ids.*' => 'exists:fasilitas,id',
-            'jadwals' => 'nullable|array',
-            'jadwals.*.sopir_id' => 'required_with:jadwals|exists:sopir,id',
-            'jadwals.*.rute_id' => 'required_with:jadwals|exists:rute,id',
-            'jadwals.*.tanggal_berangkat' => 'required_with:jadwals|date',
-            'jadwals.*.jam_berangkat' => 'required_with:jadwals|date_format:H:i',
-            'jadwals.*.status' => 'required_with:jadwals|in:aktif,nonaktif',
+            "nama" => "required|string|max:255",
+            "plat_nomor" => "required|string|max:50|unique:bus,plat_nomor",
+            "kapasitas" => "required|integer|min:1",
+            "status" => "required|in:aktif,nonaktif",
+            "keterangan" => "nullable|string",
+            "fasilitas_ids" => "nullable|array",
+            "fasilitas_ids.*" => "exists:fasilitas,id",
+            "jadwals" => "nullable|array",
+            "jadwals.*.sopir_id" => "required_with:jadwals|exists:sopir,id",
+            "jadwals.*.rute_id" => "required_with:jadwals|exists:rute,id",
+            "jadwals.*.tanggal_berangkat" => "required_with:jadwals|date",
+            "jadwals.*.jam_berangkat" => "required_with:jadwals|date_format:H:i",
+            "jadwals.*.status" => "required_with:jadwals|in:aktif,nonaktif",
         ]);
 
         $bus = DB::transaction(function () use ($request) {
-            $bus = Bus::create($request->only(['nama', 'plat_nomor', 'kapasitas', 'status', 'keterangan']));
+            $bus = Bus::create($request->only(["nama", "plat_nomor", "kapasitas", "status", "keterangan"]));
 
-            if ($request->has('fasilitas_ids')) {
+            if ($request->has("fasilitas_ids")) {
                 $bus->fasilitas()->attach($request->fasilitas_ids);
             }
 
-            if ($request->has('jadwals')) {
+            if ($request->has("jadwals")) {
                 foreach ($request->jadwals as $jadwalData) {
-                    $jadwalData['bus_id'] = $bus->id;
+                    $jadwalData["bus_id"] = $bus->id;
                     Jadwal::create($jadwalData);
                 }
             }
@@ -76,10 +76,10 @@ class BusController extends Controller
         $query = Bus::query();
 
         // Conditional eager loading based on 'include' query parameter
-        if ($request->has('include')) {
-            $includes = explode(',', $request->include);
+        if ($request->has("include")) {
+            $includes = explode(",", $request->include);
             // Filter to only allowed relations for security
-            $allowed = ['fasilitas', 'jadwals'];
+            $allowed = ["fasilitas", "jadwals"];
             $validIncludes = array_intersect($includes, $allowed);
             if (!empty($validIncludes)) {
                 $query->with($validIncludes);
@@ -96,33 +96,33 @@ class BusController extends Controller
         $bus = Bus::findOrFail($id);
 
         $request->validate([
-            'nama' => 'sometimes|required|string|max:255',
-            'plat_nomor' => "sometimes|required|string|max:50|unique:bus,plat_nomor,$id", // Ignore current bus
-            'kapasitas' => 'sometimes|required|integer|min:1',
-            'status' => 'sometimes|required|in:aktif,nonaktif',
-            'keterangan' => 'nullable|string',
-            'fasilitas_ids' => 'nullable|array',
-            'fasilitas_ids.*' => 'exists:fasilitas,id',
-            'jadwals' => 'nullable|array',
-            'jadwals.*.sopir_id' => 'required_with:jadwals|exists:sopir,id',
-            'jadwals.*.rute_id' => 'required_with:jadwals|exists:rute,id',
-            'jadwals.*.tanggal_berangkat' => 'required_with:jadwals|date',
-            'jadwals.*.jam_berangkat' => 'required_with:jadwals|date_format:H:i',
-            'jadwals.*.status' => 'required_with:jadwals|in:aktif,nonaktif',
+            "nama" => "sometimes|required|string|max:255",
+            "plat_nomor" => "sometimes|required|string|max:50|unique:bus,plat_nomor,$id", // Ignore current bus
+            "kapasitas" => "sometimes|required|integer|min:1",
+            "status" => "sometimes|required|in:aktif,nonaktif",
+            "keterangan" => "nullable|string",
+            "fasilitas_ids" => "nullable|array",
+            "fasilitas_ids.*" => "exists:fasilitas,id",
+            "jadwals" => "nullable|array",
+            "jadwals.*.sopir_id" => "required_with:jadwals|exists:sopir,id",
+            "jadwals.*.rute_id" => "required_with:jadwals|exists:rute,id",
+            "jadwals.*.tanggal_berangkat" => "required_with:jadwals|date",
+            "jadwals.*.jam_berangkat" => "required_with:jadwals|date_format:H:i",
+            "jadwals.*.status" => "required_with:jadwals|in:aktif,nonaktif",
         ]);
 
         DB::transaction(function () use ($request, $bus) {
-            $bus->update($request->only(['nama', 'plat_nomor', 'kapasitas', 'status', 'keterangan']));
+            $bus->update($request->only(["nama", "plat_nomor", "kapasitas", "status", "keterangan"]));
 
-            if ($request->has('fasilitas_ids')) {
+            if ($request->has("fasilitas_ids")) {
                 $bus->fasilitas()->sync($request->fasilitas_ids);
             }
 
-            if ($request->has('jadwals')) {
+            if ($request->has("jadwals")) {
                 // Hapus jadwal lama dan buat ulang
                 $bus->jadwals()->delete();
                 foreach ($request->jadwals as $jadwalData) {
-                    $jadwalData['bus_id'] = $bus->id;
+                    $jadwalData["bus_id"] = $bus->id;
                     Jadwal::create($jadwalData);
                 }
             }
@@ -136,6 +136,6 @@ class BusController extends Controller
     {
         $bus = Bus::findOrFail($id);
         $bus->delete();
-        return response()->json(['message' => 'Bus deleted successfully']);
+        return response()->json(["message" => "Bus deleted successfully"]);
     }
 }

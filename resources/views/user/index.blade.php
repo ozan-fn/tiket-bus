@@ -141,6 +141,9 @@
                                                 </x-ui.table.cell>
                                                 <x-ui.table.cell class="text-right">
                                                     <div class="flex items-center justify-end gap-2">
+                                                        <a href="{{ route('admin/user.show', $user) }}">
+                                                            <x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-eye class="w-4 h-4" /></x-ui.button>
+                                                        </a>
                                                         <a href="{{ route('admin/user.edit', $user) }}">
                                                             <x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-pencil class="w-4 h-4" /></x-ui.button>
                                                         </a>
@@ -178,6 +181,7 @@
                                                             <p class="text-xs text-muted-foreground">{{ $user->email }}</p>
                                                         </div>
                                                         <div class="flex gap-1">
+                                                            <a href="{{ route('admin/user.show', $user) }}"><x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-eye class="w-4 h-4" /></x-ui.button></a>
                                                             <a href="{{ route('admin/user.edit', $user) }}"><x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-pencil class="w-4 h-4" /></x-ui.button></a>
                                                             {{-- Mobile Delete Button Logic Here (Same as Desktop) --}}
                                                         </div>

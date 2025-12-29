@@ -81,6 +81,10 @@ class KelasBusController extends Controller
 
     public function destroy(KelasBus $kelasBus): RedirectResponse
     {
+        if ($kelasBus->busKelasBus()->exists()) {
+            return redirect()->back()->with("error", "Kelas bus tidak dapat dihapus karena masih terkait dengan bus atau jadwal.");
+        }
+
         $kelasBus->delete();
 
         return redirect()->route("admin/kelas-bus.index")->with("success", "Kelas bus berhasil dihapus");

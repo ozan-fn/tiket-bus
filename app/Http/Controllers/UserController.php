@@ -17,7 +17,7 @@ class UserController extends Controller
     public function index(Request $request)
     {
         $query = User::with("roles");
-        $roles = Role::all();
+        $roles = Role::where("name", "!=", "conductor")->get();
 
         if ($search = $request->input("search")) {
             $query->where(function ($q) use ($search) {
@@ -50,7 +50,7 @@ class UserController extends Controller
 
     public function create()
     {
-        $roles = Role::all();
+        $roles = Role::where("name", "!=", "conductor")->get();
         return view("user.create", compact("roles"));
     }
 
@@ -61,12 +61,12 @@ class UserController extends Controller
             "email" => "required|email|max:255|unique:users",
             "password" => "required|string|min:8",
             "role" => "required|exists:roles,name",
-            "nik" => "required_if:role,driver|string",
-            "nomor_sim" => "required_if:role,driver|string",
+            "nik" => "nullable|required_if:role,driver|string",
+            "nomor_sim" => "nullable|required_if:role,driver|string",
             "alamat" => "nullable|string",
             "telepon" => "nullable|string",
-            "tanggal_lahir" => "required_if:role,driver|date",
-            "status" => "required_if:role,driver|in:aktif,tidak_aktif",
+            "tanggal_lahir" => "nullable|required_if:role,driver|date",
+            "status" => "nullable|required_if:role,driver|in:aktif,tidak_aktif",
         ]);
 
         DB::transaction(function () use ($request) {
@@ -96,9 +96,15 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $roles = Role::all();
+        $roles = Role::where("name", "!=", "conductor")->get();
         $sopir = $user->sopirs()->first(); // Assuming one sopir per user
         return view("user.edit", compact("user", "roles", "sopir"));
+    }
+
+    public function show(User $user)
+    {
+        $user->load("roles", "sopirs");
+        return view("user.show", compact("user"));
     }
 
     public function update(Request $request, User $user)
@@ -108,12 +114,12 @@ class UserController extends Controller
             "email" => "required|email|max:255|unique:users,email," . $user->id,
             "password" => "nullable|string|min:8",
             "role" => "required|exists:roles,name",
-            "nik" => "required_if:role,driver|string",
-            "nomor_sim" => "required_if:role,driver|string",
+            "nik" => "nullable|required_if:role,driver|string",
+            "nomor_sim" => "nullable|required_if:role,driver|string",
             "alamat" => "nullable|string",
             "telepon" => "nullable|string",
-            "tanggal_lahir" => "required_if:role,driver|date",
-            "status" => "required_if:role,driver|in:aktif,tidak_aktif",
+            "tanggal_lahir" => "nullable|required_if:role,driver|date",
+            "status" => "nullable|required_if:role,driver|in:aktif,tidak_aktif",
         ]);
 
         DB::transaction(function () use ($request, $user) {

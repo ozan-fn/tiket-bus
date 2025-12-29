@@ -1,25 +1,48 @@
 <x-admin-layout>
     <x-slot name="header">
-        <div class="flex items-center justify-between">
-            <div>
-                <h2 class="text-2xl font-bold">Edit Kelas Bus</h2>
-                <p class="text-sm text-muted-foreground mt-1">Perbarui informasi kelas bus</p>
-            </div>
-            <a href="{{ route('admin/kelas-bus.index') }}">
-                <x-ui.button variant="outline">
-                    <x-lucide-arrow-left class="w-4 h-4" />
-                    Kembali
-                </x-ui.button>
-            </a>
-        </div>
+        <x-ui.breadcrumb.breadcrumb>
+            <x-ui.breadcrumb.list class="text-xs">
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.link href="{{ route('dashboard') }}">
+                        Home
+                    </x-ui.breadcrumb.link>
+                </x-ui.breadcrumb.item>
+                <x-ui.breadcrumb.separator>
+                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                </x-ui.breadcrumb.separator>
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.link href="{{ route('admin/kelas-bus.index') }}">
+                        Kelas Bus
+                    </x-ui.breadcrumb.link>
+                </x-ui.breadcrumb.item>
+                <x-ui.breadcrumb.separator>
+                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                </x-ui.breadcrumb.separator>
+                <x-ui.breadcrumb.item>
+                    <x-ui.breadcrumb.page>
+                        Edit Kelas Bus
+                    </x-ui.breadcrumb.page>
+                </x-ui.breadcrumb.item>
+            </x-ui.breadcrumb.list>
+        </x-ui.breadcrumb.breadcrumb>
     </x-slot>
 
-    <div class="p-6">
-        <div class="max-w-2xl">
+    <div class="p-4 sm:p-6">
+        <div class="max-w-4xl mx-auto">
             <x-ui.card>
                 <x-ui.card.header>
-                    <x-ui.card.title>Informasi Kelas Bus</x-ui.card.title>
-                    <x-ui.card.description>Perbarui detail kelas bus</x-ui.card.description>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <x-ui.card.title>Edit Kelas Bus</x-ui.card.title>
+                            <x-ui.card.description>Perbarui informasi kelas bus</x-ui.card.description>
+                        </div>
+                        <a href="{{ route('admin/kelas-bus.index') }}">
+                            <x-ui.button variant="outline" size="sm">
+                                <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                Kembali
+                            </x-ui.button>
+                        </a>
+                    </div>
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <form method="POST" action="{{ route('admin/kelas-bus.update', $kelasBus) }}">
@@ -30,7 +53,10 @@
                             <!-- Nama Kelas -->
                             <div class="space-y-2">
                                 <x-ui.label for="nama_kelas">
-                                    Nama Kelas
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-star class="w-4 h-4" />
+                                        Nama Kelas
+                                    </div>
                                     <span class="text-red-500">*</span>
                                 </x-ui.label>
                                 <x-ui.input
@@ -40,11 +66,18 @@
                                     value="{{ old('nama_kelas', $kelasBus->nama_kelas) }}"
                                     placeholder="Contoh: Ekonomi, VIP, Premium"
                                     required
+                                    maxlength="100"
                                 />
                                 @error('nama_kelas')
-                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                    <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        {{ $message }}
+                                    </p>
                                 @enderror
-                                <p class="text-sm text-muted-foreground">Masukkan nama kelas bus yang akan ditawarkan</p>
+                                <p class="text-xs text-muted-foreground flex items-center gap-1">
+                                    <x-lucide-info class="w-3 h-3" />
+                                    Nama kelas bus yang akan ditawarkan (maksimal 100 karakter)
+                                </p>
                             </div>
 
 
@@ -52,7 +85,10 @@
                             <!-- Deskripsi -->
                             <div class="space-y-2">
                                 <x-ui.label for="deskripsi">
-                                    Deskripsi
+                                    <div class="flex items-center gap-2">
+                                        <x-lucide-file-text class="w-4 h-4" />
+                                        Deskripsi
+                                    </div>
                                 </x-ui.label>
                                 <textarea
                                     id="deskripsi"
@@ -62,21 +98,50 @@
                                     rows="4"
                                 >{{ old('deskripsi', $kelasBus->deskripsi) }}</textarea>
                                 @error('deskripsi')
-                                    <p class="text-sm text-destructive mt-1">{{ $message }}</p>
+                                    <p class="text-sm text-destructive mt-1 flex items-center gap-1">
+                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        {{ $message }}
+                                    </p>
                                 @enderror
-                                <p class="text-sm text-muted-foreground">Deskripsi tambahan tentang kelas ini</p>
+                                <p class="text-xs text-muted-foreground flex items-center gap-1">
+                                    <x-lucide-info class="w-3 h-3" />
+                                    Deskripsi tambahan tentang kelas ini
+                                </p>
+                            </div>
+
+                            <!-- Info Box -->
+                            <div class="p-4 rounded-lg border border-border bg-muted/50">
+                                <div class="flex items-center gap-2 mb-3">
+                                    <x-lucide-info class="w-5 h-5 text-primary" />
+                                    <p class="text-sm font-medium">Informasi</p>
+                                </div>
+                                <ul class="space-y-2 text-sm text-muted-foreground">
+                                    <li class="flex items-start gap-2">
+                                        <x-lucide-check class="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                                        <span>Nama kelas harus jelas dan mudah dipahami</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <x-lucide-check class="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                                        <span>Kelas yang diupdate akan mempengaruhi semua jadwal yang menggunakannya</span>
+                                    </li>
+                                    <li class="flex items-start gap-2">
+                                        <x-lucide-check class="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                                        <span>Pastikan nama tidak duplikat dengan kelas lain</span>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between mt-8 pt-6 border-t border-border">
-                            <a href="{{ route('admin/kelas-bus.index') }}">
-                                <x-ui.button type="button" variant="outline">
+                        <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
+                            <a href="{{ route('admin/kelas-bus.index') }}" class="w-full sm:w-auto">
+                                <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
+                                    <x-lucide-x class="w-4 h-4 mr-2" />
                                     Batal
                                 </x-ui.button>
                             </a>
-                            <x-ui.button type="submit">
-                                <x-lucide-check class="w-4 h-4" />
-                                Update Kelas
+                            <x-ui.button type="submit" class="w-full sm:w-auto">
+                                <x-lucide-save class="w-4 h-4 mr-2" />
+                                Update Kelas Bus
                             </x-ui.button>
                         </div>
                     </form>

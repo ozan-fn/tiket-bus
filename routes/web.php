@@ -20,7 +20,7 @@ use App\Http\Controllers\PembayaranManualController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
-    return view("welcome");
+    return view("home.index");
 });
 
 Route::get("/dashboard", function () {
@@ -91,6 +91,7 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
 
         // Jadwal Management
         Route::resource("jadwal", JadwalController::class)->parameters(["jadwal" => "jadwal"]);
+        Route::get("jadwal/get-kelas-by-bus/{bus}", [JadwalController::class, "getKelasByBus"])->name("jadwal.get-kelas-by-bus");
 
         // Pemesanan Tiket (Agent Booking)
         Route::get("pemesanan", [PemesananController::class, "adminIndex"])->name("pemesanan.index");

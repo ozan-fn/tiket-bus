@@ -29,6 +29,37 @@
 
     <div class="p-4 sm:p-6">
         <div class="max-w-4xl mx-auto">
+            @if(session('success'))
+                <x-ui.alert class="mb-6">
+                    <x-slot:icon>
+                        <x-lucide-check-circle class="w-4 h-4" />
+                    </x-slot:icon>
+                    <x-slot:title>Berhasil!</x-slot:title>
+                    <x-slot:description>
+                        {{ session('success') }}
+                    </x-slot:description>
+                </x-ui.alert>
+            @endif
+
+            @if ($errors->any())
+                <x-ui.alert variant="destructive" class="mb-6">
+                    <x-slot:icon>
+                        <x-lucide-alert-circle class="w-4 h-4" />
+                    </x-slot:icon>
+                    <x-slot:title>Error!</x-slot:title>
+                    <x-slot:description>
+                        <ul class="text-sm space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li class="flex items-center gap-2">
+                                    <span class="h-1 w-1 rounded-full bg-current"></span>
+                                    {{ $error }}
+                                </li>
+                            @endforeach
+                        </ul>
+                    </x-slot:description>
+                </x-ui.alert>
+            @endif
+
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center justify-between">
@@ -148,7 +179,6 @@
                                         placeholder="Masukkan NIK"
                                         x-bind:required="selectedRole === 'driver'"
                                         x-bind:disabled="selectedRole !== 'driver'"
-                                        @if(old('role', $user->roles->first()->name ?? '') !== 'driver') disabled @endif
                                     />
                                     @error('nik')
                                         <p class="text-sm text-destructive mt-1">{{ $message }}</p>
@@ -172,7 +202,6 @@
                                         placeholder="Masukkan nomor SIM"
                                         x-bind:required="selectedRole === 'driver'"
                                         x-bind:disabled="selectedRole !== 'driver'"
-                                        @if(old('role', $user->roles->first()->name ?? '') !== 'driver') disabled @endif
                                     />
                                     @error('nomor_sim')
                                         <p class="text-sm text-destructive mt-1">{{ $message }}</p>
@@ -194,7 +223,6 @@
                                         value="{{ old('alamat', $sopir?->alamat ?? '') }}"
                                         placeholder="Masukkan alamat"
                                         x-bind:disabled="selectedRole !== 'driver'"
-                                        @if(old('role', $user->roles->first()->name ?? '') !== 'driver') disabled @endif
                                     />
                                     @error('alamat')
                                         <p class="text-sm text-destructive mt-1">{{ $message }}</p>
@@ -216,7 +244,6 @@
                                         value="{{ old('telepon', $sopir?->telepon ?? '') }}"
                                         placeholder="Masukkan nomor telepon"
                                         x-bind:disabled="selectedRole !== 'driver'"
-                                        @if(old('role', $user->roles->first()->name ?? '') !== 'driver') disabled @endif
                                     />
                                     @error('telepon')
                                         <p class="text-sm text-destructive mt-1">{{ $message }}</p>
@@ -239,7 +266,6 @@
                                         placeholder="Pilih tanggal..."
                                         x-bind:required="selectedRole === 'driver'"
                                         x-bind:disabled="selectedRole !== 'driver'"
-                                        @if(old('role', $user->roles->first()->name ?? '') !== 'driver') disabled @endif
                                     />
                                     @error('tanggal_lahir')
                                         <p class="text-sm text-destructive mt-1">{{ $message }}</p>
@@ -260,7 +286,6 @@
                                         id="status"
                                         x-bind:required="selectedRole === 'driver'"
                                         x-bind:disabled="selectedRole !== 'driver'"
-                                        @if(old('role', $user->roles->first()->name ?? '') !== 'driver') disabled @endif
                                         class="w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
                                         <option value="">Pilih Status</option>
                                         <option value="aktif" {{ old('status', $sopir?->status ?? '') == 'aktif' ? 'selected' : '' }}>Aktif</option>

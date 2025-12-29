@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Spatie\QueryBuilder\QueryBuilder;
+use Illuminate\Support\Facades\DB;
 
 class BusController extends Controller
 {
@@ -65,28 +66,72 @@ class BusController extends Controller
             "foto.*" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
-        $bus = Bus::create($request->only(["nama", "kapasitas", "plat_nomor"]));
-        $bus->fasilitas()->sync($request->fasilitas_ids ?? []);
-
-        // Simpan kelas bus yang dipilih
+        // Check total seats must exactly equal capacity
+        $kapasitas = intval($request->kapasitas);
+        $totalKursi = 0;
         if ($request->has("kelas_bus_data") && is_array($request->kelas_bus_data)) {
             foreach ($request->kelas_bus_data as $kelasData) {
-                // Update atau create kelas bus dengan jumlah kursi spesifik untuk bus ini
-                // Disimpan sebagai relasi pivot dengan jumlah kursi
-                $bus->kelasBus()->attach($kelasData["kelas_id"], [
-                    "jumlah_kursi" => $kelasData["jumlah_kursi"],
-                ]);
+                $totalKursi += intval($kelasData["jumlah_kursi"]);
             }
         }
 
-        if ($request->hasFile("foto")) {
-            foreach ($request->file("foto") as $file) {
-                $path = $file->store("bus_foto", "public");
-                BusPhoto::create([
-                    "bus_id" => $bus->id,
-                    "path" => $path,
-                ]);
-            }
+        if ($totalKursi !== $kapasitas) {
+            return back()
+                ->withErrors(["kelas_bus_data" => "Total kursi kelas bus harus sama dengan kapasitas bus."])
+                ->withInput();
+        }
+
+        try {
+            $bus = DB::transaction(function () use ($request) {
+                $bus = Bus::create($request->only(["nama", "kapasitas", "plat_nomor"]));
+                $bus->fasilitas()->sync($request->fasilitas_ids ?? []);
+
+                // Simpan kelas bus yang dipilih
+                if ($request->has("kelas_bus_data") && is_array($request->kelas_bus_data)) {
+                    foreach ($request->kelas_bus_data as $kelasData) {
+                        // Disimpan sebagai relasi pivot dengan jumlah kursi
+                        $bus->kelasBus()->attach($kelasData["kelas_id"], [
+                            "jumlah_kursi" => $kelasData["jumlah_kursi"],
+                        ]);
+                    }
+                }
+
+                // Ensure kursi rows exist for each bus_kelas_bus (create if missing)
+                $bus->load("busKelasBus.kursi");
+                foreach ($bus->busKelasBus as $bkb) {
+                    if ($bkb->kursi->isEmpty() && intval($bkb->jumlah_kursi) > 0) {
+                        for ($i = 1; $i <= intval($bkb->jumlah_kursi); $i++) {
+                            \App\Models\Kursi::create([
+                                "bus_kelas_bus_id" => $bkb->id,
+                                "nomor_kursi" => $i,
+                                "index" => $i - 1,
+                            ]);
+                        }
+                    }
+                }
+
+                if ($request->hasFile("foto")) {
+                    foreach ($request->file("foto") as $file) {
+                        $path = $file->store("bus_foto", "public");
+                        BusPhoto::create([
+                            "bus_id" => $bus->id,
+                            "path" => $path,
+                        ]);
+                    }
+                }
+
+                // Verifikasi tambahan: pastikan total di DB sesuai kapasitas sebelum commit
+                $dbTotal = $bus->busKelasBus()->sum("jumlah_kursi");
+                if (intval($dbTotal) !== intval($bus->kapasitas)) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        "kelas_bus_data" => ["Total kursi setelah penyimpanan tidak sama dengan kapasitas bus."],
+                    ]);
+                }
+
+                return $bus;
+            });
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            return back()->withErrors($ve->errors())->withInput();
         }
 
         return redirect()->route("admin/bus.index")->with("success", "Bus berhasil ditambahkan");
@@ -121,28 +166,91 @@ class BusController extends Controller
             "foto.*" => "image|mimes:jpeg,png,jpg,gif|max:2048",
         ]);
 
-        $bus->update($request->only(["nama", "kapasitas", "plat_nomor"]));
-        $bus->fasilitas()->sync($request->fasilitas_ids ?? []);
-
-        // Sinkronisasi kelas bus
-        $kelasBusData = [];
+        // Check total seats must exactly equal capacity (based on input if provided)
+        $kapasitas = intval($request->kapasitas);
+        $totalKursi = 0;
         if ($request->has("kelas_bus_data") && is_array($request->kelas_bus_data)) {
             foreach ($request->kelas_bus_data as $kelasData) {
-                $kelasBusData[$kelasData["kelas_id"]] = [
-                    "jumlah_kursi" => $kelasData["jumlah_kursi"],
-                ];
+                $totalKursi += intval($kelasData["jumlah_kursi"]);
+            }
+        } else {
+            // if no kelas_bus_data provided, calculate from existing pivot
+            $bus->load("kelasBus");
+            foreach ($bus->kelasBus as $kb) {
+                $pivotJumlah = 0;
+                if (isset($kb->pivot) && isset($kb->pivot->jumlah_kursi)) {
+                    $pivotJumlah = intval($kb->pivot->jumlah_kursi);
+                }
+                $totalKursi += $pivotJumlah;
             }
         }
-        $bus->kelasBus()->sync($kelasBusData);
 
-        if ($request->hasFile("foto")) {
-            foreach ($request->file("foto") as $file) {
-                $path = $file->store("bus_foto", "public");
-                BusPhoto::create([
-                    "bus_id" => $bus->id,
-                    "path" => $path,
-                ]);
-            }
+        if ($totalKursi !== $kapasitas) {
+            return back()
+                ->withErrors(["kelas_bus_data" => "Total kursi kelas bus harus sama dengan kapasitas bus."])
+                ->withInput();
+        }
+
+        try {
+            DB::transaction(function () use ($request, $bus) {
+                $bus->update($request->only(["nama", "kapasitas", "plat_nomor"]));
+                $bus->fasilitas()->sync($request->fasilitas_ids ?? []);
+
+                // Sinkronisasi kelas bus
+                $kelasBusData = [];
+                if ($request->has("kelas_bus_data") && is_array($request->kelas_bus_data)) {
+                    foreach ($request->kelas_bus_data as $kelasData) {
+                        $kelasBusData[$kelasData["kelas_id"]] = [
+                            "jumlah_kursi" => $kelasData["jumlah_kursi"],
+                        ];
+                    }
+                }
+                $bus->kelasBus()->sync($kelasBusData);
+
+                // Ensure kursi rows exist for each bus_kelas_bus (create if missing)
+                $bus->load("busKelasBus.kursi");
+                foreach ($bus->busKelasBus as $bkb) {
+                    if ($bkb->kursi->isEmpty() && intval($bkb->jumlah_kursi) > 0) {
+                        for ($i = 1; $i <= intval($bkb->jumlah_kursi); $i++) {
+                            \App\Models\Kursi::create([
+                                "bus_kelas_bus_id" => $bkb->id,
+                                "nomor_kursi" => $i,
+                                "index" => $i - 1,
+                            ]);
+                        }
+                    }
+                }
+
+                if ($request->hasFile("foto")) {
+                    foreach ($request->file("foto") as $file) {
+                        $path = $file->store("bus_foto", "public");
+                        BusPhoto::create([
+                            "bus_id" => $bus->id,
+                            "path" => $path,
+                        ]);
+                    }
+                }
+
+                // Verifikasi setelah sync: total di DB harus sama dengan kapasitas ter-update
+                $bus->load("kelasBus");
+                $totalAfterSync = 0;
+                foreach ($bus->kelasBus as $kb) {
+                    $pivotJumlah = 0;
+                    if (isset($kb->pivot) && isset($kb->pivot->jumlah_kursi)) {
+                        $pivotJumlah = intval($kb->pivot->jumlah_kursi);
+                    }
+                    $totalAfterSync += $pivotJumlah;
+                }
+
+                $currentKapasitas = intval($bus->kapasitas);
+                if ($totalAfterSync !== $currentKapasitas) {
+                    throw \Illuminate\Validation\ValidationException::withMessages([
+                        "kelas_bus_data" => ["Total kursi setelah sinkronisasi tidak sama dengan kapasitas bus."],
+                    ]);
+                }
+            });
+        } catch (\Illuminate\Validation\ValidationException $ve) {
+            return back()->withErrors($ve->errors())->withInput();
         }
 
         return redirect()->route("admin/bus.index")->with("success", "Bus berhasil diperbarui");
@@ -150,6 +258,10 @@ class BusController extends Controller
 
     public function destroy(Bus $bus): RedirectResponse
     {
+        if ($bus->jadwals()->exists() || $bus->busKelasBus()->exists()) {
+            return redirect()->back()->with("error", "Bus tidak dapat dihapus karena masih terkait dengan jadwal atau kelas bus.");
+        }
+
         // Hapus foto
         foreach ($bus->photos as $photo) {
             Storage::disk("public")->delete($photo->path);

@@ -16,7 +16,7 @@ class JadwalController extends Controller
     {
         $perPage = $request->input("per_page", 10);
 
-        $jadwals = Jadwal::with(["bus.photos", "sopir.user", "rute.asalTerminal.photos", "rute.tujuanTerminal.photos", "jadwalKelasBus.busKelasBus", "jadwalKelasBus.kelasBus"])
+        $jadwals = Jadwal::with(["bus.photos", "sopir.user", "rute.asalTerminal.photos", "rute.tujuanTerminal.photos", "jadwalKelasBus.busKelasBus.kelasBus", "jadwalKelasBus.busKelasBus.bus"])
             ->active()
             ->when($request->asal, fn($q) => $q->whereHas("rute.asalTerminal", fn($q2) => $q2->where("nama_terminal", "like", "%" . $request->asal . "%")))
             ->when($request->tujuan, fn($q) => $q->whereHas("rute.tujuanTerminal", fn($q2) => $q2->where("nama_terminal", "like", "%" . $request->tujuan . "%")))
@@ -63,19 +63,24 @@ class JadwalController extends Controller
                                 ->toArray(),
                         ],
                     ],
-                    "kelas_tersedia" => $jadwal->jadwalKelasBus->map(function ($jkb) {
-                        $kursiTerpakai = \App\Models\Tiket::where("jadwal_kelas_bus_id", $jkb->id)
-                            ->whereIn("status", ["dipesan", "dibayar"])
-                            ->count();
-                        return [
-                            "id" => $jkb->id,
-                            "bus_kelas_bus_id" => $jkb->bus_kelas_bus_id,
-                            "nama_kelas" => $jkb->kelasBus->nama_kelas,
-                            "harga" => $jkb->harga,
-                            "kursi_tersedia" => max(0, $jkb->busKelasBus->jumlah_kursi - $kursiTerpakai),
-                            "total_kursi" => $jkb->busKelasBus->jumlah_kursi,
-                        ];
-                    }),
+                    "kelas_tersedia" => $jadwal->jadwalKelasBus
+                        ->filter(function ($jkb) {
+                            return $jkb->busKelasBus !== null && $jkb->busKelasBus->kelasBus !== null && $jkb->busKelasBus->bus !== null;
+                        })
+                        ->map(function ($jkb) {
+                            $kursiTerpakai = \App\Models\Tiket::where("jadwal_kelas_bus_id", $jkb->id)
+                                ->whereIn("status", ["dipesan", "dibayar"])
+                                ->count();
+                            return [
+                                "id" => $jkb->id,
+                                "bus_kelas_bus_id" => $jkb->bus_kelas_bus_id,
+                                "nama_kelas" => $jkb->busKelasBus->kelasBus->nama_kelas,
+                                "nama_bus" => $jkb->busKelasBus->bus->nama,
+                                "harga" => $jkb->harga,
+                                "kursi_tersedia" => max(0, $jkb->busKelasBus->jumlah_kursi - $kursiTerpakai),
+                                "total_kursi" => $jkb->busKelasBus->jumlah_kursi,
+                            ];
+                        }),
                 ];
             }),
             "pagination" => [
@@ -95,7 +100,7 @@ class JadwalController extends Controller
      */
     public function show($id)
     {
-        $jadwal = Jadwal::with(["bus.photos", "sopir.user", "rute.asalTerminal.photos", "rute.tujuanTerminal.photos", "jadwalKelasBus.busKelasBus", "jadwalKelasBus.kelasBus"])->findOrFail($id);
+        $jadwal = Jadwal::with(["bus.photos", "sopir.user", "rute.asalTerminal.photos", "rute.tujuanTerminal.photos", "jadwalKelasBus.busKelasBus.kelasBus", "jadwalKelasBus.busKelasBus.bus"])->findOrFail($id);
 
         return response()->json([
             "success" => true,
@@ -143,20 +148,25 @@ class JadwalController extends Controller
                             ->toArray(),
                     ],
                 ],
-                "kelas_tersedia" => $jadwal->jadwalKelasBus->map(function ($jkb) {
-                    $kursiTerpakai = \App\Models\Tiket::where("jadwal_kelas_bus_id", $jkb->id)
-                        ->whereIn("status", ["dipesan", "dibayar"])
-                        ->count();
-                    return [
-                        "id" => $jkb->id,
-                        "bus_kelas_bus_id" => $jkb->bus_kelas_bus_id,
-                        "nama_kelas" => $jkb->kelasBus->nama_kelas,
-                        "deskripsi" => $jkb->kelasBus->deskripsi,
-                        "jumlah_kursi" => $jkb->busKelasBus->jumlah_kursi,
-                        "harga" => $jkb->harga,
-                        "kursi_tersedia" => max(0, $jkb->busKelasBus->jumlah_kursi - $kursiTerpakai),
-                    ];
-                }),
+                "kelas_tersedia" => $jadwal->jadwalKelasBus
+                    ->filter(function ($jkb) {
+                        return $jkb->busKelasBus !== null && $jkb->busKelasBus->kelasBus !== null && $jkb->busKelasBus->bus !== null;
+                    })
+                    ->map(function ($jkb) {
+                        $kursiTerpakai = \App\Models\Tiket::where("jadwal_kelas_bus_id", $jkb->id)
+                            ->whereIn("status", ["dipesan", "dibayar"])
+                            ->count();
+                        return [
+                            "id" => $jkb->id,
+                            "bus_kelas_bus_id" => $jkb->bus_kelas_bus_id,
+                            "nama_kelas" => $jkb->busKelasBus->kelasBus->nama_kelas,
+                            "nama_bus" => $jkb->busKelasBus->bus->nama,
+                            "deskripsi" => $jkb->busKelasBus->kelasBus->deskripsi,
+                            "jumlah_kursi" => $jkb->busKelasBus->jumlah_kursi,
+                            "harga" => $jkb->harga,
+                            "kursi_tersedia" => max(0, $jkb->busKelasBus->jumlah_kursi - $kursiTerpakai),
+                        ];
+                    }),
             ],
         ]);
     }

@@ -104,7 +104,7 @@
                                         value="{{ old('nama', $bus->nama) }}"
                                         placeholder="Contoh: Haryanto Executive"
                                         required
-                                        class="@error('nama') border-red-500 @enderror"
+                                        class="@error('nama') border-destructive @enderror"
                                     />
                                     @error('nama')
                                         <p class="text-sm text-destructive flex items-center gap-1">
@@ -133,7 +133,7 @@
                                             placeholder="Contoh: 40"
                                             min="1"
                                             required
-                                            class="@error('kapasitas') border-red-500 @enderror"
+                                            class="@error('kapasitas') border-destructive @enderror"
                                         />
                                         @error('kapasitas')
                                             <p class="text-sm text-destructive flex items-center gap-1">
@@ -160,7 +160,7 @@
                                             value="{{ old('plat_nomor', $bus->plat_nomor) }}"
                                             placeholder="Contoh: B 1234 XYZ"
                                             required
-                                            class="@error('plat_nomor') border-red-500 @enderror"
+                                            class="@error('plat_nomor') border-destructive @enderror"
                                         />
                                         @error('plat_nomor')
                                             <p class="text-sm text-destructive flex items-center gap-1">
@@ -357,7 +357,7 @@
                 </div>
 
                 <!-- Form Actions -->
-                <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 sticky bottom-0 bg-background border-t border-border p-4 rounded-b-lg">
+                <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 sticky bottom-0 bg-background border-t border-border p-4 mt-4 rounded-lg">
                     <a href="{{ route('admin/bus.index') }}" class="w-full sm:w-auto">
                         <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
                             <x-lucide-x class="w-4 h-4 mr-2" />

@@ -226,7 +226,8 @@
                     <div class="flex items-center gap-2">
                         <x-lucide-bus class="w-5 h-5 text-primary" />
                         <x-ui.card.title>Informasi Bus & Sopir & Kondektur</x-ui.card.title>
-                    </x-ui.card.header>
+                    </div>
+                </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <!-- Bus Info -->
@@ -314,6 +315,45 @@
                             @endif
                         </div>
                     </div>
+                </x-ui.card.content>
+            </x-ui.card>
+
+            <!-- Kelas Bus & Harga -->
+            <x-ui.card>
+                <x-ui.card.header>
+                    <div class="flex items-center gap-2">
+                        <x-lucide-armchair class="w-5 h-5 text-primary" />
+                        <x-ui.card.title>Kelas Bus & Harga</x-ui.card.title>
+                    </div>
+                    <x-ui.card.description>Detail kelas bus dan harga tiket untuk jadwal ini</x-ui.card.description>
+                </x-ui.card.header>
+                <x-ui.card.content>
+                    @if($jadwal->jadwalKelasBus->count() > 0)
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            @foreach($jadwal->jadwalKelasBus as $jadwalKelas)
+                                <div class="p-4 rounded-lg border border-border bg-card">
+                                    <div class="flex items-center gap-3 mb-3">
+                                        <div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                                            <x-lucide-armchair class="h-5 w-5 text-primary" />
+                                        </div>
+                                        <div>
+                                            <p class="text-sm font-medium">{{ $jadwalKelas->kelasBus?->nama_kelas ?? 'N/A' }}</p>
+                                            <p class="text-xs text-muted-foreground">{{ $jadwalKelas->busKelasBus?->jumlah_kursi ?? 0 }} Kursi</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm text-muted-foreground">Harga</span>
+                                        <span class="text-lg font-bold text-primary">Rp {{ number_format($jadwalKelas->harga, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="text-center py-8">
+                            <x-lucide-armchair class="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                            <p class="text-sm text-muted-foreground">Belum ada kelas bus yang dikonfigurasi untuk jadwal ini</p>
+                        </div>
+                    @endif
                 </x-ui.card.content>
             </x-ui.card>
 

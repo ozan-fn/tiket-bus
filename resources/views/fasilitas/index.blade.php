@@ -32,6 +32,42 @@
             </x-ui.alert>
         @endif
 
+        @if(session('error'))
+            <x-ui.alert variant="destructive" class="mb-6">
+                <x-slot:icon>
+                    <x-lucide-alert-circle class="w-4 h-4" />
+                </x-slot:icon>
+                <x-slot:title>Error!</x-slot:title>
+                <x-slot:description>
+                    {{ session('error') }}
+                </x-slot:description>
+            </x-ui.alert>
+        @endif
+
+        @if(session('warning'))
+            <x-ui.alert class="mb-6">
+                <x-slot:icon>
+                    <x-lucide-alert-triangle class="w-4 h-4" />
+                </x-slot:icon>
+                <x-slot:title>Peringatan!</x-slot:title>
+                <x-slot:description>
+                    {{ session('warning') }}
+                </x-slot:description>
+            </x-ui.alert>
+        @endif
+
+        @if(session('info'))
+            <x-ui.alert class="mb-6">
+                <x-slot:icon>
+                    <x-lucide-info class="w-4 h-4" />
+                </x-slot:icon>
+                <x-slot:title>Informasi!</x-slot:title>
+                <x-slot:description>
+                    {{ session('info') }}
+                </x-slot:description>
+            </x-ui.alert>
+        @endif
+
         <x-ui.card>
             <x-ui.card.header>
                 <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

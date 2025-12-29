@@ -114,6 +114,10 @@ class TerminalController extends Controller
 
     public function destroy(Terminal $terminal): RedirectResponse
     {
+        if ($terminal->ruteTujuan()->exists() || $terminal->ruteAsal()->exists() || \App\Models\User::where("terminal_id", $terminal->id)->exists()) {
+            return redirect()->back()->with("error", "Terminal tidak dapat dihapus karena masih terkait dengan rute atau user.");
+        }
+
         // Hapus foto
         foreach ($terminal->photos as $photo) {
             Storage::disk("public")->delete($photo->path);

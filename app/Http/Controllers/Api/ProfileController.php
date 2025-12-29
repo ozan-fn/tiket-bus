@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
 class ProfileController
@@ -79,14 +80,14 @@ class ProfileController
             $data["jenis_kelamin"] = null;
         }
         $rules = [
-            "name" => "required|string|max:255",
-            "email" => "required|email|max:255|unique:users,email," . $user->id,
+            "name" => "string|max:255",
+            "email" => "email|max:255|unique:users,email," . $user->id,
             "nik" => "nullable|string|max:16",
             "tanggal_lahir" => "nullable",
             "jenis_kelamin" => "nullable",
             "nomor_telepon" => "nullable|string|max:20",
         ];
-        $validator = \Validator::make($data, $rules);
+        $validator = Validator::make($data, $rules);
         if ($validator->fails()) {
             return response()->json(["errors" => $validator->errors()], 422);
         }

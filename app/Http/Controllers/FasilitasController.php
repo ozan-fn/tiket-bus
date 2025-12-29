@@ -79,6 +79,10 @@ class FasilitasController extends Controller
 
     public function destroy(Fasilitas $fasilitas): RedirectResponse
     {
+        if ($fasilitas->bus()->exists()) {
+            return redirect()->back()->with("error", "Fasilitas tidak dapat dihapus karena masih terkait dengan bus.");
+        }
+
         $fasilitas->delete();
 
         return redirect()->route("admin/fasilitas.index")->with("success", "Fasilitas berhasil dihapus");
