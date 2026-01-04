@@ -3,8 +3,6 @@
 
 @section('title', 'Pembayaran Tiket')
 
-@section('content')
-    <div class="container mx-auto px-4 py-8">
         <div class="max-w-2xl mx-auto">
             @if ($errors->any())
                 <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
@@ -151,5 +149,4 @@
             @apply border-blue-500 bg-blue-50;
         }
     </style>
-@endsection
 @endsection

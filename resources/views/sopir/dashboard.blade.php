@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 @section('content')
-    <x-slot name="header">
+    @push('header')
         <div class="flex justify-between items-center">
             <h2 class="text-2xl font-bold text-gray-800">Dashboard Sopir</h2>
             <p class="text-gray-600">Selamat datang, {{ Auth::user()->name }}</p>
         </div>
-    </x-slot>
+@endpush
 
     <div class="p-4 sm:p-6">
         <div class="max-w-7xl mx-auto space-y-6">

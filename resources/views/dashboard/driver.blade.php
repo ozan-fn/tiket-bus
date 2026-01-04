@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-    <x-slot name="header">
+    @push('header')
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
                 <!-- <x-ui.avatar.avatar size="lg">
@@ -14,7 +14,7 @@
                 </div> -->
             </div>
         </div>
-    </x-slot>
+@endpush
 
     <div class="p-4 sm:p-6">
         <div class="max-w-7xl mx-auto space-y-6">

@@ -1,5 +1,4 @@
 <x-ui.card>
-@section('content')
     <x-ui.card.header>
         <x-ui.card.title>Fasilitas Bus</x-ui.card.title>
         <x-ui.card.description>Pilih fasilitas yang tersedia di bus ini</x-ui.card.description>
@@ -45,4 +44,3 @@
         </div>
     </x-ui.card.content>
 </x-ui.card>
-@endsection

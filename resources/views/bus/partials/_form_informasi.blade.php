@@ -1,5 +1,4 @@
 <x-ui.card>
-@section('content')
     <x-ui.card.header>
         <x-ui.card.title>Informasi Dasar Bus</x-ui.card.title>
         <x-ui.card.description>Masukkan detail identitas bus yang akan ditambahkan</x-ui.card.description>
@@ -89,4 +88,3 @@
         </div>
     </x-ui.card.content>
 </x-ui.card>
-@endsection

@@ -1,5 +1,4 @@
 @if ($paginator->hasPages())
-@section('content')
     <nav role="navigation" aria-label="{!! __('Pagination Navigation') !!}" class="flex justify-between">
         {{-- Previous Page Link --}}
         @if ($paginator->onFirstPage())
@@ -24,4 +23,3 @@
         @endif
     </nav>
 @endif
-@endsection

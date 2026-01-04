@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-    <x-slot name="header">
+    @push('header')
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <x-ui.breadcrumb.breadcrumb>
                 <x-ui.breadcrumb.list class="text-xs">
@@ -24,7 +24,7 @@
                 </x-ui.button>
             </div>
         </div>
-    </x-slot>
+@endpush
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>

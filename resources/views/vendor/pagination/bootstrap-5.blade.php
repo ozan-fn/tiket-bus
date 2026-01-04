@@ -1,5 +1,4 @@
 @if ($paginator->hasPages())
-@section('content')
     <nav class="d-flex justify-items-center justify-content-between">
         <div class="d-flex justify-content-between flex-fill d-sm-none">
             <ul class="pagination">
@@ -87,4 +86,3 @@
         </div>
     </nav>
 @endif
-@endsection

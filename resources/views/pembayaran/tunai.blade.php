@@ -3,8 +3,6 @@
 
 @section('title', 'Pembayaran Tunai')
 
-@section('content')
-    <div class="container mx-auto px-4 py-8">
         <div class="max-w-2xl mx-auto">
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Pembayaran Tunai di Terminal</h1>
@@ -168,5 +166,4 @@
             </div>
         </div>
     </div>
-@endsection
 @endsection

@@ -3,8 +3,6 @@
 
 @section('title', 'Detail Tiket - ' . $tiket->kode_tiket)
 
-@section('content')
-    <div class="container mx-auto px-4 py-8">
         <div class="max-w-3xl mx-auto">
             <div class="mb-6 flex justify-between items-start">
                 <div>
@@ -313,5 +311,4 @@
             }
         </script>
     @endif
-@endsection
 @endsection

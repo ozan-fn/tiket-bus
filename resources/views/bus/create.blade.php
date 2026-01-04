@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-    <x-slot name="header">
+    @push('header')
         <x-ui.breadcrumb.breadcrumb>
             <x-ui.breadcrumb.list class="text-xs">
                 <x-ui.breadcrumb.item>
@@ -26,7 +26,7 @@
                 </x-ui.breadcrumb.item>
             </x-ui.breadcrumb.list>
         </x-ui.breadcrumb.breadcrumb>
-    </x-slot>
+@endpush
 
     <div class="p-4 sm:p-6">
         <div class="max-w-6xl mx-auto space-y-6">

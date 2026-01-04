@@ -1,5 +1,4 @@
 <section class="space-y-6">
-@section('content')
     <header>
         <h2 class="text-lg font-medium text-gray-900">
             {{ __('Delete Account') }}
@@ -54,4 +53,3 @@
         </form>
     </x-modal>
 </section>
-@endsection

@@ -226,11 +226,9 @@
                         <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors flex-shrink-0" title="Buka sidebar">
                             <i data-lucide="menu" class="w-6 h-6"></i>
                         </button>
-                        @isset($header)
-                            <div class="flex-1 min-w-0">
-                                {{ $header }}
-                            </div>
-                        @endisset
+                        <div class="flex-1 min-w-0">
+                            @stack('header')
+                        </div>
                     </div>
                     <div class="flex items-center gap-2 ml-4 flex-shrink-0">
                         <!-- Fullscreen Toggle -->

@@ -1,5 +1,4 @@
 @if ($paginator->hasPages())
-@section('content')
     <nav>
         <ul class="pagination">
             {{-- Previous Page Link --}}
@@ -26,4 +25,3 @@
         </ul>
     </nav>
 @endif
-@endsection

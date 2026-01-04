@@ -1,8 +1,8 @@
 @extends('layouts.admin')
 @section('content')
-    <x-slot name="header">
+    @push('header')
         <h2 class="text-xl font-bold text-gray-900 dark:text-white">Pesan Tiket</h2>
-    </x-slot>
+@endpush
 
     <div class="p-6 bg-secondary/30">
         <!-- Search Section -->

@@ -1,8 +1,8 @@
 tiket-bus\resources\views\admin\pembayaran-manual\create.blade.php
 @section('content')
+    @push('header')
 Create pembayaran-manual create view
 @extends('layouts.admin')
-    <x-slot name="header">
         <x-ui.breadcrumb.breadcrumb>
             <x-ui.breadcrumb.list class="text-xs">
                 <x-ui.breadcrumb.item>
@@ -28,7 +28,7 @@ Create pembayaran-manual create view
                 </x-ui.breadcrumb.item>
             </x-ui.breadcrumb.list>
         </x-ui.breadcrumb.breadcrumb>
-    </x-slot>
+@endpush
 
     <div class="p-4 sm:p-6">
         <div class="max-w-4xl mx-auto">
