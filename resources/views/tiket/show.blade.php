@@ -62,7 +62,7 @@
                         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-border/50">
                             <div>
                                 <p class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Tanggal</p>
-                                <p class="font-semibold">{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }}</p>
+                                <p class="font-semibold">{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal_berangkat)->format('d M Y') }}</p>
                             </div>
                             <div>
                                 <p class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Waktu</p>
@@ -224,8 +224,8 @@
                     printWindow.document.write('<p><strong>{{ $tiket->kode_tiket }}</strong></p>');
                     printWindow.document.write('<div style="margin:20px 0">' + qrContent + '</div>');
                     printWindow.document.write('<p>{{ $tiket->nama_penumpang }}</p>');
-                    printWindow.document.write('<p>{{ $tiket->jadwalKelasBus->jadwal->rute->asal }} → {{ $tiket->jadwalKelasBus->jadwal->rute->tujuan }}</p>');
-                    printWindow.document.write('<p>{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }} | {{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') }}</p>');
+                    printWindow.document.write('<p>{{ $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_kota }} → {{ $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_kota }}</p>');
+                    printWindow.document.write('<p>{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal_berangkat)->format('d M Y') }} | {{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') }}</p>');
                     printWindow.document.write('<p>Kursi: {{ $tiket->kursi->nomor_kursi }}</p>');
                     printWindow.document.write('</div>');
                     printWindow.document.write('</body></html>');
@@ -238,61 +238,5 @@
                 }
             </script>
         @endpush
-    @endif
-@endsection
-                        if (error) console.error(error);
-                        container.appendChild(canvas);
-                    });
-                }
-            });
-
-            function printQRCode() {
-                // Ambil canvas yang sudah dirender
-                const qrCanvas = document.querySelector('#qrcode canvas');
-                
-                if (!qrCanvas) {
-                    alert('QR Code belum dimuat.');
-                    return;
-                }
-
-                const dataUrl = qrCanvas.toDataURL('image/png');
-                const printWindow = window.open('', '', 'width=600,height=700');
-
-                printWindow.document.write(`
-                    <html>
-                        <head>
-                            <title>QR Code - {{ $tiket->kode_tiket }}</title>
-                            <style>
-                                body { text-align: center; font-family: Arial, sans-serif; padding: 40px; }
-                                .ticket-info { border: 1px solid #ccc; padding: 20px; border-radius: 10px; display: inline-block; }
-                                img { max-width: 250px; margin: 20px 0; }
-                                h2 { margin: 0 0 10px 0; color: #333; }
-                                p { margin: 5px 0; color: #555; font-size: 14px; }
-                                .code { font-weight: bold; font-size: 18px; margin-top: 10px; color: #000; }
-                            </style>
-                        </head>
-                        <body>
-                            <div class="ticket-info">
-                                <h2>{{ $tiket->nama_penumpang }}</h2>
-                                <p>{{ $tiket->jadwalKelasBus->jadwal->rute->asal }} &rarr; {{ $tiket->jadwalKelasBus->jadwal->rute->tujuan }}</p>
-                                <p>{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }} - 
-                                   {{ is_string($tiket->jadwalKelasBus->jadwal->jam_berangkat) ? \Carbon\Carbon::createFromFormat('H:i:s', $tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') : $tiket->jadwalKelasBus->jadwal->jam_berangkat->format('H:i') }}
-                                </p>
-                                <p>Bus: {{ $tiket->jadwalKelasBus->jadwal->bus->nama }} | Kursi: {{ $tiket->kursi->nomor_kursi }}</p>
-                                
-                                <img src="${dataUrl}" alt="QR Code">
-                                
-                                <p>Kode Tiket:</p>
-                                <div class="code">{{ $tiket->kode_tiket }}</div>
-                            </div>
-                            <script>
-                                window.onload = function() { window.print(); window.close(); }
-                            <\/script>
-                        </body>
-                    </html>
-                `);
-                printWindow.document.close();
-            }
-        </script>
     @endif
 @endsection

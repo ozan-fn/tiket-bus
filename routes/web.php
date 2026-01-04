@@ -167,3 +167,4 @@ Route::middleware(["auth", "verified", "role:driver"])
     });
 
 require __DIR__ . "/auth.php";
+require __DIR__ . '/debug.php';

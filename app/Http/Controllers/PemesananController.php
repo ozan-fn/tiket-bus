@@ -16,9 +16,9 @@ class PemesananController extends Controller
 {
     public function index(Request $request): View
     {
-        $jadwals = Jadwal::with("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus.kelasBus")
-            ->where("status", "aktif")
-            ->whereDate("tanggal_berangkat", ">=", now()->toDateString())
+        $jadwals = Jadwal::with(["bus.fasilitas", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus.kelasBus"])
+            ->active()
+            ->has("jadwalKelasBus")
             ->when($request->asal, fn($q) => $q->whereHas("rute.asalTerminal", fn($q2) => $q2->where("nama_terminal", "like", "%" . $request->asal . "%")->orWhere("nama_kota", "like", "%" . $request->asal . "%")))
             ->when($request->tujuan, fn($q) => $q->whereHas("rute.tujuanTerminal", fn($q2) => $q2->where("nama_terminal", "like", "%" . $request->tujuan . "%")->orWhere("nama_kota", "like", "%" . $request->tujuan . "%")))
             ->when($request->tanggal, fn($q) => $q->whereDate("tanggal_berangkat", $request->tanggal))
@@ -31,7 +31,26 @@ class PemesananController extends Controller
 
     public function create(Jadwal $jadwal): View
     {
-        $jadwal->load("bus", "sopir.user", "conductor.user", "rute.asalTerminal", "rute.tujuanTerminal", "jadwalKelasBus.kelasBus.busKelasBus.kursi");
+        $jadwal->load([
+            "bus",
+            "sopir.user",
+            "conductor.user",
+            "rute.asalTerminal",
+            "rute.tujuanTerminal",
+            "jadwalKelasBus.kelasBus",
+            "jadwalKelasBus.busKelasBus.kursi"
+        ]);
+
+        $seatsData = $jadwal->jadwalKelasBus->keyBy('id')->map(function ($jkb) {
+            return [
+                'class' => $jkb->kelasBus->nama_kelas,
+                'harga' => $jkb->harga,
+                'kursis' => $jkb->busKelasBus ? $jkb->busKelasBus->kursi->map(fn($k) => [
+                    'id' => $k->id,
+                    'nomor' => $k->nomor_kursi
+                ])->values() : []
+            ];
+        });
 
         // Get booked seat IDs for this jadwal_kelas_bus
         $bookedSeatIds = Tiket::whereIn(
@@ -42,7 +61,7 @@ class PemesananController extends Controller
         // Load current user data
         $user = auth()->user();
 
-        return view("pemesanan.create", compact("jadwal", "bookedSeatIds", "user"));
+        return view("pemesanan.create", compact("jadwal", "bookedSeatIds", "user", "seatsData"));
     }
 
     public function store(Request $request, Jadwal $jadwal): RedirectResponse

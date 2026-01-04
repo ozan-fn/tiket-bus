@@ -40,19 +40,16 @@ class ProfileController extends Controller
     }
 
     // Update profil user (nama, email, avatar S3)
-    public function update(Request $request)
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = $request->user();
-        $data = $request->only(['name', 'email']);
-        $rules = [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
-        ];
-        $validator = \Validator::make($data, $rules);
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
-        $user->update($data);
+
+        $user->save();
 
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
@@ -64,11 +61,7 @@ class ProfileController extends Controller
             $user->save();
         }
 
-        $avatarUrl = $user->avatar ? \Storage::disk('public')->url($user->avatar) : null;
-        $userData = $user->toArray();
-        $userData['avatar_url'] = $avatarUrl;
-
-        return response()->json(['message' => 'Profile updated', 'user' => $userData]);
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
     /**
      * Display the user's profile form.

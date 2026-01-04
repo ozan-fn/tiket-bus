@@ -166,7 +166,8 @@
                                 <p class="text-xs text-muted-foreground font-bold uppercase tracking-wider mb-1">Total Bayar
                                 </p>
                                 <p class="text-2xl font-bold text-primary">Rp
-                                    {{ number_format($tiket->harga, 0, ',', '.') }}</p>
+                                    {{ number_format($tiket->harga, 0, ',', '.') }}
+                                </p>
                             </div>
                         </x-ui.card.content>
                     </x-ui.card>
@@ -184,43 +185,16 @@
             </div>
         </div>
     </div>
-@endsection
-        Kursi akan dikunci selama 24 jam. Pastikan untuk menyelesaikan pembayaran sebelum waktu yang
-        ditentukan.
-    </p>
-</div>
 
-<!-- Buttons -->
-<div class="flex gap-3 mt-6">
-    <a href="{{ route('pemesanan.index') }}"
-        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gray-700 font-semibold hover:bg-gray-50 transition">
-        Kembali
-    </a>
-    <button type="submit"
-        class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
-        Lanjut Pembayaran
-    </button>
-</div>
-</form>
-</x-ui.card.content>
-</x-ui.card>
+    <style>
+        input[type="radio"]:checked+div {
+            color: #2563eb;
+        }
 
-<!-- Info Timeout -->
-<div class="mt-6 text-center text-sm text-gray-500">
-    <p>Tiket akan dibatalkan otomatis jika pembayaran tidak selesai dalam 24 jam</p>
-</div>
-</div>
-</div>
-
-<style>
-    input[type="radio"]:checked+div {
-        color: #2563eb;
-    }
-
-    #metode-xendit-label:has(input[type="radio"]:checked),
-    #metode-transfer-label:has(input[type="radio"]:checked),
-    #metode-tunai-label:has(input[type="radio"]:checked) {
-        @apply border-blue-500 bg-blue-50;
-    }
-</style>
+        #metode-xendit-label:has(input[type="radio"]:checked),
+        #metode-transfer-label:has(input[type="radio"]:checked),
+        #metode-tunai-label:has(input[type="radio"]:checked) {
+            @apply border-blue-500 bg-blue-50;
+        }
+    </style>
 @endsection

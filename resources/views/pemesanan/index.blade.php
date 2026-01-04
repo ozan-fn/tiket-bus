@@ -41,8 +41,8 @@
                         <label class="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                             Tanggal Berangkat
                         </label>
-                        <x-ui.input type="date" name="tanggal" value="{{ request('tanggal') }}"
-                            min="{{ now()->toDateString() }}" class="h-10" />
+                        <x-datepicker name="tanggal" id="tanggal" value="{{ request('tanggal') }}"
+                            placeholder="Pilih tanggal..." class="h-10" />
                     </div>
 
                     <!-- Search Button -->
@@ -61,7 +61,7 @@
             <div class="space-y-4">
                 <div class="flex items-center justify-between">
                     <h3 class="text-lg font-semibold tracking-tight">
-                        {{ $jadwals->total() }} Perjalanan Tersedia
+                        {{ $jadwals->count() }} Perjalanan Tersedia
                     </h3>
                 </div>
 
@@ -152,8 +152,6 @@
                     @endforeach
                 </div>
 
-                <div class="mt-6">
-                    {{ $jadwals->links() }}
                 </div>
             </div>
         @else

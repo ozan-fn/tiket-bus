@@ -90,7 +90,7 @@ class JadwalController extends Controller
             "rute_id" => "required|exists:rute,id",
             "tanggal_berangkat" => "required|date_format:Y-m-d",
             "jam_berangkat" => "required|date_format:H:i",
-            "status" => "required|in:aktif,selesai,dibatalkan",
+            "status" => "required|in:aktif,tidak_aktif",
             "is_recurring" => "nullable|boolean",
             "recurring_type" => "nullable|in:daily,weekly",
             "recurring_count" => "nullable|integer|min:1|max:90",

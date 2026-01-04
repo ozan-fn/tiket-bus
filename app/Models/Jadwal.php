@@ -39,11 +39,19 @@ class Jadwal extends Model
         "bus_id" => "int",
         "sopir_id" => "int",
         "rute_id" => "int",
-        "tanggal_berangkat" => "datetime",
-        "jam_berangkat" => "datetime",
     ];
 
     protected $fillable = ["bus_id", "sopir_id", "conductor_id", "rute_id", "tanggal_berangkat", "jam_berangkat", "status"];
+
+    public function getTanggalBerangkatAttribute($value)
+    {
+        return $value ? Carbon::createFromFormat('Y-m-d', $value) : null;
+    }
+
+    public function getJamBerangkatAttribute($value)
+    {
+        return $value ? Carbon::createFromFormat('H:i:s', $value) : null;
+    }
 
     public function bus()
     {
@@ -75,10 +83,13 @@ class Jadwal extends Model
         return $query->where("status", "aktif")
             ->where(function ($q) {
                 $now = now();
-                $q->where("tanggal_berangkat", ">", $now->toDateString())
-                    ->orWhere(function ($q2) use ($now) {
-                        $q2->where("tanggal_berangkat", $now->toDateString())
-                            ->where("jam_berangkat", ">=", $now->toTimeString());
+                $today = $now->format('Y-m-d');
+                $time = $now->format('H:i:s');
+
+                $q->where("tanggal_berangkat", ">", $today)
+                    ->orWhere(function ($q2) use ($today, $time) {
+                        $q2->where("tanggal_berangkat", "=", $today)
+                            ->where("jam_berangkat", ">=", $time);
                     });
             });
     }

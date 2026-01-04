@@ -191,7 +191,7 @@
 
                             <div class="space-y-2">
                                 <x-ui.label for="tanggal_lahir">Tanggal Lahir <span class="text-destructive">*</span></x-ui.label>
-                                <x-ui.input type="date" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', $user?->tanggal_lahir?->format('Y-m-d')) }}" required />
+                                <x-datepicker name="tanggal_lahir" id="tanggal_lahir" :value="old('tanggal_lahir', $user?->tanggal_lahir?->format('Y-m-d'))" required />
                                 @error('tanggal_lahir') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
                             </div>
 
@@ -260,20 +260,14 @@
     @push('scripts')
     <script>
         // Data jadwal dengan kursi
-        const seatsData = {!! json_encode($jadwal->jadwalKelasBus->mapWithKeys(function($jkb) {
-            return [$jkb->id => [
-                'class' => $jkb->kelasBus->nama_kelas,
-                'harga' => $jkb->harga,
-                'kursis' => $jkb->busKelasBus->kursi->map(fn($k) => ['id' => $k->id, 'nomor' => $k->nomor_kursi])
-            ]];
-        })) !!};
+        const seatsData = @json($seatsData);
         
         console.log('Seats Data:', seatsData);
 
-        const bookedIds = {{ json_encode($bookedSeatIds) }};
+        const bookedIds = @json($bookedSeatIds);
 
         function sortSeats(kursis) {
-            return kursis.sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, {numeric: true, sensitivity: 'base'}));
+            return [...kursis].sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, {numeric: true, sensitivity: 'base'}));
         }
 
         function updateSeatGrid(element) {
@@ -286,6 +280,7 @@
             
             if (!data) {
                 console.error('No data found for JKB ID:', jkbId);
+                grid.innerHTML = '<div class="p-8 border-2 border-dashed rounded-xl text-center"><p class="text-muted-foreground">Data kelas tidak ditemukan</p></div>';
                 return;
             }
 
@@ -320,16 +315,14 @@
                     // Left side (2 seats)
                     html += '<div class="flex gap-2">';
                     [row[0], row[1]].forEach(k => {
-                        if (!k) return;
-                        html += renderSeat(k);
+                        if (k) html += renderSeat(k);
                     });
                     html += '</div>';
                     
                     // Right side (2 seats)
                     html += '<div class="flex gap-2">';
                     [row[2], row[3]].forEach(k => {
-                        if (!k) return;
-                        html += renderSeat(k);
+                        if (k) html += renderSeat(k);
                     });
                     html += '</div>';
                     
@@ -341,8 +334,8 @@
             grid.innerHTML = html;
             grid.classList.remove('p-8', 'border-2', 'border-dashed', 'text-center');
             
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
+            if (window.lucide) {
+                window.lucide.createIcons();
             }
             
             // Reset selection
@@ -353,7 +346,8 @@
 
         function renderSeat(k) {
             const isBooked = bookedIds.includes(k.id);
-            const isSelected = {{ json_encode(old('kursi_id')) }} == k.id;
+            const oldKursiId = @json(old('kursi_id'));
+            const isSelected = oldKursiId == k.id;
             
             return `
                 <label class="relative group">
@@ -384,12 +378,14 @@
             const checkedRadio = document.querySelector('input[name="jadwal_kelas_bus_id"]:checked');
             if (checkedRadio) {
                 updateSeatGrid(checkedRadio);
-                const oldKursiId = {{ json_encode(old('kursi_id')) }};
+                const oldKursiId = @json(old('kursi_id'));
                 if (oldKursiId) {
-                    const kursiRadio = document.querySelector(\`input[name="kursi_id"][value="\${oldKursiId}"]\`);
+                    const kursiRadio = document.querySelector(`input[name="kursi_id"][value="${oldKursiId}"]`);
                     if (kursiRadio) {
                         kursiRadio.checked = true;
-                        const nomor = kursiRadio.closest('label').innerText.trim();
+                        // Find the seat number from the label text or data
+                        const label = kursiRadio.closest('label');
+                        const nomor = label.innerText.trim() || label.querySelector('div').innerText.trim();
                         updateSeatInfo(nomor);
                     }
                 }

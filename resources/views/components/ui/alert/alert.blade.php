@@ -42,9 +42,7 @@
         @endif
 
         @if(!$title && !$description)
-            <div data-slot="alert-description" class="text-muted-foreground [&_p]:leading-relaxed">
-                {!! $slot !!}
-            </div>
+            {{ $slot }}
         @endif
     </div>
 </div>
