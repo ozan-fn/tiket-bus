@@ -148,4 +148,15 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         });
     });
 
+// =================== SOPIR/DRIVER ROUTES ===================
+Route::middleware(["auth", "verified", "role:driver"])
+    ->prefix("sopir")
+    ->name("sopir.")
+    ->group(function () {
+        Route::get("dashboard", [SopirController::class, "dashboard"])->name("dashboard");
+        Route::get("jadwal/{jadwal}", [SopirController::class, "showJadwal"])->name("jadwal.show");
+        Route::post("jadwal/{jadwal}/scan", [SopirController::class, "scanTiket"])->name("jadwal.scan");
+        Route::get("jadwal/{jadwal}/kursi-status", [SopirController::class, "getKursiStatus"])->name("jadwal.kursi-status");
+    });
+
 require __DIR__ . "/auth.php";

@@ -48,6 +48,11 @@ class User extends Authenticatable
         return $this->hasMany(Pembayaran::class, "user_id");
     }
 
+    public function sopir()
+    {
+        return $this->hasOne(Sopir::class, "user_id");
+    }
+
     public function sopirs()
     {
         return $this->hasMany(Sopir::class, "user_id");

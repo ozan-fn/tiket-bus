@@ -60,7 +60,7 @@
                         $userRole = auth()->user()?->roles->first()?->name ?? 'agent';
 
                         $menus = [
-                            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'layout-dashboard', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor']],
+                            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'layout-dashboard', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor', 'driver']],
                             ['label' => 'Data Setup', 'type' => 'section', 'roles' => ['owner']],
                             ['label' => 'Kelas Bus', 'route' => 'admin/kelas-bus.index', 'icon' => 'layers', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Fasilitas', 'route' => 'admin/fasilitas.index', 'icon' => 'sparkles', 'type' => 'menu', 'roles' => ['owner']],
@@ -83,6 +83,8 @@
                             ['label' => 'User', 'route' => 'admin/user.index', 'icon' => 'users', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'Pemeriksaan', 'type' => 'section', 'roles' => ['agent']],
                             ['label' => 'Cek Kursi', 'route' => 'admin/cek-kursi.index', 'icon' => 'armchair', 'type' => 'menu', 'roles' => ['agent']],
+                            ['label' => 'Perjalanan Sopir', 'type' => 'section', 'roles' => ['driver']],
+                            ['label' => 'Jadwal Saya', 'route' => 'sopir.dashboard', 'icon' => 'calendar-check', 'type' => 'menu', 'roles' => ['driver']],
                             ['label' => 'Laporan', 'type' => 'section', 'roles' => ['owner']],
                             ['label' => 'Analytics', 'route' => 'admin/laporan.index', 'icon' => 'bar-chart-3', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Laporan Tiket', 'route' => 'admin/laporan.tiket', 'icon' => 'ticket', 'type' => 'menu', 'roles' => ['owner']],
