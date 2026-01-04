@@ -8,6 +8,8 @@
     @include('dashboard.conductor')
 @elseif($userRole === 'agent')
     @include('dashboard.agent')
+@elseif($userRole === 'driver')
+    @include('dashboard.driver')
 @else
     @include('dashboard.user')
 @endif

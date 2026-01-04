@@ -62,4 +62,16 @@ class JadwalKelasBus extends Model
     {
         return $this->hasMany(Tiket::class);
     }
+
+    public function kursi()
+    {
+        return $this->hasManyThrough(
+            Kursi::class,
+            BusKelasBus::class,
+            "id", // through primary key
+            "bus_kelas_bus_id", // kursi foreign key
+            "bus_kelas_bus_id", // this local key
+            "id" // through local key
+        );
+    }
 }

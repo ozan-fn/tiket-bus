@@ -153,10 +153,17 @@ Route::middleware(["auth", "verified", "role:driver"])
     ->prefix("sopir")
     ->name("sopir.")
     ->group(function () {
-        Route::get("dashboard", [SopirController::class, "dashboard"])->name("dashboard");
         Route::get("jadwal/{jadwal}", [SopirController::class, "showJadwal"])->name("jadwal.show");
         Route::post("jadwal/{jadwal}/scan", [SopirController::class, "scanTiket"])->name("jadwal.scan");
         Route::get("jadwal/{jadwal}/kursi-status", [SopirController::class, "getKursiStatus"])->name("jadwal.kursi-status");
+
+        // Scan Tiket
+        Route::get("scan", [SopirController::class, "scanIndex"])->name("scan.index");
+        Route::post("scan/verify", [SopirController::class, "scanVerify"])->name("scan.verify");
+
+        // Cek Ketersediaan Kursi
+        Route::get("cek-kursi", [SopirController::class, "cekKursiIndex"])->name("cek-kursi.index");
+        Route::get("cek-kursi/get", [SopirController::class, "cekKursiGet"])->name("cek-kursi.get");
     });
 
 require __DIR__ . "/auth.php";

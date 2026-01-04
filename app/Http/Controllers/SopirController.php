@@ -13,6 +13,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Spatie\QueryBuilder\QueryBuilder;
+use Carbon\Carbon;
 
 class SopirController extends Controller
 {
@@ -151,37 +152,6 @@ class SopirController extends Controller
         ]);
     }
 
-    // DASHBOARD SOPIR
-    public function dashboard(): View
-    {
-        $user = Auth::user();
-        $sopir = $user->sopir;
-
-        // Ambil jadwal terbaru sopir (aktif atau yang akan datang)
-        $jadwalAktif = Jadwal::where("sopir_id", $sopir->id)
-            ->where("status", "aktif")
-            ->orderBy("tanggal_berangkat", "desc")
-            ->orderBy("jam_berangkat", "desc")
-            ->with(["bus", "rute", "jadwalKelasBus.kursi"])
-            ->first();
-
-        // Ambil jadwal-jadwal mendatang
-        $jadwalMendatang = Jadwal::where("sopir_id", $sopir->id)
-            ->where("status", "aktif")
-            ->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) > NOW()")
-            ->orderBy("tanggal_berangkat", "asc")
-            ->orderBy("jam_berangkat", "asc")
-            ->with(["bus", "rute"])
-            ->limit(5)
-            ->get();
-
-        // Hitung statistik
-        $totalJadwal = Jadwal::where("sopir_id", $sopir->id)->count();
-        $jadwalSelesai = Jadwal::where("sopir_id", $sopir->id)->where("status", "selesai")->count();
-
-        return view("sopir.dashboard", compact("jadwalAktif", "jadwalMendatang", "totalJadwal", "jadwalSelesai", "sopir"));
-    }
-
     public function showJadwal(Jadwal $jadwal): View
     {
         $user = Auth::user();
@@ -192,13 +162,22 @@ class SopirController extends Controller
             abort(403, "Unauthorized");
         }
 
-        $jadwal->load(["bus", "rute", "jadwalKelasBus" => function ($query) {
-            $query->with(["kelasBus", "kursi" => function ($q) {
-                $q->with(["tikets" => function ($t) {
-                    $t->where("status", "dibayar");
-                }]);
-            }]);
-        }]);
+        $jadwal->load([
+            "bus",
+            "rute",
+            "jadwalKelasBus" => function ($query) {
+                $query->with([
+                    "kelasBus",
+                    "kursi" => function ($q) {
+                        $q->with([
+                            "tikets" => function ($t) {
+                                $t->where("status", "dibayar");
+                            }
+                        ]);
+                    }
+                ]);
+            }
+        ]);
 
         // Hitung statistik kursi
         $kursiStats = [
@@ -212,7 +191,7 @@ class SopirController extends Controller
         foreach ($jadwal->jadwalKelasBus as $jkb) {
             foreach ($jkb->kursi as $kursi) {
                 $kursiStats["total"]++;
-                
+
                 $tiketAktif = $kursi->tikets->first();
                 if ($tiketAktif) {
                     if ($tiketAktif->is_hadir) {
@@ -309,13 +288,20 @@ class SopirController extends Controller
             return response()->json(["success" => false, "message" => "Unauthorized"], 403);
         }
 
-        $jadwal->load(["jadwalKelasBus" => function ($query) {
-            $query->with(["kelasBus", "kursi" => function ($q) {
-                $q->with(["tikets" => function ($t) {
-                    $t->where("status", "dibayar");
-                }]);
-            }]);
-        }]);
+        $jadwal->load([
+            "jadwalKelasBus" => function ($query) {
+                $query->with([
+                    "kelasBus",
+                    "kursi" => function ($q) {
+                        $q->with([
+                            "tikets" => function ($t) {
+                                $t->where("status", "dibayar");
+                            }
+                        ]);
+                    }
+                ]);
+            }
+        ]);
 
         $kursiData = [];
         foreach ($jadwal->jadwalKelasBus as $jkb) {
@@ -348,3 +334,219 @@ class SopirController extends Controller
             "kursi" => $kursiData,
         ]);
     }
+    // SCAN TIKET - Driver Interface
+    public function scanIndex(): View
+    {
+        $user = Auth::user();
+        $sopir = $user->sopir;
+
+        // Get driver's active jadwals
+        $jadwals = Jadwal::where("sopir_id", $sopir->id)
+            ->where("status", "aktif")
+            ->orderBy("tanggal_berangkat", "desc")
+            ->orderBy("jam_berangkat", "desc")
+            ->with(["bus", "rute"])
+            ->get();
+
+        return view("sopir.scan", compact("jadwals"));
+    }
+
+    public function scanVerify(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $sopir = $user->sopir;
+
+        $request->validate([
+            "kode_tiket" => "required|string",
+        ]);
+
+        $tiket = Tiket::with(["jadwalKelasBus.jadwal", "kursi"])
+            ->where("kode_tiket", $request->kode_tiket)
+            ->first();
+
+        if (!$tiket) {
+            return response()->json([
+                "success" => false,
+                "message" => "Kode tiket tidak ditemukan",
+            ], 404);
+        }
+
+        // Validate tiket belongs to driver's jadwal
+        if ($tiket->jadwalKelasBus->jadwal->sopir_id !== $sopir->id) {
+            return response()->json([
+                "success" => false,
+                "message" => "Tiket tidak sesuai dengan jadwal Anda",
+            ], 403);
+        }
+
+        // Check status
+        if ($tiket->status === "batal") {
+            return response()->json([
+                "success" => false,
+                "message" => "Tiket telah dibatalkan",
+                "tiket" => [
+                    "kode_tiket" => $tiket->kode_tiket,
+                    "nama_penumpang" => $tiket->nama_penumpang,
+                    "nomor_kursi" => $tiket->kursi?->nomor_kursi ?? "N/A",
+                    "is_hadir" => $tiket->is_hadir,
+                ],
+            ], 400);
+        }
+
+        if ($tiket->status === "dipesan") {
+            return response()->json([
+                "success" => false,
+                "message" => "Tiket belum dibayar",
+                "tiket" => [
+                    "kode_tiket" => $tiket->kode_tiket,
+                    "nama_penumpang" => $tiket->nama_penumpang,
+                    "nomor_kursi" => $tiket->kursi?->nomor_kursi ?? "N/A",
+                    "is_hadir" => $tiket->is_hadir,
+                ],
+            ], 400);
+        }
+
+        // Check expiry
+        $jadwal = $tiket->jadwalKelasBus->jadwal;
+        if ($jadwal) {
+            $waktuBerangkat = Carbon::parse($jadwal->tanggal_berangkat->format("Y-m-d") . " " . $jadwal->jam_berangkat->format("H:i:s"));
+            if ($waktuBerangkat->isPast()) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Tiket telah expired",
+                    "tiket" => [
+                        "kode_tiket" => $tiket->kode_tiket,
+                        "nama_penumpang" => $tiket->nama_penumpang,
+                        "nomor_kursi" => $tiket->kursi?->nomor_kursi ?? "N/A",
+                        "is_hadir" => $tiket->is_hadir,
+                    ],
+                ], 400);
+            }
+        }
+
+        // If already scanned
+        if ($tiket->is_hadir) {
+            return response()->json([
+                "success" => true,
+                "message" => "Tiket sudah di-scan sebelumnya",
+                "tiket" => [
+                    "kode_tiket" => $tiket->kode_tiket,
+                    "nama_penumpang" => $tiket->nama_penumpang,
+                    "nomor_kursi" => $tiket->kursi?->nomor_kursi ?? "N/A",
+                    "is_hadir" => $tiket->is_hadir,
+                    "waktu_scan" => $tiket->waktu_scan?->format("H:i:s"),
+                ],
+                "already_scanned" => true,
+            ]);
+        }
+
+        // Mark as scanned
+        $tiket->update([
+            "is_hadir" => true,
+            "waktu_scan" => now(),
+        ]);
+
+        return response()->json([
+            "success" => true,
+            "message" => "Tiket berhasil di-scan",
+            "tiket" => [
+                "kode_tiket" => $tiket->kode_tiket,
+                "nama_penumpang" => $tiket->nama_penumpang,
+                "nomor_kursi" => $tiket->kursi?->nomor_kursi ?? "N/A",
+                "is_hadir" => $tiket->is_hadir,
+                "waktu_scan" => $tiket->waktu_scan?->format("H:i:s"),
+            ],
+        ]);
+    }
+
+    // CEK KURSI - Driver Interface
+    public function cekKursiIndex(): View
+    {
+        $user = Auth::user();
+        $sopir = $user->sopir;
+
+        // Get driver's jadwals
+        $jadwals = Jadwal::where("sopir_id", $sopir->id)
+            ->where("status", "aktif")
+            ->orderBy("tanggal_berangkat", "desc")
+            ->with(["bus", "rute", "conductor.user", "jadwalKelasBus.kelasBus"])
+            ->paginate(5);
+
+        return view("sopir.cek-kursi", compact("jadwals"));
+    }
+
+    public function cekKursiGet(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+        $sopir = $user->sopir;
+
+        try {
+            $jadwalId = $request->input("jadwal_id");
+
+            if (!$jadwalId) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "ID jadwal tidak ditemukan",
+                ], 400);
+            }
+
+            // Get jadwal and verify it belongs to driver
+            $jadwal = Jadwal::with([
+                "bus",
+                "rute.asalTerminal",
+                "rute.tujuanTerminal",
+                "jadwalKelasBus.kelasBus.kursi",
+                "jadwalKelasBus.tikets"
+            ])->find($jadwalId);
+
+            if (!$jadwal || $jadwal->sopir_id !== $sopir->id) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Jadwal tidak ditemukan",
+                ], 404);
+            }
+
+            // Build kursi data
+            $kursiData = [];
+            foreach ($jadwal->jadwalKelasBus as $jkb) {
+                foreach ($jkb->kelasBus->kursi as $kursi) {
+                    $bookedTicket = $jkb->tikets->where("kursi_id", $kursi->id)->first();
+                    $kursiData[] = [
+                        "id" => $kursi->id,
+                        "nomor_kursi" => $kursi->nomor_kursi,
+                        "status" => $bookedTicket ? "booked" : "available",
+                        "kelas" => $jkb->kelasBus->nama_kelas,
+                    ];
+                }
+            }
+
+            // Count stats
+            $totalKursi = count($kursiData);
+            $bookedKursi = collect($kursiData)->where("status", "booked")->count();
+            $availableKursi = $totalKursi - $bookedKursi;
+
+            return response()->json([
+                "success" => true,
+                "jadwal" => [
+                    "bus_nama" => $jadwal->bus->nama,
+                    "bus_plat" => $jadwal->bus->plat_nomor,
+                    "tanggal_berangkat" => $jadwal->tanggal_berangkat->format("d M Y"),
+                    "jam_berangkat" => $jadwal->jam_berangkat->format("H:i"),
+                    "asal_terminal" => $jadwal->rute->asalTerminal->nama_terminal,
+                    "tujuan_terminal" => $jadwal->rute->tujuanTerminal->nama_terminal,
+                ],
+                "kursi" => $kursiData,
+                "kursi_summary" => [
+                    "total" => $totalKursi,
+                    "booked" => $bookedKursi,
+                    "available" => $availableKursi,
+                ],
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan: " . $e->getMessage(),
+            ], 500);
+        }
+    }
+}

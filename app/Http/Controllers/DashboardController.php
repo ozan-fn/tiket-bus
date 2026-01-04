@@ -13,15 +13,20 @@ use App\Models\User;
 class DashboardController extends Controller
 {
     /**
-     * Display the dashboard for owner/agent.
+     * Display the dashboard for owner/agent/driver/user.
      *
      * Prepares summary metrics used by the dashboard view and its role-specific
-     * partials (e.g. dashboard.owner).
+     * partials (e.g. dashboard.owner, dashboard.driver).
      */
     public function index(Request $request)
     {
         // Determine role (kept for compatibility with views that may expect it)
         $userRole = auth()->user()?->roles->first()?->name ?? "user";
+        // dd($userRole);
+        // Handle Driver Dashboard
+        if ($userRole === "driver") {
+            return $this->driverDashboard();
+        }
 
         // Basic counts
         $totalBus = Bus::count();
@@ -57,7 +62,7 @@ class DashboardController extends Controller
         $completedTickets = collect();
 
         // Jika user tidak punya role (regular user/passenger)
-        if ($userRole === "user" || !in_array($userRole, ["owner", "agent", "conductor"])) {
+        if ($userRole === "user" || !in_array($userRole, ["owner", "agent", "conductor", "driver"])) {
             $currentUser = auth()->user();
 
             // Active tickets (dibayar atau digunakan)
@@ -123,6 +128,58 @@ class DashboardController extends Controller
             "totalSpent",
             "upcomingTickets",
             "completedTickets"
+        ));
+    }
+
+    private function driverDashboard()
+    {
+        $user = auth()->user();
+        $sopir = $user->sopir;
+
+        // Ambil jadwal terbaru sopir (aktif atau yang akan datang)
+        $jadwalAktif = Jadwal::where("sopir_id", $sopir->id)
+            ->where("status", "aktif")
+            ->orderBy("tanggal_berangkat", "desc")
+            ->orderBy("jam_berangkat", "desc")
+            ->with([
+                "bus",
+                "rute.asalTerminal",
+                "rute.tujuanTerminal",
+                "jadwalKelasBus" => function ($query) {
+                    $query->with([
+                        "kelasBus",
+                        "tikets" => function ($t) {
+                            $t->where("status", "dibayar");
+                        }
+                    ]);
+                }
+            ])
+            ->first();
+
+        // Ambil jadwal-jadwal mendatang
+        $jadwalMendatang = Jadwal::where("sopir_id", $sopir->id)
+            ->where("status", "aktif")
+            ->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) > NOW()")
+            ->orderBy("tanggal_berangkat", "asc")
+            ->orderBy("jam_berangkat", "asc")
+            ->with(["bus", "rute.asalTerminal", "rute.tujuanTerminal"])
+            ->limit(5)
+            ->get();
+
+        // Hitung statistik
+        $totalJadwal = Jadwal::where("sopir_id", $sopir->id)->count();
+        $jadwalSelesai = Jadwal::where("sopir_id", $sopir->id)->where("status", "selesai")->count();
+
+        $userRole = "driver";
+
+        return view("dashboard", compact(
+            "jadwalAktif",
+            "jadwalMendatang",
+            "totalJadwal",
+            "jadwalSelesai",
+            "sopir",
+            "userRole",
+            "user"
         ));
     }
 }
