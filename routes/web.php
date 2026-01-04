@@ -4,6 +4,7 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\BannerController;
 use App\Http\Controllers\BusController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FasilitasController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SopirController;
@@ -23,10 +24,8 @@ Route::get("/", function () {
     return view("home.index");
 });
 
-Route::get("/dashboard", function () {
-    return view("dashboard");
-})
-    ->middleware(["auth", "verified", "role:owner|agent"])
+Route::get("/dashboard", [DashboardController::class, "index"])
+    ->middleware(["auth", "verified"])
     ->name("dashboard");
 
 Route::middleware("auth")->group(function () {

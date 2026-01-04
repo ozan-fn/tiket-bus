@@ -30,90 +30,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     @stack('styles')
-    <style>
-        @keyframes duck-walk-random-1 {
-            0% { transform: translateX(-100px); }
-            8% { transform: translateX(15vw) scaleX(1); }
-            12% { transform: translateX(18vw) scaleX(1); }
-            22% { transform: translateX(35vw) scaleX(1); }
-            28% { transform: translateX(42vw) scaleX(1); }
-            35% { transform: translateX(52vw) scaleX(1); }
-            42% { transform: translateX(65vw) scaleX(-1); }
-            50% { transform: translateX(78vw) scaleX(-1); }
-            58% { transform: translateX(65vw) scaleX(-1); }
-            68% { transform: translateX(45vw) scaleX(-1); }
-            76% { transform: translateX(28vw) scaleX(-1); }
-            82% { transform: translateX(12vw) scaleX(1); }
-            90% { transform: translateX(8vw) scaleX(1); }
-            100% { transform: translateX(-100px) scaleX(1); }
-        }
 
-        @keyframes duck-walk-random-2 {
-            0% { transform: translateX(-120px); }
-            10% { transform: translateX(20vw) scaleX(1); }
-            18% { transform: translateX(40vw) scaleX(1); }
-            25% { transform: translateX(48vw) scaleX(1); }
-            32% { transform: translateX(58vw) scaleX(1); }
-            40% { transform: translateX(72vw) scaleX(-1); }
-            48% { transform: translateX(82vw) scaleX(-1); }
-            55% { transform: translateX(70vw) scaleX(-1); }
-            65% { transform: translateX(48vw) scaleX(-1); }
-            73% { transform: translateX(32vw) scaleX(-1); }
-            81% { transform: translateX(15vw) scaleX(1); }
-            88% { transform: translateX(5vw) scaleX(1); }
-            100% { transform: translateX(-120px) scaleX(1); }
-        }
-
-        @keyframes duck-walk-random-3 {
-            0% { transform: translateX(-80px); }
-            7% { transform: translateX(12vw) scaleX(1); }
-            14% { transform: translateX(32vw) scaleX(1); }
-            21% { transform: translateX(44vw) scaleX(1); }
-            29% { transform: translateX(56vw) scaleX(1); }
-            38% { transform: translateX(70vw) scaleX(-1); }
-            46% { transform: translateX(80vw) scaleX(-1); }
-            54% { transform: translateX(68vw) scaleX(-1); }
-            62% { transform: translateX(50vw) scaleX(-1); }
-            70% { transform: translateX(35vw) scaleX(-1); }
-            78% { transform: translateX(18vw) scaleX(1); }
-            86% { transform: translateX(6vw) scaleX(1); }
-            100% { transform: translateX(-80px) scaleX(1); }
-        }
-
-        @keyframes leg-swing {
-            0%, 100% { transform: rotateX(0deg); }
-            50% { transform: rotateX(15deg); }
-        }
-
-        .duck-parent {
-            position: absolute;
-            bottom: 0;
-            z-index: 10;
-            animation-timing-function: ease-in-out;
-        }
-
-        .duck-parent.parent-1 {
-            animation: duck-walk-random-1 38s infinite;
-            animation-delay: 0s;
-        }
-
-        .duck-parent.child-1 {
-            animation: duck-walk-random-2 42s infinite;
-            animation-delay: -3s;
-            opacity: 0.85;
-        }
-
-        .duck-parent.child-2 {
-            animation: duck-walk-random-3 45s infinite;
-            animation-delay: -6s;
-            opacity: 0.7;
-        }
-
-        .duck-legs {
-            transform-origin: center top;
-            animation: leg-swing 0.4s ease-in-out infinite;
-        }
-    </style>
 </head>
 
 <body class="font-sans antialiased">
@@ -128,7 +45,8 @@
                 <div class="h-16 flex items-center justify-between px-6 border-b border-border shrink-0">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
                         {{-- <i data-lucide="zap" class="w-8 h-8 text-primary" ></i> --}}
-                        <span class="text-xl font-bold">tiket bus</span>
+                        <img class="w-8" src="{{ asset('assets/images/logo.png') }}" alt="">
+                        <span class="text-xl font-bold">Tiket Bus</span>
                     </a>
                     <!-- Close button for mobile -->
                     <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent">
@@ -292,41 +210,6 @@
             <div class="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
                 <!-- Top Bar -->
                 <header class="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6 shrink-0 relative overflow-hidden">
-                    <!-- Parent Duck -->
-                    <div class="duck-parent parent-1">
-                        <svg width="45" height="35" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
-                            <circle cx="18" cy="8" r="3" fill="currentColor" class="text-primary"/>
-                            <path d="M21 8h2" stroke="currentColor" stroke-width="1.5" class="text-primary"/>
-                            <ellipse cx="13" cy="14" rx="7" ry="5" fill="currentColor" class="text-primary" opacity="0.9"/>
-                            <g class="duck-legs">
-                                <path d="M11 19v2M14 19v2" stroke="currentColor" stroke-width="1.5" class="text-primary"/>
-                            </g>
-                        </svg>
-                    </div>
-
-                    <!-- Child Duck 1 -->
-                    <div class="duck-parent child-1">
-                        <svg width="32" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
-                            <circle cx="18" cy="8" r="2.5" fill="currentColor" class="text-primary"/>
-                            <path d="M20.5 8h1.5" stroke="currentColor" stroke-width="1.5" class="text-primary"/>
-                            <ellipse cx="13.5" cy="13.5" rx="5.5" ry="4" fill="currentColor" class="text-primary" opacity="0.85"/>
-                            <g class="duck-legs">
-                                <path d="M12 18v1.5M14.5 18v1.5" stroke="currentColor" stroke-width="1.5" class="text-primary"/>
-                            </g>
-                        </svg>
-                    </div>
-
-                    <!-- Child Duck 2 -->
-                    <div class="duck-parent child-2">
-                        <svg width="28" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary">
-                            <circle cx="18" cy="8" r="2" fill="currentColor" class="text-primary"/>
-                            <path d="M20 8h1.5" stroke="currentColor" stroke-width="1.5" class="text-primary"/>
-                            <ellipse cx="13" cy="13" rx="5" ry="3.5" fill="currentColor" class="text-primary" opacity="0.8"/>
-                            <g class="duck-legs">
-                                <path d="M11.5 17.5v1.5M13.5 17.5v1.5" stroke="currentColor" stroke-width="1.5" class="text-primary"/>
-                            </g>
-                        </svg>
-                    </div>
                     <div class="flex items-center gap-3">
                         <!-- Mobile menu button -->
                         <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors">
