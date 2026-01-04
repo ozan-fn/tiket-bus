@@ -1,4 +1,5 @@
 <x-ui.card>
+@section('content')
     <x-ui.card.header>
         <div class="flex items-center justify-between">
             <div class="flex flex-col gap-2">
@@ -28,3 +29,4 @@
         </div>
     </x-ui.card.content>
 </x-ui.card>
+@endsection

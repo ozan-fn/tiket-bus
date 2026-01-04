@@ -1,4 +1,5 @@
-<x-admin-layout>
+@extends('layouts.admin')
+@section('content')
     <x-slot name="header">
         <div class="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
             <x-ui.breadcrumb.breadcrumb>
@@ -303,4 +304,4 @@
             @endforeach
         </div>
     </div>
-</x-admin-layout>
+@endsection

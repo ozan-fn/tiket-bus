@@ -1,4 +1,5 @@
 @if ($paginator->hasPages())
+@section('content')
     <nav class="flex items-center justify-between border-t border-gray-200 bg-white px-4 py-3 sm:px-6" aria-label="Pagination Navigation">
         <div class="flex justify-between flex-1 sm:hidden">
             @if ($paginator->onFirstPage())
@@ -90,3 +91,4 @@
         </div>
     </nav>
 @endif
+@endsection

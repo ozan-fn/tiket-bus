@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 
 @section('title', 'Pembayaran Tunai')
 
@@ -167,4 +168,5 @@
             </div>
         </div>
     </div>
+@endsection
 @endsection

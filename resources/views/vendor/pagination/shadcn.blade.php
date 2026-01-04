@@ -1,4 +1,5 @@
 @if ($paginator->hasPages())
+@section('content')
     <x-ui.pagination>
         <x-ui.pagination.content>
             {{-- Previous Page Link --}}
@@ -52,3 +53,4 @@
         </x-ui.pagination.content>
     </x-ui.pagination>
 @endif
+@endsection

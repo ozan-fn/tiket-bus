@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 
 @section('title', 'Instruksi Transfer')
 
@@ -188,4 +189,5 @@
             </div>
         </div>
     </div>
+@endsection
 @endsection

@@ -1,4 +1,5 @@
 <x-ui.card>
+@section('content')
     <x-ui.card.header>
         <x-ui.card.title>Foto Bus</x-ui.card.title>
         <x-ui.card.description>Unggah foto atau gambar bus dari berbagai sudut</x-ui.card.description>
@@ -45,3 +46,4 @@
         </div>
     </x-ui.card.content>
 </x-ui.card>
+@endsection

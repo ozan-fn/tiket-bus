@@ -1,4 +1,5 @@
-<x-guest-layout>
+@extends('layouts.guest')
+@section('content')
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-foreground">{{ __('Verifikasi Email') }}</h2>
         <p class="text-sm text-muted-foreground mt-1">{{ __('Terima kasih telah mendaftar! Sebelum memulai, harap verifikasi alamat email Anda dengan mengklik link yang kami kirimkan.') }}</p>
@@ -34,4 +35,5 @@
             {{ __('Jika Anda tidak menerima email, silakan periksa folder spam atau coba kirim ulang link verifikasi di atas.') }}
         </p>
     </div>
-</x-guest-layout>
+
+@endsection

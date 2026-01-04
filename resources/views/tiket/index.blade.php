@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 
 @section('title', 'Tiket Saya')
 
@@ -129,4 +130,5 @@
         @endif
     </div>
 </div>
+@endsection
 @endsection

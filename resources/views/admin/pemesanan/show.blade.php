@@ -1,4 +1,5 @@
-<x-admin-layout>
+@extends('layouts.admin')
+@section('content')
     <x-slot name="header">
         <x-ui.breadcrumb.breadcrumb>
             <x-ui.breadcrumb.list class="text-xs">
@@ -454,4 +455,5 @@
             }
         }
     </style>
-</x-admin-layout>
+
+@endsection

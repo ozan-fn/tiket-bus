@@ -15,7 +15,7 @@
     <!-- Dark Mode Script (Prevent Flash) -->
     <script>
         // Apply theme immediately before page renders
-        (function() {
+        (function () {
             const theme = localStorage.getItem('theme') || 'light';
             if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
@@ -34,7 +34,7 @@
         <div class="w-full sm:max-w-md">
             <!-- Card Container with CSS Variables -->
             <div class="bg-card border border-border shadow-md rounded-lg overflow-hidden p-6">
-                {{ $slot }}
+                @yield('content')
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 
 @section('title', 'Detail Tiket - ' . $tiket->kode_tiket)
 
@@ -312,4 +313,5 @@
             }
         </script>
     @endif
+@endsection
 @endsection

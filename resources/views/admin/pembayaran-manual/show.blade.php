@@ -1,5 +1,6 @@
 tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
-<x-admin-layout>
+@section('content')
+@extends('layouts.admin')
     <x-slot name="header">
         <x-ui.breadcrumb.breadcrumb>
             <x-ui.breadcrumb.list class="text-xs">
@@ -142,4 +143,4 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
             </x-ui.card>
         </div>
     </div>
-</x-admin-layout>
+@endsection

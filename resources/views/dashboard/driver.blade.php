@@ -1,4 +1,5 @@
-<x-admin-layout>
+@extends('layouts.admin')
+@section('content')
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <div class="flex items-center gap-4">
@@ -215,4 +216,5 @@
             </x-ui.card.card>
         </div>
     </div>
-</x-admin-layout>
+
+@endsection

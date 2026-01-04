@@ -1,4 +1,5 @@
-<x-guest-layout>
+@extends('layouts.guest')
+@section('content')
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-foreground">{{ __('Atur Ulang Password') }}</h2>
         <p class="text-sm text-muted-foreground mt-1">{{ __('Buat password baru untuk akun Anda') }}</p>
@@ -73,4 +74,5 @@
             </a>
         </div>
     </form>
-</x-guest-layout>
+
+@endsection

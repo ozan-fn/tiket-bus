@@ -1,4 +1,5 @@
-<x-guest-layout>
+@extends('layouts.guest')
+@section('content')
     <div class="mb-6">
         <h2 class="text-2xl font-bold text-foreground">{{ __('Konfirmasi Password') }}</h2>
         <p class="text-sm text-muted-foreground mt-1">{{ __('Ini adalah area aman. Silakan konfirmasi password Anda untuk melanjutkan.') }}</p>
@@ -28,4 +29,5 @@
             </x-ui.button.button>
         </div>
     </form>
-</x-guest-layout>
+
+@endsection

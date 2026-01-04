@@ -40,27 +40,33 @@
 
         <div class="flex h-screen overflow-hidden">
             <!-- Sidebar -->
-            <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out">
+            <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border/50 dark:border-border flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none">
                 <!-- Logo -->
-                <div class="h-16 flex items-center justify-between px-6 border-b border-border shrink-0">
-                    <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                        {{-- <i data-lucide="zap" class="w-8 h-8 text-primary" ></i> --}}
-                        <img class="w-8" src="{{ asset('assets/images/logo.png') }}" alt="">
-                        <span class="text-xl font-bold">Tiket Bus</span>
+                <div class="h-20 flex items-center px-6 border-b border-border/50 dark:border-border/30 shrink-0">
+                    <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
+                        <div class="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors">
+                            <img class="w-6" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+                        </div>
+                        <span class="text-lg font-bold text-foreground hidden sm:inline">Tiket Bus</span>
                     </a>
                     <!-- Close button for mobile -->
-                    <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent">
-                        <i data-lucide="x" class="w-5 h-5" ></i>
+                    <button onclick="toggleSidebar()" class="lg:hidden ml-auto p-2 rounded-lg hover:bg-accent transition-colors">
+                        <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
 
                 <!-- Navigation -->
-                <nav id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-3 space-y-1">
+                <nav id="sidebar-nav" class="flex-1 overflow-y-auto py-6 px-3 space-y-0.5">
                     @php
-                        $userRole = auth()->user()?->roles->first()?->name ?? 'agent';
+                        $userRole = auth()->user()?->roles->first()?->name ?? 'user';
 
                         $menus = [
-                            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'layout-dashboard', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor', 'driver']],
+                            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'layout-dashboard', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor', 'driver', 'user']],
+                            ['label' => 'Pemesanan', 'type' => 'section', 'roles' => ['user']],
+                            ['label' => 'Pesan Tiket', 'route' => 'pemesanan.index', 'icon' => 'ticket', 'type' => 'menu', 'roles' => ['user']],
+                            ['label' => 'Tiket Saya', 'route' => 'tiket.index', 'icon' => 'clipboard-list', 'type' => 'menu', 'roles' => ['user']],
+                            ['label' => 'Profil', 'type' => 'section', 'roles' => ['user']],
+                            ['label' => 'Data Profil', 'route' => 'profile.edit', 'icon' => 'user', 'type' => 'menu', 'roles' => ['user']],
                             ['label' => 'Data Setup', 'type' => 'section', 'roles' => ['owner']],
                             ['label' => 'Kelas Bus', 'route' => 'admin/kelas-bus.index', 'icon' => 'layers', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Fasilitas', 'route' => 'admin/fasilitas.index', 'icon' => 'sparkles', 'type' => 'menu', 'roles' => ['owner']],
@@ -96,9 +102,9 @@
 
                     @foreach($menus as $menu)
                             @if(in_array($userRole, $menu['roles']))
-                                @if($menu['type'] === 'section')
-                                    <div class="pt-4 pb-2 px-3">
-                                        <h3 class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{{ $menu['label'] }}</h3>
+                                    @if($menu['type'] === 'section')
+                                    <div class="pt-6 pb-2 px-2 first:pt-0">
+                                        <h3 class="text-xs font-bold text-muted-foreground/70 dark:text-muted-foreground/60 uppercase tracking-widest">{{ $menu['label'] }}</h3>
                                     </div>
                                 @else
                                     @php
@@ -132,15 +138,15 @@
                                     @endphp
 
                                     <a href="{{ route($menu['route']) }}"
-                                       class="group relative flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg transition-colors
-                                       {{ $isActive ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground' }}">
+                                       class="group relative flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
+                                       {{ $isActive ? 'bg-primary text-primary-foreground shadow-md dark:shadow-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 dark:hover:bg-accent/40' }}">
 
                                         @if($isActive)
-                                            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-foreground rounded-r-full"></span>
+                                            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-7 bg-primary-foreground rounded-r-full"></span>
                                         @endif
 
-                                        <i data-lucide="{{ $menu['icon'] }}" class="w-5 h-5 shrink-0"></i>
-                                        {{ $menu['label'] }}
+                                        <i data-lucide="{{ $menu['icon'] }}" class="w-5 h-5 shrink-0 {{ $isActive ? '' : 'group-hover:scale-110' }} transition-transform"></i>
+                                        <span class="truncate">{{ $menu['label'] }}</span>
                                     </a>
                                 @endif
                             @endif
@@ -148,11 +154,11 @@
                 </nav>
 
                 <!-- User Menu -->
-                <div class="border-t border-border p-4 shrink-0">
+                <div class="border-t border-border/50 dark:border-border/30 p-4 shrink-0 bg-muted/30 dark:bg-background/50 rounded-lg m-3 mt-auto">
                     <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition-colors">
-                            <x-ui.avatar>
-                                <x-ui.avatar.fallback class="bg-primary text-primary-foreground font-semibold">
+                        <button @click="open = !open" class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors group">
+                            <x-ui.avatar class="h-9 w-9">
+                                <x-ui.avatar.fallback class="bg-primary text-primary-foreground font-bold text-sm">
                                     @if(auth()->check())
                                         {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
                                     @else
@@ -161,7 +167,7 @@
                                 </x-ui.avatar.fallback>
                             </x-ui.avatar>
                             <div class="flex-1 min-w-0 text-left">
-                                <p class="text-sm font-medium truncate">
+                                <p class="text-sm font-semibold text-foreground truncate">
                                     @if(auth()->check())
                                         {{ auth()->user()->name }}
                                     @else
@@ -176,29 +182,29 @@
                                     @endif
                                 </p>
                             </div>
-                            <i data-lucide="chevron-right" class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" x-bind:class="open ? 'rotate-90' : ''" ></i>
+                            <i data-lucide="chevron-up" class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" x-bind:class="open ? '-rotate-180' : ''" ></i>
                         </button>
 
                         <div
                             x-show="open"
                             x-transition
                             @click.outside="open = false"
-                            class="absolute bottom-full left-0 right-0 mb-2 z-50 rounded-md border bg-popover text-popover-foreground shadow-lg p-1"
+                            class="absolute bottom-full left-0 right-0 mb-2 z-50 rounded-lg border border-border/50 bg-popover text-popover-foreground shadow-xl p-1"
                         >
-                            <div class="px-2 py-1.5 text-sm font-semibold">Akun Saya</div>
-                            <div class="h-px bg-border my-1"></div>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors">
+                            <div class="px-3 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Akun Saya</div>
+                            <div class="h-px bg-border/50 my-1"></div>
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors">
                                 <i data-lucide="user" class="w-4 h-4" ></i>
                                 Profile
                             </a>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors">
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors">
                                 <i data-lucide="settings" class="w-4 h-4" ></i>
                                 Pengaturan
                             </a>
-                            <div class="h-px bg-border my-1"></div>
+                            <div class="h-px bg-border/50 my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors text-destructive">
+                                <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-destructive/10 transition-colors text-destructive font-medium">
                                     <i data-lucide="log-out" class="w-4 h-4" ></i>
                                     Logout
                                 </button>
@@ -208,38 +214,41 @@
                 </div>
             </aside>
 
+            <!-- Mobile overlay for sidebar -->
+            <div id="sidebar-overlay" class="fixed inset-0 bg-black/50 dark:bg-black/60 z-40 lg:hidden hidden opacity-0 transition-opacity duration-300" onclick="toggleSidebar()"></div>
+
             <!-- Main Content -->
             <div class="flex-1 flex flex-col overflow-hidden w-full lg:w-auto">
                 <!-- Top Bar -->
-                <header class="h-16 bg-card border-b border-border flex items-center justify-between px-4 lg:px-6 shrink-0 relative overflow-hidden">
-                    <div class="flex items-center gap-3">
+                <header class="h-16 bg-card border-b border-border/50 dark:border-border flex items-center justify-between px-4 lg:px-6 shrink-0 relative overflow-hidden shadow-sm dark:shadow-sm/50">
+                    <div class="flex items-center gap-4 flex-1 min-w-0">
                         <!-- Mobile menu button -->
-                        <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors">
-                            <i data-lucide="menu" class="w-6 h-6" ></i>
+                        <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors flex-shrink-0" title="Buka sidebar">
+                            <i data-lucide="menu" class="w-6 h-6"></i>
                         </button>
                         @isset($header)
-                            <div class="flex-1">
+                            <div class="flex-1 min-w-0">
                                 {{ $header }}
                             </div>
                         @endisset
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 ml-4 flex-shrink-0">
                         <!-- Fullscreen Toggle -->
-                        <button onclick="toggleFullscreen()" class="p-2 rounded-lg hover:bg-accent transition-colors" title="Toggle Fullscreen">
-                            <i data-lucide="maximize" class="w-5 h-5" id="fullscreen-icon-max" ></i>
-                            <i data-lucide="minimize" class="w-5 h-5 hidden" id="fullscreen-icon-min" ></i>
+                        <button onclick="toggleFullscreen()" class="p-2 rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors" title="Toggle Fullscreen">
+                            <i data-lucide="maximize" class="w-5 h-5" id="fullscreen-icon-max"></i>
+                            <i data-lucide="minimize" class="w-5 h-5 hidden" id="fullscreen-icon-min"></i>
                         </button>
 
                         <!-- Theme Toggle -->
                         <x-theme-toggle />
 
-                        <span class="text-sm text-muted-foreground hidden sm:inline" id="current-time">{{ now()->format('d M Y, H:i:s') }}</span>
+                        <span class="text-sm text-muted-foreground/70 hidden sm:inline font-medium" id="current-time">{{ now()->format('d M Y, H:i:s') }}</span>
                     </div>
                 </header>
 
                 <!-- Page Content -->
                 <main class="flex-1 overflow-y-auto bg-muted">
-                    {{ $slot }}
+                    @yield('content')
                 </main>
             </div>
         </div>
@@ -302,16 +311,51 @@
             const overlay = document.getElementById('sidebar-overlay');
 
             sidebar.classList.toggle('-translate-x-full');
-            overlay.classList.toggle('hidden');
+            
+            // Handle overlay with proper z-index
+            if (overlay.classList.contains('hidden')) {
+                overlay.classList.remove('hidden');
+                // Trigger reflow to ensure transition works
+                void overlay.offsetWidth;
+                overlay.classList.remove('opacity-0');
+                overlay.classList.add('opacity-100');
+            } else {
+                overlay.classList.add('opacity-0');
+                overlay.classList.remove('opacity-100');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
         }
 
-        // Close sidebar when clicking outside on mobile
+        // Close sidebar when clicking on overlay
+        document.addEventListener('DOMContentLoaded', function() {
+            const overlay = document.getElementById('sidebar-overlay');
+            if (overlay) {
+                overlay.addEventListener('click', toggleSidebar);
+            }
+        });
+
+        // Close sidebar when clicking a navigation link on mobile
+        window.addEventListener('load', function() {
+            const navLinks = document.querySelectorAll('#sidebar-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 1024) {
+                        toggleSidebar();
+                    }
+                });
+            });
+        });
+
+        // Handle window resize
         window.addEventListener('resize', function() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+            
             if (window.innerWidth >= 1024) {
-                const sidebar = document.getElementById('sidebar');
-                const overlay = document.getElementById('sidebar-overlay');
                 sidebar.classList.remove('-translate-x-full');
                 overlay.classList.add('hidden');
+                overlay.classList.remove('opacity-100');
+                overlay.classList.add('opacity-0');
             }
         });
 

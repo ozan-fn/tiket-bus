@@ -1,4 +1,5 @@
-<x-admin-layout>
+@extends('layouts.admin')
+@section('content')
     <x-slot name="header">
         <h2 class="text-xl font-bold text-gray-900 dark:text-white">Dashboard Kondektur</h2>
     </x-slot>
@@ -196,4 +197,4 @@
             </x-ui.card.content>
         </x-ui.card>
     </div>
-</x-admin-layout>
+@endsection

@@ -1,4 +1,5 @@
 @extends('layouts.app')
+@section('content')
 
 @section('title', 'Pembayaran Tiket')
 
@@ -150,4 +151,5 @@
             @apply border-blue-500 bg-blue-50;
         }
     </style>
+@endsection
 @endsection
