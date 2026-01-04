@@ -21,15 +21,15 @@ class DatabaseSeeder extends Seeder
         // Role:
         // owner: Mengelola seluruh sistem, termasuk admin dan pengaturan global
         // agent: Mengelola penjualan tiket, harga tiket, dan history pemesanan
-        // conductor: Kondektur bus, mengecek penumpang dan data penumpang di bus
-        // driver: Sopir bus, bisa login jika diperlukan untuk absen, cek jadwal, atau laporan
+        // driver: Sopir bus
+        // conductor: Kondektur bus (merangkap dengan sopir)
         // passenger: Melakukan pemesanan tiket, melihat jadwal, dan riwayat transaksi
         // Membuat role dan permission
 
         Role::firstOrCreate(["name" => "owner"]);
         Role::firstOrCreate(["name" => "agent"]);
-        Role::firstOrCreate(["name" => "conductor"]);
         Role::firstOrCreate(["name" => "driver"]);
+        Role::firstOrCreate(["name" => "conductor"]);
         Role::firstOrCreate(["name" => "passenger"]);
 
         $owner = User::factory()->create([
@@ -43,12 +43,6 @@ class DatabaseSeeder extends Seeder
             "email" => "agent@example.com",
         ]);
         $agent->assignRole("agent");
-
-        $conductor = User::factory()->create([
-            "name" => "Conductor User",
-            "email" => "conductor@example.com",
-        ]);
-        $conductor->assignRole("conductor");
 
         $passenger = User::factory()->create([
             "name" => "Passenger User",

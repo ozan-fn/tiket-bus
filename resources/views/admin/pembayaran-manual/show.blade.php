@@ -9,7 +9,7 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/pembayaran-manual.index') }}">
@@ -17,7 +17,7 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -38,15 +38,25 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                             <x-ui.card.description>{{ $pembayaran->kode_transaksi }}</x-ui.card.description>
                         </div>
                         <div class="flex gap-2">
+                            @if($pembayaran->status === 'dipesan')
+                                <form action="{{ route('admin/pembayaran-manual.confirm', $pembayaran) }}" method="POST"
+                                    onsubmit="return confirm('Yakin konfirmasi pembayaran ini? Status tiket akan berubah menjadi dibayar.')">
+                                    @csrf
+                                    <x-ui.button variant="default" size="sm">
+                                        <i data-lucide="check-circle" class="w-4 h-4 mr-2"></i>
+                                        Konfirmasi Pembayaran
+                                    </x-ui.button>
+                                </form>
+                            @endif
                             <a href="{{ route('admin/pembayaran-manual.edit', $pembayaran) }}">
                                 <x-ui.button variant="outline" size="sm">
-                                    <i data-lucide="edit" class="w-4 h-4 mr-2" ></i>
+                                    <i data-lucide="edit" class="w-4 h-4 mr-2"></i>
                                     Edit
                                 </x-ui.button>
                             </a>
                             <a href="{{ route('admin/pembayaran-manual.index') }}">
                                 <x-ui.button variant="outline" size="sm">
-                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
                                     Kembali
                                 </x-ui.button>
                             </a>
@@ -66,7 +76,8 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                             <x-ui.label>User</x-ui.label>
                             <div class="flex items-center gap-2">
                                 <x-ui.avatar class="h-8 w-8">
-                                    <x-ui.avatar.fallback class="text-xs">{{ strtoupper(substr($pembayaran->user->name, 0, 2)) }}</x-ui.avatar.fallback>
+                                    <x-ui.avatar.fallback
+                                        class="text-xs">{{ strtoupper(substr($pembayaran->user->name, 0, 2)) }}</x-ui.avatar.fallback>
                                 </x-ui.avatar>
                                 <div>
                                     <p class="text-sm font-medium">{{ $pembayaran->user->name }}</p>
@@ -80,8 +91,13 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                             <x-ui.label>Tiket</x-ui.label>
                             <div class="text-sm">
                                 <p class="font-medium">{{ $pembayaran->tiket->kode_tiket }}</p>
-                                <p class="text-muted-foreground">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? '-' }} → {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}</p>
-                                <p class="text-muted-foreground">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->bus->nama }}</p>
+                                <p class="text-muted-foreground">
+                                    {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? '-' }}
+                                    →
+                                    {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
+                                </p>
+                                <p class="text-muted-foreground">
+                                    {{ $pembayaran->tiket->jadwalKelasBus->jadwal->bus->nama }}</p>
                             </div>
                         </div>
 
@@ -94,7 +110,8 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                         <!-- Metode -->
                         <div class="space-y-2">
                             <x-ui.label>Metode Pembayaran</x-ui.label>
-                            <x-ui.badge variant="{{ $pembayaran->metode == 'tunai' ? 'default' : ($pembayaran->metode == 'transfer' ? 'secondary' : 'outline') }}">
+                            <x-ui.badge
+                                variant="{{ $pembayaran->metode == 'tunai' ? 'default' : ($pembayaran->metode == 'transfer' ? 'secondary' : 'outline') }}">
                                 {{ ucfirst($pembayaran->metode) }}
                             </x-ui.badge>
                         </div>
@@ -102,7 +119,8 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                         <!-- Status -->
                         <div class="space-y-2">
                             <x-ui.label>Status</x-ui.label>
-                            <x-ui.badge variant="{{ in_array($pembayaran->status, ['dibayar', 'selesai']) ? 'default' : ($pembayaran->status == 'dipesan' ? 'secondary' : 'destructive') }}">
+                            <x-ui.badge
+                                variant="{{ in_array($pembayaran->status, ['dibayar', 'selesai']) ? 'default' : ($pembayaran->status == 'dipesan' ? 'secondary' : 'destructive') }}">
                                 {{ ucfirst($pembayaran->status) }}
                             </x-ui.badge>
                         </div>
@@ -110,7 +128,8 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                         <!-- Waktu Bayar -->
                         <div class="space-y-2">
                             <x-ui.label>Waktu Bayar</x-ui.label>
-                            <p class="text-sm">{{ $pembayaran->waktu_bayar ? $pembayaran->waktu_bayar->format('d/m/Y H:i') : '-' }}</p>
+                            <p class="text-sm">
+                                {{ $pembayaran->waktu_bayar ? $pembayaran->waktu_bayar->format('d/m/Y H:i') : '-' }}</p>
                         </div>
 
                         <!-- Dibuat -->

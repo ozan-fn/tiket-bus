@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('nama');
             $table->string('plat_nomor');
             $table->integer('kapasitas');
-            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif');
+            $table->enum('status', ['aktif', 'tidak_aktif'])->default('aktif');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

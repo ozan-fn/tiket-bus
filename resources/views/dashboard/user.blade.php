@@ -48,25 +48,25 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Total Pengeluaran -->
-                <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total Pengeluaran</p>
-                            <p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-                                Rp {{ number_format($totalSpent ?? 0, 0, ',', '.') }}
-                            </p>
-                        </div>
-                        <div class="bg-purple-500/10 p-3 rounded-lg">
-                            <i data-lucide="wallet" class="w-8 h-8 text-purple-600 dark:text-purple-400"></i>
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <!-- Quick Actions -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Tiket Saya -->
+                <div
+                    class="bg-gradient-to-br from-green-500 to-green-600 dark:from-green-600 dark:to-green-700 rounded-lg shadow-lg p-8 text-white">
+                    <i data-lucide="ticket" class="w-12 h-12 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">Tiket Saya</h3>
+                    <p class="text-green-100 mb-4">
+                        Lihat daftar tiket dan status pembayaran Anda
+                    </p>
+                    <a href="{{ route('tiket.index') }}"
+                        class="inline-flex items-center gap-2 bg-white text-green-600 hover:bg-green-50 px-4 py-2 rounded-lg font-semibold transition-colors">
+                        Lihat Tiket
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </a>
+                </div>
+
                 <!-- Pesan Tiket Baru -->
                 <div
                     class="bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 rounded-lg shadow-lg p-8 text-white">

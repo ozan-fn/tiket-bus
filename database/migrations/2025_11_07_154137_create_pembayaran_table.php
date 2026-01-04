@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->foreignId("tiket_id")->constrained("tiket")->onDelete("cascade");
             $table->string("metode");
             $table->decimal("nominal", 12, 2);
-            $table->enum("status", ["pending", "berhasil", "gagal", "refund"])->default("pending");
+            $table->enum("status", ["dipesan", "dibayar", "batal", "selesai"])->default("dipesan");
             $table->timestamp("waktu_bayar")->nullable();
             $table->string("kode_transaksi")->unique();
             $table->string("bukti_pembayaran")->nullable();

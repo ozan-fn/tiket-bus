@@ -18,6 +18,7 @@ use App\Http\Controllers\LaporanController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\CekKursiController;
 use App\Http\Controllers\PembayaranManualController;
+use App\Http\Controllers\TiketController;
 use Illuminate\Support\Facades\Route;
 
 Route::get("/", function () {
@@ -38,7 +39,21 @@ Route::middleware("auth")->group(function () {
     Route::get("pemesanan", [PemesananController::class, "index"])->name("pemesanan.index");
     Route::get("pemesanan/{jadwal}", [PemesananController::class, "create"])->name("pemesanan.create");
     Route::post("pemesanan/{jadwal}", [PemesananController::class, "store"])->name("pemesanan.store");
-    Route::get("tiket/{tiket}", [PemesananController::class, "show"])->name("pemesanan.show");
+
+    // Pembayaran tiket
+    Route::get("pemesanan/{tiket}/pembayaran", [PemesananController::class, "pembayaran"])->name("pemesanan.pembayaran");
+    Route::post("pemesanan/{tiket}/pembayaran", [PemesananController::class, "pembayaranStore"])->name("pemesanan.pembayaran.store");
+
+    // Pembayaran instruksi dan tunai
+    Route::get("pembayaran/{pembayaran}/instruksi", [PemesananController::class, "pembayaranInstruksi"])->name("pembayaran.instruksi");
+    Route::get("pembayaran/{pembayaran}/tunai", [PemesananController::class, "pembayaranTunai"])->name("pembayaran.tunai");
+
+    // Tiket list dan detail
+    Route::get("tiket", [TiketController::class, "index"])->name("tiket.index");
+    Route::get("tiket/{tiket}", [TiketController::class, "show"])->name("tiket.show");
+
+    // Old route for backward compatibility
+    Route::get("tiket-detail/{tiket}", [PemesananController::class, "show"])->name("pemesanan.show");
 });
 
 // =================== ADMIN/OWNER/AGENT ROUTES ===================
@@ -96,21 +111,18 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         Route::get("pemesanan", [PemesananController::class, "adminIndex"])->name("pemesanan.index");
         Route::get("pemesanan/create/{jadwal}", [PemesananController::class, "adminCreate"])->name("pemesanan.create");
         Route::post("pemesanan/store/{jadwal}", [PemesananController::class, "adminStore"])->name("pemesanan.store");
+        Route::get("pemesanan/{tiket}", [PemesananController::class, "adminShow"])->name("pemesanan.show");
+
+        // History Pemesanan
+        Route::get("history-pemesanan", [PemesananController::class, "history"])->name("history-pemesanan");
 
         // Pembayaran Manual
         Route::get("pembayaran-manual", [PembayaranManualController::class, "index"])->name("pembayaran-manual.index");
         Route::get("pembayaran-manual/{pembayaran}", [PembayaranManualController::class, "show"])->name("pembayaran-manual.show");
         Route::get("pembayaran-manual/{pembayaran}/edit", [PembayaranManualController::class, "edit"])->name("pembayaran-manual.edit");
         Route::put("pembayaran-manual/{pembayaran}", [PembayaranManualController::class, "update"])->name("pembayaran-manual.update");
-
-        // History Pemesanan
-        Route::get("history-pemesanan", [PemesananController::class, "history"])->name("history-pemesanan");
-
-        // Pesan Tiket (Agent Booking)
-        Route::get("pemesanan", [PemesananController::class, "adminIndex"])->name("pemesanan.index");
-        Route::get("pemesanan/create/{jadwal}", [PemesananController::class, "adminCreate"])->name("pemesanan.create");
-        Route::post("pemesanan/store/{jadwal}", [PemesananController::class, "adminStore"])->name("pemesanan.store");
-        Route::get("pemesanan/{tiket}", [PemesananController::class, "adminShow"])->name("pemesanan.show");
+        Route::post("pembayaran-manual/{pembayaran}/confirm", [PembayaranManualController::class, "confirm"])->name("pembayaran-manual.confirm");
+        Route::delete("pembayaran-manual/{pembayaran}", [PembayaranManualController::class, "destroy"])->name("pembayaran-manual.destroy");
 
         // Scan Tiket
         Route::get("scan", [ScanController::class, "index"])->name("scan.index");
@@ -127,11 +139,13 @@ Route::middleware(["auth", "verified", "role:owner|agent"])
         Route::get("jadwal-kelas-bus/kelas-by-jadwal/{jadwal_id}", [JadwalKelasBusController::class, "getKelasByJadwal"])->name("jadwal-kelas-bus.kelas-by-jadwal");
         Route::resource("jadwal-kelas-bus", JadwalKelasBusController::class)->parameters(["jadwal-kelas-bus" => "jadwalKelasBu"]);
 
-        // Laporan & Analytics
-        Route::get("laporan", [LaporanController::class, "index"])->name("laporan.index");
-        Route::get("laporan/tiket", [LaporanController::class, "tiket"])->name("laporan.tiket");
-        Route::get("laporan/pendapatan", [LaporanController::class, "pendapatan"])->name("laporan.pendapatan");
-        Route::get("laporan/penumpang", [LaporanController::class, "penumpang"])->name("laporan.penumpang");
+        // Laporan & Analytics (Owner Only)
+        Route::middleware("role:owner")->group(function () {
+            Route::get("laporan", [LaporanController::class, "index"])->name("laporan.index");
+            Route::get("laporan/tiket", [LaporanController::class, "tiket"])->name("laporan.tiket");
+            Route::get("laporan/pendapatan", [LaporanController::class, "pendapatan"])->name("laporan.pendapatan");
+            Route::get("laporan/penumpang", [LaporanController::class, "penumpang"])->name("laporan.penumpang");
+        });
     });
 
 require __DIR__ . "/auth.php";

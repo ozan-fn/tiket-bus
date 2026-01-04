@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -35,37 +35,33 @@
                     <div class="flex flex-col sm:flex-row gap-4 mb-6">
                         <div class="flex-1">
                             <form method="GET" class="flex gap-2">
-                                <x-ui.input
-                                    type="text"
-                                    name="search"
-                                    value="{{ request('search') }}"
-                                    placeholder="Cari kode transaksi atau nama user..."
-                                    class="flex-1"
-                                />
+                                <x-ui.input type="text" name="search" value="{{ request('search') }}"
+                                    placeholder="Cari kode transaksi atau nama user..." class="flex-1" />
                                 <x-ui.button type="submit" variant="outline" size="sm">
-                                    <i data-lucide="search" class="w-4 h-4" ></i>
+                                    <i data-lucide="search" class="w-4 h-4"></i>
                                 </x-ui.button>
                             </form>
                         </div>
                         <div class="flex gap-2">
-                            <select
-                                name="status"
-                                onchange="this.form.submit()"
+                            <select name="status" onchange="this.form.submit()"
                                 class="rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
                                 <option value="">Semua Status</option>
-                                <option value="dipesan" {{ request('status') == 'dipesan' ? 'selected' : '' }}>Dipesan</option>
-                                <option value="dibayar" {{ request('status') == 'dibayar' ? 'selected' : '' }}>Dibayar</option>
+                                <option value="dipesan" {{ request('status') == 'dipesan' ? 'selected' : '' }}>Dipesan
+                                </option>
+                                <option value="dibayar" {{ request('status') == 'dibayar' ? 'selected' : '' }}>Dibayar
+                                </option>
                                 <option value="batal" {{ request('status') == 'batal' ? 'selected' : '' }}>Batal</option>
-                                <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                                <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai
+                                </option>
                             </select>
-                            <select
-                                name="metode"
-                                onchange="this.form.submit()"
+                            <select name="metode" onchange="this.form.submit()"
                                 class="rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring">
                                 <option value="">Semua Metode</option>
                                 <option value="tunai" {{ request('metode') == 'tunai' ? 'selected' : '' }}>Tunai</option>
-                                <option value="transfer" {{ request('metode') == 'transfer' ? 'selected' : '' }}>Transfer</option>
-                                <option value="xendit" {{ request('metode') == 'xendit' ? 'selected' : '' }}>Xendit</option>
+                                <option value="transfer" {{ request('metode') == 'transfer' ? 'selected' : '' }}>Transfer
+                                </option>
+                                <option value="xendit" {{ request('metode') == 'xendit' ? 'selected' : '' }}>Xendit
+                                </option>
                             </select>
                         </div>
                     </div>
@@ -92,9 +88,11 @@
                                         <x-ui.table.cell>
                                             <div class="flex items-center gap-2">
                                                 <x-ui.avatar class="h-8 w-8">
-                                                    <x-ui.avatar.fallback class="text-xs text-white">{{ strtoupper(substr($item->user->name, 0, 2)) }}</x-ui.avatar.fallback>
+                                                    <x-ui.avatar.fallback
+                                                        class="text-xs text-white">{{ strtoupper(substr($item->user->name, 0, 2)) }}</x-ui.avatar.fallback>
                                                     @if($item->user->photo)
-                                                        <x-ui.avatar.image src="{{ asset('storage/' . $item->user->photo) }}" alt="{{ $item->user->name }}" />
+                                                        <x-ui.avatar.image src="{{ asset('storage/' . $item->user->photo) }}"
+                                                            alt="{{ $item->user->name }}" />
                                                     @endif
                                                 </x-ui.avatar>
                                                 <div>
@@ -105,29 +103,50 @@
                                         </x-ui.table.cell>
                                         <x-ui.table.cell>
                                             <div class="text-sm">
-                                                <p>{{ $item->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? '-' }} → {{ $item->tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}</p>
-                                                <p class="text-muted-foreground">{{ $item->tiket->jadwalKelasBus->jadwal->bus->nama }}</p>
+                                                <p>{{ $item->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? '-' }}
+                                                    →
+                                                    {{ $item->tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
+                                                </p>
+                                                <p class="text-muted-foreground">
+                                                    {{ $item->tiket->jadwalKelasBus->jadwal->bus->nama }}</p>
                                             </div>
                                         </x-ui.table.cell>
-                                        <x-ui.table.cell>Rp {{ number_format($item->nominal, 0, ',', '.') }}</x-ui.table.cell>
+                                        <x-ui.table.cell>Rp
+                                            {{ number_format($item->nominal, 0, ',', '.') }}</x-ui.table.cell>
                                         <x-ui.table.cell>
-                                            <x-ui.badge variant="{{ $item->metode == 'tunai' ? 'default' : ($item->metode == 'transfer' ? 'secondary' : 'outline') }}">
+                                            <x-ui.badge
+                                                variant="{{ $item->metode == 'tunai' ? 'default' : ($item->metode == 'transfer' ? 'secondary' : 'outline') }}">
                                                 {{ ucfirst($item->metode) }}
                                             </x-ui.badge>
                                         </x-ui.table.cell>
                                         <x-ui.table.cell>
-                                            <x-ui.badge variant="{{ in_array($item->status, ['dibayar', 'selesai']) ? 'default' : ($item->status == 'dipesan' ? 'secondary' : 'destructive') }}">
+                                            <x-ui.badge
+                                                variant="{{ in_array($item->status, ['dibayar', 'selesai']) ? 'default' : ($item->status == 'dipesan' ? 'secondary' : 'destructive') }}">
                                                 {{ ucfirst($item->status) }}
                                             </x-ui.badge>
                                         </x-ui.table.cell>
                                         <x-ui.table.cell>{{ $item->waktu_bayar ? $item->waktu_bayar->format('d/m/Y H:i') : '-' }}</x-ui.table.cell>
                                         <x-ui.table.cell>
                                             <div class="flex items-center gap-1">
-                                                <a href="{{ route('admin/pembayaran-manual.show', $item) }}" class="p-1 rounded hover:bg-accent">
-                                                    <i data-lucide="eye" class="w-4 h-4" ></i>
+                                                <a href="{{ route('admin/pembayaran-manual.show', $item) }}"
+                                                    class="p-1 rounded hover:bg-accent" title="Lihat Detail">
+                                                    <i data-lucide="eye" class="w-4 h-4"></i>
                                                 </a>
-                                                <a href="{{ route('admin/pembayaran-manual.edit', $item) }}" class="p-1 rounded hover:bg-accent">
-                                                    <i data-lucide="edit" class="w-4 h-4" ></i>
+                                                @if($item->status === 'dipesan')
+                                                    <form action="{{ route('admin/pembayaran-manual.confirm', $item) }}"
+                                                        method="POST" class="inline"
+                                                        onsubmit="return confirm('Yakin konfirmasi pembayaran ini?')">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="p-1 rounded hover:bg-green-100 text-green-600"
+                                                            title="Konfirmasi Pembayaran">
+                                                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                <a href="{{ route('admin/pembayaran-manual.edit', $item) }}"
+                                                    class="p-1 rounded hover:bg-accent" title="Edit">
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </div>
                                         </x-ui.table.cell>
@@ -139,31 +158,52 @@
                                             <div class="flex-1">
                                                 <div class="flex items-center gap-2 mb-2">
                                                     <x-ui.avatar class="h-8 w-8">
-                                                        <x-ui.avatar.fallback class="text-xs text-white">{{ strtoupper(substr($item->user->name, 0, 2)) }}</x-ui.avatar.fallback>
+                                                        <x-ui.avatar.fallback
+                                                            class="text-xs text-white">{{ strtoupper(substr($item->user->name, 0, 2)) }}</x-ui.avatar.fallback>
                                                         @if($item->user->photo)
-                                                            <x-ui.avatar.image src="{{ asset('storage/' . $item->user->photo) }}" alt="{{ $item->user->name }}" />
+                                                            <x-ui.avatar.image
+                                                                src="{{ asset('storage/' . $item->user->photo) }}"
+                                                                alt="{{ $item->user->name }}" />
                                                         @endif
                                                     </x-ui.avatar>
                                                     <div>
                                                         <p class="font-medium">{{ $item->user->name }}</p>
-                                                        <p class="text-xs text-muted-foreground">{{ $item->user->email }}</p>
+                                                        <p class="text-xs text-muted-foreground">{{ $item->user->email }}
+                                                        </p>
                                                     </div>
                                                 </div>
                                                 <p class="font-medium">{{ $item->kode_transaksi }}</p>
-                                                <p class="text-sm">Rp {{ number_format($item->nominal, 0, ',', '.') }} - {{ ucfirst($item->metode) }}</p>
+                                                <p class="text-sm">Rp {{ number_format($item->nominal, 0, ',', '.') }} -
+                                                    {{ ucfirst($item->metode) }}</p>
                                                 <div class="flex items-center gap-2 mt-2">
-                                                    <x-ui.badge variant="{{ in_array($item->status, ['dibayar', 'selesai']) ? 'default' : ($item->status == 'dipesan' ? 'secondary' : 'destructive') }}">
+                                                    <x-ui.badge
+                                                        variant="{{ in_array($item->status, ['dibayar', 'selesai']) ? 'default' : ($item->status == 'dipesan' ? 'secondary' : 'destructive') }}">
                                                         {{ ucfirst($item->status) }}
                                                     </x-ui.badge>
-                                                    <span class="text-xs text-muted-foreground">{{ $item->waktu_bayar ? $item->waktu_bayar->format('d/m/Y H:i') : '-' }}</span>
+                                                    <span
+                                                        class="text-xs text-muted-foreground">{{ $item->waktu_bayar ? $item->waktu_bayar->format('d/m/Y H:i') : '-' }}</span>
                                                 </div>
                                             </div>
                                             <div class="flex items-center gap-1">
-                                                <a href="{{ route('admin/pembayaran-manual.show', $item) }}" class="p-2 rounded hover:bg-accent">
-                                                    <i data-lucide="eye" class="w-4 h-4" ></i>
+                                                <a href="{{ route('admin/pembayaran-manual.show', $item) }}"
+                                                    class="p-2 rounded hover:bg-accent" title="Lihat Detail">
+                                                    <i data-lucide="eye" class="w-4 h-4"></i>
                                                 </a>
-                                                <a href="{{ route('admin/pembayaran-manual.edit', $item) }}" class="p-2 rounded hover:bg-accent">
-                                                    <i data-lucide="edit" class="w-4 h-4" ></i>
+                                                @if($item->status === 'dipesan')
+                                                    <form action="{{ route('admin/pembayaran-manual.confirm', $item) }}"
+                                                        method="POST" class="inline"
+                                                        onsubmit="return confirm('Yakin konfirmasi pembayaran ini?')">
+                                                        @csrf
+                                                        <button type="submit"
+                                                            class="p-2 rounded hover:bg-green-100 text-green-600"
+                                                            title="Konfirmasi Pembayaran">
+                                                            <i data-lucide="check-circle" class="w-4 h-4"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
+                                                <a href="{{ route('admin/pembayaran-manual.edit', $item) }}"
+                                                    class="p-2 rounded hover:bg-accent" title="Edit">
+                                                    <i data-lucide="edit" class="w-4 h-4"></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -172,9 +212,10 @@
                                     <x-ui.table.row>
                                         <x-ui.table.cell colspan="8" class="text-center py-12">
                                             <div class="flex flex-col items-center gap-2">
-                                                <i data-lucide="credit-card" class="w-12 h-12 text-muted-foreground" ></i>
+                                                <i data-lucide="credit-card" class="w-12 h-12 text-muted-foreground"></i>
                                                 <h3 class="text-lg font-medium">Belum ada pembayaran</h3>
-                                                <p class="text-sm text-muted-foreground">Pembayaran manual akan muncul di sini.</p>
+                                                <p class="text-sm text-muted-foreground">Pembayaran manual akan muncul di
+                                                    sini.</p>
                                             </div>
                                         </x-ui.table.cell>
                                     </x-ui.table.row>
