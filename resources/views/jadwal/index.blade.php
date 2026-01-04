@@ -172,18 +172,22 @@
                                                     class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
                                                     Aktif
                                                 </x-ui.badge>
-                                            @elseif($jadwal->status === 'selesai')
-                                                <x-ui.badge class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
-                                                    Selesai
-                                                </x-ui.badge>
-                                            @elseif($jadwal->status === 'dibatalkan')
-                                                <x-ui.badge class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                                                    Dibatalkan
-                                                </x-ui.badge>
                                             @else
-                                                <x-ui.badge variant="outline">
-                                                    {{ ucfirst($jadwal->status) }}
-                                                </x-ui.badge>
+                                                @php
+                                                    $isExpired = $jadwal->tanggal_berangkat->format('Y-m-d') < now()->format('Y-m-d') || 
+                                                               ($jadwal->tanggal_berangkat->format('Y-m-d') == now()->format('Y-m-d') && 
+                                                                $jadwal->jam_berangkat->format('H:i') < now()->format('H:i'));
+                                                @endphp
+                                                
+                                                @if($isExpired)
+                                                    <x-ui.badge class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                                        Selesai
+                                                    </x-ui.badge>
+                                                @else
+                                                    <x-ui.badge class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                                                        Dibatalkan
+                                                    </x-ui.badge>
+                                                @endif
                                             @endif
                                         </x-ui.table.cell>
                                         <x-ui.table.cell class="text-right">

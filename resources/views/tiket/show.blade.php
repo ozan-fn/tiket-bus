@@ -240,64 +240,6 @@
         @endpush
     @endif
 @endsection
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-sm mb-1">Metode Pembayaran</p>
-                                <p class="font-semibold text-lg capitalize">{{ $tiket->pembayaran->metode }}</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-sm mb-1">Nominal</p>
-                                <p class="font-semibold text-lg">
-                                    Rp {{ number_format($tiket->pembayaran->nominal, 0, ',', '.') }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-sm mb-1">Status Pembayaran</p>
-                                <p class="font-semibold text-lg">
-                                    @if ($tiket->pembayaran->status === 'dibayar')
-                                        <span class="text-green-600">✓ Dibayar</span>
-                                    @elseif ($tiket->pembayaran->status === 'dipesan')
-                                        <span class="text-yellow-600">⏳ Menunggu Konfirmasi</span>
-                                    @elseif ($tiket->pembayaran->status === 'gagal')
-                                        <span class="text-red-600">✗ Gagal</span>
-                                    @else
-                                        <span class="text-gray-600">{{ ucfirst($tiket->pembayaran->status) }}</span>
-                                    @endif
-                                </p>
-                            </div>
-                            @if ($tiket->pembayaran->waktu_bayar)
-                                <div class="col-span-1 md:col-span-2">
-                                    <p class="text-gray-600 text-sm mb-1">Waktu Pembayaran</p>
-                                    <p class="font-semibold text-lg">
-                                        {{ \Carbon\Carbon::parse($tiket->pembayaran->waktu_bayar)->format('d M Y H:i') }}
-                                    </p>
-                                </div>
-                            @endif
-                        </div>
-                    </x-ui.card.content>
-                </x-ui.card>
-            @endif
-        </div>
-    </div>
-
-    @if ($tiket->status === 'dibayar')
-        {{-- Pastikan library QRCode diload. Contoh menggunakan CDN --}}
-        <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                var container = document.getElementById('qrcode');
-                
-                // Pastikan element container ada sebelum render
-                if (container) {
-                    QRCode.toCanvas(document.createElement('canvas'), '{{ $tiket->kode_tiket }}', {
-                        width: 200,
-                        margin: 2,
-                        color: {
-                            dark: '#000000',
-                            light: '#FFFFFF'
-                        }
-                    }, function(error, canvas) {
                         if (error) console.error(error);
                         container.appendChild(canvas);
                     });

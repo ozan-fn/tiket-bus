@@ -185,19 +185,6 @@
         </div>
     </div>
 @endsection
-<div class="ml-3 flex-1">
-    <p class="font-semibold text-gray-900">Bayar di Lokasi / Terminal</p>
-    <p class="text-sm text-gray-600 mt-1">Bayar tunai saat naik bus di terminal
-        keberangkatan</p>
-</div>
-</label>
-</div>
-
-<!-- Info Penting -->
-<div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-    <p class="text-sm text-blue-800">
-        <strong>Catatan:</strong> Tiket Anda akan tetap dalam status <strong>Pending</strong> sampai
-        pembayaran dikonfirmasi.
         Kursi akan dikunci selama 24 jam. Pastikan untuk menyelesaikan pembayaran sebelum waktu yang
         ditentukan.
     </p>

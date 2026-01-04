@@ -29,14 +29,15 @@ class ExpireSchedules extends Command
     {
         $this->info("Starting to expire schedules and tickets...");
 
-        // Expire Jadwal where status is aktif or tersedia and departure time is past
-        $expiredJadwalCount = Jadwal::whereIn("status", ["aktif", "tersedia"])
+        // Expire Jadwal where status is aktif and departure time is past
+        // We use 'tidak_aktif' because 'selesai' is not in the database ENUM
+        $expiredJadwalCount = Jadwal::where("status", "aktif")
             ->expired()
-            ->update(["status" => "selesai"]);
+            ->update(["status" => "tidak_aktif"]);
 
         $this->info("Expired {$expiredJadwalCount} schedules.");
 
-        // Expire Tiket where status is dipesan and their jadwal is expired (do NOT auto-expire already paid tickets)
+        // Expire Tiket where status is dipesan and their jadwal is expired
         $expiredTiketIds = Tiket::whereIn("status", ["dipesan"])
             ->whereHas("jadwalKelasBus.jadwal", fn($query) => $query->expired())
             ->pluck("id");
@@ -44,7 +45,6 @@ class ExpireSchedules extends Command
         $expiredTiketCount = Tiket::whereIn("id", $expiredTiketIds)->update(["status" => "batal"]);
 
         // Expire Pembayaran terkait (hanya yang masih berstatus 'dipesan')
-        // Pembayaran dengan status 'dibayar' tidak diubah agar paid tickets tetap valid
         $expiredPembayaranCount = \App\Models\Pembayaran::whereIn("tiket_id", $expiredTiketIds)
             ->whereIn("status", ["dipesan"])
             ->update(["status" => "batal"]);

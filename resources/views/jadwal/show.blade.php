@@ -162,14 +162,27 @@
                                 <p class="text-sm text-muted-foreground">Status</p>
                                 @if($jadwal->status === 'aktif')
                                     <x-ui.badge class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                        <i data-lucide="circle-check" class="h-3 w-3"></i>
+                                        <i data-lucide="circle-check" class="h-3 w-3 mr-1"></i>
                                         Aktif
                                     </x-ui.badge>
                                 @else
-                                    <x-ui.badge class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                                        <i data-lucide="circle-x" class="h-3 w-3"></i>
-                                        Tidak Aktif
-                                    </x-ui.badge>
+                                    @php
+                                        $isExpired = $jadwal->tanggal_berangkat->format('Y-m-d') < now()->format('Y-m-d') || 
+                                                   ($jadwal->tanggal_berangkat->format('Y-m-d') == now()->format('Y-m-d') && 
+                                                    $jadwal->jam_berangkat->format('H:i') < now()->format('H:i'));
+                                    @endphp
+                                    
+                                    @if($isExpired)
+                                        <x-ui.badge class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                                            <i data-lucide="check-circle" class="h-3 w-3 mr-1"></i>
+                                            Selesai
+                                        </x-ui.badge>
+                                    @else
+                                        <x-ui.badge class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
+                                            <i data-lucide="circle-x" class="h-3 w-3 mr-1"></i>
+                                            Dibatalkan
+                                        </x-ui.badge>
+                                    @endif
                                 @endif
                             </div>
                         </div>

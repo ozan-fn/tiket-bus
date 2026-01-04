@@ -59,8 +59,8 @@
                             <option value="">Semua Status</option>
                             <option value="dipesan" {{ request('status') == 'dipesan' ? 'selected' : '' }}>Dipesan</option>
                             <option value="dibayar" {{ request('status') == 'dibayar' ? 'selected' : '' }}>Dibayar</option>
-                            <option value="digunakan" {{ request('status') == 'digunakan' ? 'selected' : '' }}>Digunakan</option>
-                            <option value="dibatalkan" {{ request('status') == 'dibatalkan' ? 'selected' : '' }}>Dibatalkan</option>
+                            <option value="selesai" {{ request('status') == 'selesai' ? 'selected' : '' }}>Selesai</option>
+                            <option value="batal" {{ request('status') == 'batal' ? 'selected' : '' }}>Batal</option>
                         </select>
                     </div>
 
@@ -164,8 +164,8 @@
                                                 $statusConfig = [
                                                     'dipesan' => ['class' => 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400', 'label' => 'Dipesan'],
                                                     'dibayar' => ['class' => 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400', 'label' => 'Dibayar'],
-                                                    'digunakan' => ['class' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', 'label' => 'Digunakan'],
-                                                    'dibatalkan' => ['class' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'label' => 'Dibatalkan']
+                                                    'selesai' => ['class' => 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400', 'label' => 'Selesai'],
+                                                    'batal' => ['class' => 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400', 'label' => 'Batal']
                                                 ];
                                                 $status = $statusConfig[$tiket->status] ?? ['class' => 'bg-gray-100 text-gray-700', 'label' => ucfirst($tiket->status)];
                                             @endphp

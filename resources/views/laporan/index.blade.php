@@ -183,7 +183,12 @@
                         @foreach($tiketPerStatus as $status => $total)
                             @php
                                 $percent = $totalTiket > 0 ? ($total / $totalTiket) * 100 : 0;
-                                $color = ['Dipesan' => 'bg-yellow-400', 'Dibayar' => 'bg-emerald-500', 'Digunakan' => 'bg-blue-500', 'Dibatalkan' => 'bg-red-500'][$status] ?? 'bg-slate-400';
+                                $color = [
+                                    'Dipesan' => 'bg-yellow-400',
+                                    'Dibayar' => 'bg-emerald-500',
+                                    'Selesai' => 'bg-blue-500',
+                                    'Batal' => 'bg-red-500'
+                                ][$status] ?? 'bg-slate-400';
                             @endphp
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2">

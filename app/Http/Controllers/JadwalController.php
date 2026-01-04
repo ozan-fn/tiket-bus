@@ -17,11 +17,7 @@ class JadwalController extends Controller
     {
         // Update status jadwal expired jadi tidak_aktif
         Jadwal::where("status", "aktif")
-            ->where(function ($q) {
-                $q->whereDate("tanggal_berangkat", "<", now()->toDateString())->orWhere(function ($q2) {
-                    $q2->whereDate("tanggal_berangkat", now()->toDateString())->whereTime("jam_berangkat", "<=", now()->toTimeString());
-                });
-            })
+            ->expired()
             ->update(["status" => "tidak_aktif"]);
 
         $search = $request->input("search");
@@ -94,7 +90,7 @@ class JadwalController extends Controller
             "rute_id" => "required|exists:rute,id",
             "tanggal_berangkat" => "required|date_format:Y-m-d",
             "jam_berangkat" => "required|date_format:H:i",
-            "status" => "required|in:aktif,tidak_aktif",
+            "status" => "required|in:aktif,selesai,dibatalkan",
             "is_recurring" => "nullable|boolean",
             "recurring_type" => "nullable|in:daily,weekly",
             "recurring_count" => "nullable|integer|min:1|max:90",
@@ -210,7 +206,7 @@ class JadwalController extends Controller
             "rute_id" => "required|exists:rute,id",
             "tanggal_berangkat" => "required|date",
             "jam_berangkat" => "required|date_format:H:i",
-            "status" => "required|in:aktif,tidak_aktif",
+            "status" => "required|in:aktif,selesai,dibatalkan",
             "harga" => "nullable|array",
             "harga.*" => "nullable|numeric|min:0",
         ]);

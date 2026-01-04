@@ -268,6 +268,8 @@
             ]];
         })) !!};
         
+        console.log('Seats Data:', seatsData);
+
         const bookedIds = {{ json_encode($bookedSeatIds) }};
 
         function sortSeats(kursis) {
@@ -277,14 +279,23 @@
         function updateSeatGrid(element) {
             const jkbId = element.value;
             const data = seatsData[jkbId];
+            console.log('Selected JKB ID:', jkbId);
+            console.log('Selected Data:', data);
+            
             const grid = document.getElementById('seat-grid');
             
+            if (!data) {
+                console.error('No data found for JKB ID:', jkbId);
+                return;
+            }
+
             // Update summary class & price
             document.getElementById('summary-class').textContent = data.class;
             document.getElementById('summary-price').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(data.harga);
 
             // Sort seats
             const sortedKursis = sortSeats(data.kursis);
+            console.log('Sorted Kursis:', sortedKursis);
 
             // Render seat grid
             let html = '<div class="max-w-xs mx-auto space-y-4">';
@@ -299,33 +310,40 @@
                 </div>
             `;
 
-            for (let i = 0; i < sortedKursis.length; i += 4) {
-                const row = sortedKursis.slice(i, i + 4);
-                html += '<div class="flex justify-between gap-8">';
-                
-                // Left side (2 seats)
-                html += '<div class="flex gap-2">';
-                [row[0], row[1]].forEach(k => {
-                    if (!k) return;
-                    html += renderSeat(k);
-                });
-                html += '</div>';
-                
-                // Right side (2 seats)
-                html += '<div class="flex gap-2">';
-                [row[2], row[3]].forEach(k => {
-                    if (!k) return;
-                    html += renderSeat(k);
-                });
-                html += '</div>';
-                
-                html += '</div>';
+            if (sortedKursis.length === 0) {
+                html += '<p class="text-center text-muted-foreground py-4">Tidak ada kursi tersedia untuk kelas ini.</p>';
+            } else {
+                for (let i = 0; i < sortedKursis.length; i += 4) {
+                    const row = sortedKursis.slice(i, i + 4);
+                    html += '<div class="flex justify-between gap-8">';
+                    
+                    // Left side (2 seats)
+                    html += '<div class="flex gap-2">';
+                    [row[0], row[1]].forEach(k => {
+                        if (!k) return;
+                        html += renderSeat(k);
+                    });
+                    html += '</div>';
+                    
+                    // Right side (2 seats)
+                    html += '<div class="flex gap-2">';
+                    [row[2], row[3]].forEach(k => {
+                        if (!k) return;
+                        html += renderSeat(k);
+                    });
+                    html += '</div>';
+                    
+                    html += '</div>';
+                }
             }
             html += '</div>';
             
             grid.innerHTML = html;
             grid.classList.remove('p-8', 'border-2', 'border-dashed', 'text-center');
-            lucide.createIcons();
+            
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
             
             // Reset selection
             document.getElementById('summary-seat').textContent = '-'; 
@@ -354,6 +372,7 @@
         }
 
         function updateSeatInfo(nomor) {
+            console.log('Selected Seat Number:', nomor);
             document.getElementById('summary-seat').textContent = nomor;
             document.getElementById('selected-seat-name').textContent = nomor;
             document.getElementById('selected-seat-info').classList.remove('hidden');
@@ -378,36 +397,4 @@
         });
     </script>
     @endpush
-@endsection
-            const oldSeatId = {{ json_encode(old('kursi_id')) }};
-            if(oldSeatId) {
-                const oldInput = document.querySelector(`input[name="kursi_id"][value="${oldSeatId}"]`);
-                if(oldInput) {
-                    oldInput.checked = true;
-                    // Trigger change manually or update info directly
-                     // Find seat number for old id
-                     const seat = sortedKursis.find(s => s.id == oldSeatId);
-                     if(seat) updateSeatInfo(seat.nomor);
-                     document.getElementById('btn-submit').disabled = false;
-                }
-            }
-        }
-
-        function updateSeatInfo(seatNo) {
-            document.getElementById('summary-seat').textContent = seatNo;
-            document.getElementById('btn-submit').disabled = false;
-        }
-
-        // Auto-load if class already selected
-        const checked = document.querySelector('input[name="jadwal_kelas_bus_id"]:checked');
-        if (checked) updateSeatGrid(checked);
-
-        // Event delegation for dynamically added inputs
-        document.getElementById('seat-grid').addEventListener('change', function(e) {
-             if (e.target && e.target.name === 'kursi_id') {
-                 // Logic handled in updateSeatInfo inline call, but we ensure button state here too if needed
-                 document.getElementById('btn-submit').disabled = false;
-             }
-        });
-    </script>
 @endsection

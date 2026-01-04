@@ -21,8 +21,8 @@ class LaporanController extends Controller
 
         // Statistik Umum
         $totalTiket = Tiket::count();
-        $totalPendapatan = Tiket::whereIn("status", ["dibayar", "digunakan"])->sum("harga");
-        $totalPenumpang = Tiket::whereIn("status", ["dibayar", "digunakan"])
+        $totalPendapatan = Tiket::whereIn("status", ["dibayar", "selesai"])->sum("harga");
+        $totalPenumpang = Tiket::whereIn("status", ["dibayar", "selesai"])
             ->distinct("user_id")
             ->count("user_id");
         $totalBus = Bus::count();
@@ -37,7 +37,7 @@ class LaporanController extends Controller
 
         // Pendapatan per Bulan (Line Chart) - 6 bulan terakhir
         $pendapatanPerBulan = Tiket::select(DB::raw('DATE_FORMAT(waktu_pesan, "%Y-%m") as bulan'), DB::raw("SUM(harga) as total"))
-            ->whereIn("status", ["dibayar", "digunakan"])
+            ->whereIn("status", ["dibayar", "selesai"])
             ->where("waktu_pesan", ">=", now()->subMonths(6))
             ->groupBy("bulan")
             ->orderBy("bulan")
@@ -49,7 +49,7 @@ class LaporanController extends Controller
         // Tiket Terjual per Hari (Bar Chart) - periode dipilih
         $tiketPerHari = Tiket::select(DB::raw("DATE(waktu_pesan) as tanggal"), DB::raw("COUNT(*) as total"))
             ->where("waktu_pesan", ">=", now()->subDays($periode))
-            ->whereIn("status", ["dibayar", "digunakan"])
+            ->whereIn("status", ["dibayar", "selesai"])
             ->groupBy("tanggal")
             ->orderBy("tanggal")
             ->get()
@@ -64,7 +64,7 @@ class LaporanController extends Controller
             ->join("rute", "jadwal.rute_id", "=", "rute.id")
             ->join("terminal as asal", "rute.asal_terminal_id", "=", "asal.id")
             ->join("terminal as tujuan", "rute.tujuan_terminal_id", "=", "tujuan.id")
-            ->whereIn("tiket.status", ["dibayar", "digunakan"])
+            ->whereIn("tiket.status", ["dibayar", "selesai"])
             ->where("tiket.waktu_pesan", ">=", now()->subDays($periode))
             ->groupBy("jadwal_kelas_bus.jadwal_id", "asal.nama_terminal", "tujuan.nama_terminal")
             ->orderByDesc("total_tiket")
@@ -76,7 +76,7 @@ class LaporanController extends Controller
             ->join("jadwal_kelas_bus", "tiket.jadwal_kelas_bus_id", "=", "jadwal_kelas_bus.id")
             ->join("jadwal", "jadwal_kelas_bus.jadwal_id", "=", "jadwal.id")
             ->join("bus", "jadwal.bus_id", "=", "bus.id")
-            ->whereIn("tiket.status", ["dibayar", "digunakan"])
+            ->whereIn("tiket.status", ["dibayar", "selesai"])
             ->where("tiket.waktu_pesan", ">=", now()->subDays($periode))
             ->groupBy("bus.id", "bus.nama")
             ->orderByDesc("total_tiket")

@@ -72,11 +72,26 @@ class Jadwal extends Model
 
     public function scopeActive($query)
     {
-        return $query->whereIn("status", ["aktif", "tersedia"])->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) >= NOW()");
+        return $query->where("status", "aktif")
+            ->where(function ($q) {
+                $now = now();
+                $q->where("tanggal_berangkat", ">", $now->toDateString())
+                    ->orWhere(function ($q2) use ($now) {
+                        $q2->where("tanggal_berangkat", $now->toDateString())
+                            ->where("jam_berangkat", ">=", $now->toTimeString());
+                    });
+            });
     }
 
     public function scopeExpired($query)
     {
-        return $query->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) < NOW()");
+        return $query->where(function ($q) {
+            $now = now();
+            $q->where("tanggal_berangkat", "<", $now->toDateString())
+                ->orWhere(function ($q2) use ($now) {
+                    $q2->whereDate("tanggal_berangkat", $now->toDateString())
+                        ->whereTime("jam_berangkat", "<", $now->toTimeString());
+                });
+        });
     }
 }
