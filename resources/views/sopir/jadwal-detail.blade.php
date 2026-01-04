@@ -3,7 +3,7 @@
         <x-ui.breadcrumb.breadcrumb>
             <x-ui.breadcrumb.list class="text-xs">
                 <x-ui.breadcrumb.item>
-                    <x-ui.breadcrumb.link href="{{ route('sopir.dashboard') }}">
+                    <x-ui.breadcrumb.link href="{{ route('dashboard') }}">
                         Dashboard
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>

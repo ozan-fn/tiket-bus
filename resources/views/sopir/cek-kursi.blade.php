@@ -212,7 +212,7 @@
                                 <div>
                                     <h4 class="text-sm font-semibold text-foreground mb-3">Layout Kursi</h4>
                                     <div class="grid grid-cols-6 gap-2">
-                                        <template x-for="kursi in kursiData.kursi" :key="kursi.id">
+                                        <template x-for="kursi in (kursiData?.kursi || [])" :key="kursi.id">
                                             <div
                                                 :class="[
                                                     'aspect-square flex items-center justify-center rounded-lg font-bold text-xs transition-all cursor-default',

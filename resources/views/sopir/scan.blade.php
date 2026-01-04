@@ -95,13 +95,13 @@
                         </div>
 
                         <div x-show="result !== null" x-transition
-                            :class="result.success ? 'border border-green-200 bg-green-50 dark:bg-green-900/10 rounded-xl p-5' : 'border border-red-200 bg-red-50 dark:bg-red-900/10 rounded-xl p-5'">
+                            :class="result?.success ? 'border border-green-200 bg-green-50 dark:bg-green-900/10 rounded-xl p-5' : 'border border-red-200 bg-red-50 dark:bg-red-900/10 rounded-xl p-5'">
 
                             <div class="space-y-4">
                                 <div class="flex items-center gap-3">
-                                    <div :class="result.success ? 'text-green-600' : 'text-red-600'">
-                                        <i data-lucide="check-circle" x-show="result.success" class="w-6 h-6"></i>
-                                        <i data-lucide="x-circle" x-show="!result.success" class="w-6 h-6"></i>
+                                    <div :class="result?.success ? 'text-green-600' : 'text-red-600'">
+                                        <i data-lucide="check-circle" x-show="result?.success" class="w-6 h-6"></i>
+                                        <i data-lucide="x-circle" x-show="!result?.success" class="w-6 h-6"></i>
                                     </div>
                                     <h3 class="font-bold text-foreground" x-text="result?.message"></h3>
                                 </div>

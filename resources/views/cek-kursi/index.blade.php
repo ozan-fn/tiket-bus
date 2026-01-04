@@ -253,13 +253,13 @@
                             </div>
 
                             <!-- Kursi Grid - 2 Kolom Layout -->
-                            <div>
+                            <div x-show="kursiData && kursiData.kursi && kursiData.kursi.length > 0">
                                 <p class="text-sm font-semibold text-foreground mb-3">Layout Kursi (2 Kolom):</p>
                                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                     <!-- Kolom Kiri -->
                                     <div class="space-y-2 max-h-96 overflow-y-auto p-4 bg-accent/50 rounded-lg border border-border">
                                         <p class="text-xs font-medium text-muted-foreground mb-3 sticky top-0 bg-accent/50">Sisi Kiri</p>
-                                        <template x-for="(kursi, index) in groupKursiLeft(kursiData?.kursi)" :key="index">
+                                        <template x-for="(kursi, index) in groupKursiLeft(kursiData?.kursi || [])" :key="index">
                                             <div class="flex items-center justify-center gap-3">
                                                 <template x-for="k in kursi" :key="k.id">
                                                     <div :class="[
@@ -279,7 +279,7 @@
                                     <!-- Kolom Kanan -->
                                     <div class="space-y-2 max-h-96 overflow-y-auto p-4 bg-accent/50 rounded-lg border border-border">
                                         <p class="text-xs font-medium text-muted-foreground mb-3 sticky top-0 bg-accent/50">Sisi Kanan</p>
-                                        <template x-for="(kursi, index) in groupKursiRight(kursiData?.kursi)" :key="index">
+                                        <template x-for="(kursi, index) in groupKursiRight(kursiData?.kursi || [])" :key="index">
                                             <div class="flex items-center justify-center gap-3">
                                                 <template x-for="k in kursi" :key="k.id">
                                                     <div :class="[

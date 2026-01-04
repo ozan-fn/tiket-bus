@@ -93,14 +93,18 @@
                                 </div>
 
                                 <div class="flex gap-3">
-                                    <x-ui.button variant="default" class="flex-1">
-                                        <i data-lucide="eye" class="w-4 h-4 mr-2"></i>
+                                    <a 
+                                        href="{{ route('sopir.jadwal.show', $jadwalAktif->id) }}"
+                                        class="flex-1 flex items-center justify-center gap-2 h-9 px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90 shadow-xs font-medium transition-all">
+                                        <i data-lucide="eye" class="w-4 h-4"></i>
                                         Lihat Detail
-                                    </x-ui.button>
-                                    <x-ui.button variant="secondary" class="flex-1">
-                                        <i data-lucide="barcode" class="w-4 h-4 mr-2"></i>
+                                    </a>
+                                    <a 
+                                        href="{{ route('sopir.scan.index') }}"
+                                        class="flex-1 flex items-center justify-center gap-2 h-9 px-4 py-2 rounded-md bg-secondary text-secondary-foreground hover:bg-secondary/80 shadow-xs font-medium transition-all">
+                                        <i data-lucide="barcode" class="w-4 h-4"></i>
                                         Scan Tiket
-                                    </x-ui.button>
+                                    </a>
                                 </div>
                             @else
                                 <x-ui.alert variant="default">
