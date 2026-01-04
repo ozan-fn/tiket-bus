@@ -42,31 +42,33 @@
             <!-- Sidebar -->
             <aside id="sidebar" class="fixed lg:static inset-y-0 left-0 z-50 w-64 bg-card border-r border-border/50 dark:border-border flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-in-out shadow-lg lg:shadow-none">
                 <!-- Logo -->
-                <div class="h-20 flex items-center px-6 border-b border-border/50 dark:border-border/30 shrink-0">
+                <div class="h-16 flex items-center px-6 border-b border-border/50 dark:border-border/30 shrink-0">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-3 group">
-                        <div class="w-10 h-10 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors">
-                            <img class="w-6" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
+                        <div class="w-9 h-9 rounded-lg bg-primary/10 dark:bg-primary/20 flex items-center justify-center group-hover:bg-primary/20 dark:group-hover:bg-primary/30 transition-colors">
+                            <img class="w-5" src="{{ asset('assets/images/logo.png') }}" alt="Logo">
                         </div>
-                        <span class="text-lg font-bold text-foreground hidden sm:inline">Tiket Bus</span>
+                        <span class="text-base font-bold text-foreground tracking-tight">Tiket Bus</span>
                     </a>
                     <!-- Close button for mobile -->
-                    <button onclick="toggleSidebar()" class="lg:hidden ml-auto p-2 rounded-lg hover:bg-accent transition-colors">
+                    <button onclick="toggleSidebar()" class="lg:hidden ml-auto p-2 rounded-lg hover:bg-accent transition-colors text-muted-foreground">
                         <i data-lucide="x" class="w-5 h-5"></i>
                     </button>
                 </div>
 
                 <!-- Navigation -->
-                <nav id="sidebar-nav" class="flex-1 overflow-y-auto py-6 px-3 space-y-0.5">
+                <nav id="sidebar-nav" class="flex-1 overflow-y-auto py-4 px-4 space-y-1">
                     @php
-                        $userRole = auth()->user()?->roles->first()?->name ?? 'user';
+                        $userRole = auth()->user()?->roles->first()?->name ?? 'passenger';
 
                         $menus = [
-                            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'layout-dashboard', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor', 'driver', 'user']],
-                            ['label' => 'Pemesanan', 'type' => 'section', 'roles' => ['user']],
-                            ['label' => 'Pesan Tiket', 'route' => 'pemesanan.index', 'icon' => 'ticket', 'type' => 'menu', 'roles' => ['user']],
-                            ['label' => 'Tiket Saya', 'route' => 'tiket.index', 'icon' => 'clipboard-list', 'type' => 'menu', 'roles' => ['user']],
-                            ['label' => 'Profil', 'type' => 'section', 'roles' => ['user']],
-                            ['label' => 'Data Profil', 'route' => 'profile.edit', 'icon' => 'user', 'type' => 'menu', 'roles' => ['user']],
+                            // ['label' => 'Beranda', 'route' => 'home', 'icon' => 'home', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor', 'driver', 'passenger']],
+                            ['label' => 'Dashboard', 'route' => 'dashboard', 'icon' => 'layout-dashboard', 'type' => 'menu', 'roles' => ['owner', 'agent', 'conductor', 'driver', 'passenger']],
+                            ['label' => 'Pemesanan', 'type' => 'section', 'roles' => ['passenger']],
+                            ['label' => 'Pesan Tiket', 'route' => 'pemesanan.index', 'icon' => 'ticket', 'type' => 'menu', 'roles' => ['passenger']],
+                            ['label' => 'Tiket Saya', 'route' => 'tiket.index', 'icon' => 'clipboard-list', 'type' => 'menu', 'roles' => ['passenger']],
+                            ['label' => 'Profil', 'type' => 'section', 'roles' => ['passenger']],
+                            ['label' => 'Data Profil', 'route' => 'profile.edit', 'icon' => 'user', 'type' => 'menu', 'roles' => ['passenger']],
+                            // ['label' => 'Bantuan', 'route' => 'home', 'icon' => 'help-circle', 'type' => 'menu', 'roles' => ['passenger']],
                             ['label' => 'Data Setup', 'type' => 'section', 'roles' => ['owner']],
                             ['label' => 'Kelas Bus', 'route' => 'admin/kelas-bus.index', 'icon' => 'layers', 'type' => 'menu', 'roles' => ['owner']],
                             ['label' => 'Fasilitas', 'route' => 'admin/fasilitas.index', 'icon' => 'sparkles', 'type' => 'menu', 'roles' => ['owner']],
@@ -103,8 +105,8 @@
                     @foreach($menus as $menu)
                             @if(in_array($userRole, $menu['roles']))
                                     @if($menu['type'] === 'section')
-                                    <div class="pt-6 pb-2 px-2 first:pt-0">
-                                        <h3 class="text-xs font-bold text-muted-foreground/70 dark:text-muted-foreground/60 uppercase tracking-widest">{{ $menu['label'] }}</h3>
+                                    <div class="pt-4 pb-1 px-2 first:pt-0">
+                                        <h3 class="text-[10px] font-semibold text-muted-foreground/50 uppercase tracking-wider">{{ $menu['label'] }}</h3>
                                     </div>
                                 @else
                                     @php
@@ -115,10 +117,6 @@
                                         if (!$isActive && \Illuminate\Support\Str::endsWith($menu['route'], '.index')) {
                                             $baseRoute = \Illuminate\Support\Str::replace('.index', '', $menu['route']);
 
-                                            // PERBAIKAN DI SINI:
-                                            // Alih-alih pakai wildcard '.*' yang mengambil semuanya,
-                                            // Kita hanya cek spesifik ke action CRUD standar.
-                                            // Ini mencegah 'admin/laporan.tiket' dianggap anak dari 'admin/laporan.index'
                                             $isActive = request()->routeIs([
                                                 $baseRoute . '.create',
                                                 $baseRoute . '.store',
@@ -126,26 +124,18 @@
                                                 $baseRoute . '.update',
                                                 $baseRoute . '.show',
                                                 $baseRoute . '.destroy',
-                                                // Tambahkan action lain jika route resource punya method custom yang memang anaknya halaman ini
                                             ]);
                                         }
 
-                                        // 3. Fallback Wildcard (Opsional, hati-hati pakai ini jika struktur nama route mirip)
-                                        // Kita tambahkan pengecekan agar tidak menimpa logic di atas
                                         if (!$isActive && !str_contains($menu['route'], '.index')) {
                                             $isActive = request()->routeIs($menu['route'] . '*');
                                         }
                                     @endphp
 
                                     <a href="{{ route($menu['route']) }}"
-                                       class="group relative flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-lg transition-all duration-200
-                                       {{ $isActive ? 'bg-primary text-primary-foreground shadow-md dark:shadow-primary/20' : 'text-muted-foreground hover:text-foreground hover:bg-accent/60 dark:hover:bg-accent/40' }}">
-
-                                        @if($isActive)
-                                            <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-7 bg-primary-foreground rounded-r-full"></span>
-                                        @endif
-
-                                        <i data-lucide="{{ $menu['icon'] }}" class="w-5 h-5 shrink-0 {{ $isActive ? '' : 'group-hover:scale-110' }} transition-transform"></i>
+                                       class="group flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md transition-all duration-200
+                                       {{ $isActive ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground hover:bg-accent' }}">
+                                        <i data-lucide="{{ $menu['icon'] }}" class="w-4 h-4 shrink-0 {{ $isActive ? '' : 'text-muted-foreground/70 group-hover:text-foreground' }}"></i>
                                         <span class="truncate">{{ $menu['label'] }}</span>
                                     </a>
                                 @endif
@@ -154,20 +144,18 @@
                 </nav>
 
                 <!-- User Menu -->
-                <div class="border-t border-border/50 dark:border-border/30 p-4 shrink-0 bg-muted/30 dark:bg-background/50 rounded-lg m-3 mt-auto">
+                <div class="mt-auto border-t border-border/50 p-4">
                     <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" class="w-full flex items-center gap-3 p-2 rounded-lg hover:bg-accent/50 dark:hover:bg-accent/30 transition-colors group">
-                            <x-ui.avatar class="h-9 w-9">
-                                <x-ui.avatar.fallback class="bg-primary text-primary-foreground font-bold text-sm">
-                                    @if(auth()->check())
-                                        {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
-                                    @else
-                                        GU
-                                    @endif
-                                </x-ui.avatar.fallback>
-                            </x-ui.avatar>
+                        <button @click="open = !open" class="w-full flex items-center gap-3 p-2 rounded-md hover:bg-accent transition-colors group">
+                            <div class="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xs shrink-0">
+                                @if(auth()->check())
+                                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                                @else
+                                    GU
+                                @endif
+                            </div>
                             <div class="flex-1 min-w-0 text-left">
-                                <p class="text-sm font-semibold text-foreground truncate">
+                                <p class="text-sm font-medium text-foreground truncate">
                                     @if(auth()->check())
                                         {{ auth()->user()->name }}
                                     @else
@@ -182,29 +170,34 @@
                                     @endif
                                 </p>
                             </div>
-                            <i data-lucide="chevron-up" class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" x-bind:class="open ? '-rotate-180' : ''" ></i>
+                            <i data-lucide="chevrons-up-down" class="w-4 h-4 text-muted-foreground shrink-0" ></i>
                         </button>
 
                         <div
                             x-show="open"
-                            x-transition
+                            x-transition:enter="transition ease-out duration-100"
+                            x-transition:enter-start="transform opacity-0 scale-95"
+                            x-transition:enter-end="transform opacity-100 scale-100"
+                            x-transition:leave="transition ease-in duration-75"
+                            x-transition:leave-start="transform opacity-100 scale-100"
+                            x-transition:leave-end="transform opacity-0 scale-95"
                             @click.outside="open = false"
-                            class="absolute bottom-full left-0 right-0 mb-2 z-50 rounded-lg border border-border/50 bg-popover text-popover-foreground shadow-xl p-1"
+                            class="absolute bottom-full left-0 right-0 mb-2 z-50 rounded-md border border-border bg-popover text-popover-foreground shadow-md p-1"
                         >
-                            <div class="px-3 py-2 text-xs font-bold text-muted-foreground uppercase tracking-wider">Akun Saya</div>
-                            <div class="h-px bg-border/50 my-1"></div>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors">
+                            <div class="px-2 py-1.5 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Akun Saya</div>
+                            <div class="h-px bg-border my-1"></div>
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors">
                                 <i data-lucide="user" class="w-4 h-4" ></i>
                                 Profile
                             </a>
-                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-accent transition-colors">
+                            <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors">
                                 <i data-lucide="settings" class="w-4 h-4" ></i>
                                 Pengaturan
                             </a>
-                            <div class="h-px bg-border/50 my-1"></div>
+                            <div class="h-px bg-border my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
-                                <button type="submit" class="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-destructive/10 transition-colors text-destructive font-medium">
+                                <button type="submit" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-destructive/10 transition-colors text-destructive font-medium">
                                     <i data-lucide="log-out" class="w-4 h-4" ></i>
                                     Logout
                                 </button>

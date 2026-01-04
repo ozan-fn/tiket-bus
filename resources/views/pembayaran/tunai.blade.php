@@ -1,168 +1,138 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
+    @push('header')
+        <div class="flex items-center gap-2">
+            <a href="{{ route('tiket.index') }}" class="text-muted-foreground hover:text-foreground">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </a>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Pembayaran Tunai</h2>
+        </div>
+    @endpush
 
-@section('title', 'Pembayaran Tunai')
-
-        <div class="max-w-2xl mx-auto">
-            <div class="mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">Pembayaran Tunai di Terminal</h1>
-                <p class="text-gray-600 mt-2">Tiket Anda siap untuk dibayar saat naik bus</p>
-            </div>
-
-            <!-- Success Alert -->
-            <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex gap-3">
-                <div class="text-green-600 text-2xl">✓</div>
-                <div>
-                    <p class="font-semibold text-green-900">Tiket Anda berhasil dipesan!</p>
-                    <p class="text-sm text-green-800 mt-1">Silakan bayar tunai saat naik di terminal keberangkatan</p>
+    <div class="p-6 space-y-6">
+        <div class="max-w-3xl mx-auto space-y-6">
+            <div class="text-center space-y-2">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 mb-2">
+                    <i data-lucide="check-circle-2" class="w-10 h-10"></i>
                 </div>
+                <h1 class="text-3xl font-bold text-foreground">Pemesanan Berhasil!</h1>
+                <p class="text-muted-foreground">Tiket Anda telah dipesan. Silakan lakukan pembayaran tunai di terminal.</p>
             </div>
 
-            <!-- Tiket Info Card -->
-            <x-ui.card class="mb-6">
-                <x-ui.card.header>
-                    <h2 class="text-xl font-bold">Informasi Tiket</h2>
-                </x-ui.card.header>
-                <x-ui.card.content>
-                    <div class="grid grid-cols-2 gap-4 mb-4">
-                        <div>
-                            <p class="text-gray-600 text-sm">Kode Tiket</p>
-                            <p class="font-semibold text-lg">{{ $pembayaran->tiket->kode_tiket }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Status Pembayaran</p>
-                            <span
-                                class="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-semibold">Menunggu
-                                Pembayaran Tunai</span>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Penumpang</p>
-                            <p class="font-semibold">{{ $pembayaran->tiket->nama_penumpang }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Rute</p>
-                            <p class="font-semibold">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asal }} →
-                                {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->tujuan }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Tanggal Berangkat</p>
-                            <p class="font-semibold">
-                                {{ \Carbon\Carbon::parse($pembayaran->tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Jam Berangkat</p>
-                            <p class="font-semibold">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->jam_berangkat }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Kursi</p>
-                            <p class="font-semibold text-blue-600">{{ $pembayaran->tiket->kursi->nomor }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm">Nominal Pembayaran</p>
-                            <p class="font-bold text-lg text-green-600">Rp
-                                {{ number_format($pembayaran->nominal, 0, ',', '.') }}</p>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
-
-            <!-- Terminal & Payment Info -->
-            <x-ui.card class="mb-6">
-                <x-ui.card.header>
-                    <h2 class="text-xl font-bold">Lokasi Pembayaran</h2>
-                </x-ui.card.header>
-                <x-ui.card.content>
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Terminal Keberangkatan</p>
-                            <p class="font-semibold text-lg">
-                                {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? 'Terminal' }}
-                            </p>
-                            <p class="text-sm text-gray-600 mt-1">
-                                {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->alamat ?? '-' }}</p>
-                        </div>
-                        <div class="border-t pt-4">
-                            <p class="text-gray-600 text-sm mb-2">Cara Pembayaran</p>
-                            <ul class="space-y-2 text-sm">
-                                <li class="flex items-start gap-2">
-                                    <span class="text-blue-600 font-bold">1.</span>
-                                    <span>Datang ke terminal keberangkatan sebelum jadwal keberangkatan</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-blue-600 font-bold">2.</span>
-                                    <span>Tunjukkan kode tiket <strong>{{ $pembayaran->tiket->kode_tiket }}</strong> ke
-                                        petugas</span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-blue-600 font-bold">3.</span>
-                                    <span>Lakukan pembayaran tunai sebesar <strong>Rp
-                                            {{ number_format($pembayaran->nominal, 0, ',', '.') }}</strong></span>
-                                </li>
-                                <li class="flex items-start gap-2">
-                                    <span class="text-blue-600 font-bold">4.</span>
-                                    <span>Terima kuitansi dan boarding pass dari petugas</span>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
-
-            <!-- Important Notes -->
-            <x-ui.card class="mb-6 border-amber-200 bg-amber-50">
-                <x-ui.card.content class="pt-6">
-                    <div class="flex gap-3">
-                        <div class="text-amber-600 text-2xl">⚠️</div>
-                        <div>
-                            <p class="font-semibold text-amber-900 mb-2">Penting:</p>
-                            <ul class="text-sm text-amber-800 space-y-1">
-                                <li>• Tiket akan dianggap pembatalan otomatis jika tidak dibayar dalam 24 jam</li>
-                                <li>• Harap datang ke terminal minimal 30 menit sebelum waktu keberangkatan</li>
-                                <li>• Siapkan uang tunai sesuai dengan nominal tiket</li>
-                                <li>• Tunjukkan kode tiket saat check-in di terminal</li>
-                                <li>• Jika ada kendala, hubungi customer service kami</li>
-                            </ul>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
-
-            <!-- Contact Info -->
-            <x-ui.card class="mb-6">
-                <x-ui.card.header>
-                    <h2 class="text-xl font-bold">Hubungi Kami</h2>
-                </x-ui.card.header>
-                <x-ui.card.content>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">📞</div>
-                            <div>
-                                <p class="text-sm text-gray-600">Nomor Telepon</p>
-                                <p class="font-semibold">{{ env('CUSTOMER_SERVICE_PHONE', '1234567890') }}</p>
+            <div class="grid gap-6 md:grid-cols-5">
+                <div class="md:col-span-3 space-y-6">
+                    <!-- Terminal Info -->
+                    <x-ui.card>
+                        <x-ui.card.header>
+                            <x-ui.card.title class="flex items-center gap-2">
+                                <i data-lucide="map-pin" class="w-5 h-5 text-primary"></i>
+                                Lokasi Pembayaran
+                            </x-ui.card.title>
+                            <x-ui.card.description>Silakan datang ke terminal keberangkatan</x-ui.card.description>
+                        </x-ui.card.header>
+                        <x-ui.card.content class="space-y-6">
+                            <div class="p-4 bg-muted/50 rounded-xl border border-border">
+                                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">Terminal Keberangkatan</p>
+                                <p class="text-xl font-bold text-foreground">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? 'Terminal' }}</p>
+                                <p class="text-sm text-muted-foreground mt-1">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->alamat ?? '-' }}</p>
                             </div>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <div class="text-2xl">📧</div>
-                            <div>
-                                <p class="text-sm text-gray-600">Email</p>
-                                <p class="font-semibold">{{ env('CUSTOMER_SERVICE_EMAIL', 'support@tiketbus.com') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
 
-            <!-- Action Buttons -->
-            <div class="flex gap-3 justify-center">
-                <a href="{{ route('tiket.index') }}"
-                    class="px-6 py-2 border border-gray-300 text-gray-700 rounded-lg font-semibold hover:bg-gray-50 transition">
-                    Lihat Tiket Saya
-                </a>
-                <a href="{{ route('dashboard') }}"
-                    class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
-                    Kembali ke Dashboard
-                </a>
+                            <div class="space-y-4">
+                                <p class="font-bold text-sm">Langkah Pembayaran:</p>
+                                <div class="space-y-3">
+                                    <div class="flex gap-3">
+                                        <div class="flex-none w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">1</div>
+                                        <p class="text-sm text-muted-foreground">Datang ke terminal keberangkatan minimal 30 menit sebelum jadwal.</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex-none w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">2</div>
+                                        <p class="text-sm text-muted-foreground">Tunjukkan kode tiket <span class="font-mono font-bold text-foreground">{{ $pembayaran->tiket->kode_tiket }}</span> kepada petugas loket.</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex-none w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">3</div>
+                                        <p class="text-sm text-muted-foreground">Lakukan pembayaran tunai sebesar <span class="font-bold text-foreground">Rp {{ number_format($pembayaran->nominal, 0, ',', '.') }}</span>.</p>
+                                    </div>
+                                    <div class="flex gap-3">
+                                        <div class="flex-none w-6 h-6 rounded-full bg-primary/10 text-primary flex items-center justify-center text-xs font-bold">4</div>
+                                        <p class="text-sm text-muted-foreground">Petugas akan memberikan tiket fisik atau memvalidasi tiket digital Anda.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </x-ui.card.content>
+                    </x-ui.card>
+
+                    <x-ui.card class="bg-blue-50 dark:bg-blue-950/20 border-blue-200 dark:border-blue-900">
+                        <x-ui.card.content class="p-6">
+                            <div class="flex gap-4">
+                                <div class="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg h-fit">
+                                    <i data-lucide="info" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
+                                </div>
+                                <div class="space-y-1">
+                                    <h4 class="font-bold text-blue-900 dark:text-blue-300 text-sm">Informasi Tambahan</h4>
+                                    <p class="text-xs text-blue-800 dark:text-blue-400/80 leading-relaxed">
+                                        Pemesanan ini akan dibatalkan otomatis jika Anda tidak melakukan pembayaran di terminal sebelum bus berangkat.
+                                    </p>
+                                </div>
+                            </div>
+                        </x-ui.card.content>
+                    </x-ui.card>
+                </div>
+
+                <div class="md:col-span-2 space-y-6">
+                    <!-- Tiket Info -->
+                    <x-ui.card>
+                        <x-ui.card.header>
+                            <x-ui.card.title>Ringkasan Tiket</x-ui.card.title>
+                        </x-ui.card.header>
+                        <x-ui.card.content class="space-y-4">
+                            <div class="space-y-1">
+                                <p class="text-[10px] font-bold text-muted-foreground uppercase tracking-wider">Kode Tiket</p>
+                                <p class="font-mono font-bold text-lg">{{ $pembayaran->tiket->kode_tiket }}</p>
+                            </div>
+                            
+                            <div class="space-y-3 py-4 border-y border-border/50">
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-muted-foreground">Penumpang</span>
+                                    <span class="font-semibold">{{ $pembayaran->tiket->nama_penumpang }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-muted-foreground">Rute</span>
+                                    <span class="font-semibold text-right">{{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_kota }} → {{ $pembayaran->tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_kota }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-muted-foreground">Jadwal</span>
+                                    <span class="font-semibold">{{ \Carbon\Carbon::parse($pembayaran->tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }}</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-muted-foreground">Jam</span>
+                                    <span class="font-semibold">{{ \Carbon\Carbon::parse($pembayaran->tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') }} WIB</span>
+                                </div>
+                                <div class="flex justify-between text-sm">
+                                    <span class="text-muted-foreground">Kursi</span>
+                                    <x-ui.badge variant="outline" class="font-bold text-primary">{{ $pembayaran->tiket->kursi->nomor_kursi }}</x-ui.badge>
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <p class="text-xs text-muted-foreground font-bold uppercase tracking-wider mb-1">Total Bayar</p>
+                                <p class="text-3xl font-bold text-primary">Rp {{ number_format($pembayaran->nominal, 0, ',', '.') }}</p>
+                            </div>
+                        </x-ui.card.content>
+                        <x-ui.card.footer>
+                            <x-ui.button variant="outline" class="w-full gap-2" onclick="window.print()">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                Cetak Bukti Pesan
+                            </x-ui.button>
+                        </x-ui.card.footer>
+                    </x-ui.card>
+
+                    <x-ui.button class="w-full gap-2" as-child>
+                        <a href="{{ route('tiket.index') }}">
+                            <i data-lucide="ticket" class="w-4 h-4"></i>
+                            Lihat Tiket Saya
+                        </a>
+                    </x-ui.button>
+                </div>
             </div>
         </div>
     </div>

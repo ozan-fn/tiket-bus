@@ -9,7 +9,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/jadwal.index') }}">
@@ -17,7 +17,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -26,7 +26,7 @@
                 </x-ui.breadcrumb.item>
             </x-ui.breadcrumb.list>
         </x-ui.breadcrumb.breadcrumb>
-@endpush
+    @endpush
 
     <div class="p-4 sm:p-6">
         <div class="max-w-5xl mx-auto space-y-6">
@@ -36,61 +36,57 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div class="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <i data-lucide="calendar-clock" class="h-8 w-8 text-primary" ></i>
+                                <i data-lucide="calendar-clock" class="h-8 w-8 text-primary"></i>
                             </div>
                             <div>
                                 <x-ui.card.title class="text-2xl">Detail Jadwal</x-ui.card.title>
-                                <x-ui.card.description>{{ $jadwal->rute->asalTerminal->nama_kota ?? '-' }} → {{ $jadwal->rute->tujuanTerminal->nama_kota ?? '-' }}</x-ui.card.description>
+                                <x-ui.card.description>{{ $jadwal->rute->asalTerminal->nama_kota ?? '-' }} →
+                                    {{ $jadwal->rute->tujuanTerminal->nama_kota ?? '-' }}</x-ui.card.description>
                             </div>
                         </div>
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <a href="{{ route('admin/jadwal.edit', $jadwal) }}" class="flex-1 sm:flex-initial">
                                 <x-ui.button variant="outline" class="w-full">
-                                    <i data-lucide="pencil" class="w-4 h-4 mr-2" ></i>
+                                    <i data-lucide="pencil" class="w-4 h-4 mr-2"></i>
                                     Edit
                                 </x-ui.button>
                             </a>
 
                             <!-- Delete Dialog -->
                             <div x-data="{ open: false }">
-                                <x-ui.button @click="open = true" variant="outline" class="text-destructive hover:bg-destructive/10">
-                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
+                                <x-ui.button @click="open = true" variant="outline"
+                                    class="text-destructive hover:bg-destructive/10">
+                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
                                     Hapus
                                 </x-ui.button>
 
                                 <!-- Dialog Overlay & Content -->
                                 <template x-teleport="body">
-                                    <div x-show="open"
-                                         x-cloak
-                                         class="fixed inset-0 z-50 overflow-y-auto"
-                                         @keydown.escape.window="open = false">
+                                    <div x-show="open" x-cloak class="fixed inset-0 z-50 overflow-y-auto"
+                                        @keydown.escape.window="open = false">
                                         <!-- Overlay -->
-                                        <div x-show="open"
-                                             x-transition:enter="transition ease-out duration-200"
-                                             x-transition:enter-start="opacity-0"
-                                             x-transition:enter-end="opacity-100"
-                                             x-transition:leave="transition ease-in duration-150"
-                                             x-transition:leave-start="opacity-100"
-                                             x-transition:leave-end="opacity-0"
-                                             @click="open = false"
-                                             class="fixed inset-0 bg-black/50 backdrop-blur-sm">
+                                        <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                            x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                                            x-transition:leave="transition ease-in duration-150"
+                                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                                            @click="open = false" class="fixed inset-0 bg-black/50 backdrop-blur-sm">
                                         </div>
 
                                         <!-- Dialog Content -->
                                         <div class="flex min-h-full items-center justify-center p-4">
-                                            <div x-show="open"
-                                                 x-transition:enter="transition ease-out duration-200"
-                                                 x-transition:enter-start="opacity-0 scale-95"
-                                                 x-transition:enter-end="opacity-100 scale-100"
-                                                 x-transition:leave="transition ease-in duration-150"
-                                                 x-transition:leave-start="opacity-100 scale-100"
-                                                 x-transition:leave-end="opacity-0 scale-95"
-                                                 @click.stop
-                                                 class="relative w-full max-w-lg bg-card rounded-lg shadow-lg border border-border p-6">
+                                            <div x-show="open" x-transition:enter="transition ease-out duration-200"
+                                                x-transition:enter-start="opacity-0 scale-95"
+                                                x-transition:enter-end="opacity-100 scale-100"
+                                                x-transition:leave="transition ease-in duration-150"
+                                                x-transition:leave-start="opacity-100 scale-100"
+                                                x-transition:leave-end="opacity-0 scale-95" @click.stop
+                                                class="relative w-full max-w-lg bg-card rounded-lg shadow-lg border border-border p-6">
 
                                                 <div class="flex items-start gap-4">
-                                                    <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                        <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
+                                                    <div
+                                                        class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
+                                                        <i data-lucide="alert-triangle"
+                                                            class="h-6 w-6 text-destructive"></i>
                                                     </div>
                                                     <div class="flex-1">
                                                         <h3 class="text-lg font-semibold mb-2">Hapus Jadwal</h3>
@@ -100,14 +96,18 @@
                                                         </p>
 
                                                         <div class="flex flex-col-reverse sm:flex-row gap-2 justify-end">
-                                                            <x-ui.button type="button" variant="outline" @click="open = false">
+                                                            <x-ui.button type="button" variant="outline"
+                                                                @click="open = false">
                                                                 Batal
                                                             </x-ui.button>
-                                                            <form method="POST" action="{{ route('admin/jadwal.destroy', $jadwal) }}" class="inline">
+                                                            <form method="POST"
+                                                                action="{{ route('admin/jadwal.destroy', $jadwal) }}"
+                                                                class="inline">
                                                                 @csrf
                                                                 @method('DELETE')
-                                                                <x-ui.button type="submit" class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
+                                                                <x-ui.button type="submit"
+                                                                    class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                                                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2"></i>
                                                                     Ya, Hapus
                                                                 </x-ui.button>
                                                             </form>
@@ -122,7 +122,7 @@
 
                             <a href="{{ route('admin/jadwal.index') }}">
                                 <x-ui.button variant="outline">
-                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
                                     Kembali
                                 </x-ui.button>
                             </a>
@@ -134,7 +134,7 @@
                         <!-- ID Jadwal -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                                <i data-lucide="fingerprint" class="h-5 w-5 text-blue-600 dark:text-blue-400" ></i>
+                                <i data-lucide="fingerprint" class="h-5 w-5 text-blue-600 dark:text-blue-400"></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">ID Jadwal</p>
@@ -145,7 +145,7 @@
                         <!-- Tanggal -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
-                                <i data-lucide="calendar" class="h-5 w-5 text-purple-600 dark:text-purple-400" ></i>
+                                <i data-lucide="calendar" class="h-5 w-5 text-purple-600 dark:text-purple-400"></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Tanggal Berangkat</p>
@@ -156,18 +156,18 @@
                         <!-- Status -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
-                                <i data-lucide="check-circle" class="h-5 w-5 text-green-600 dark:text-green-400" ></i>
+                                <i data-lucide="check-circle" class="h-5 w-5 text-green-600 dark:text-green-400"></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Status</p>
                                 @if($jadwal->status === 'aktif')
                                     <x-ui.badge class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                        <i data-lucide="circle-check" class="h-3 w-3" ></i>
+                                        <i data-lucide="circle-check" class="h-3 w-3"></i>
                                         Aktif
                                     </x-ui.badge>
                                 @else
                                     <x-ui.badge class="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">
-                                        <i data-lucide="circle-x" class="h-3 w-3" ></i>
+                                        <i data-lucide="circle-x" class="h-3 w-3"></i>
                                         Tidak Aktif
                                     </x-ui.badge>
                                 @endif
@@ -181,7 +181,7 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <i data-lucide="clock" class="w-5 h-5 text-primary" ></i>
+                        <i data-lucide="clock" class="w-5 h-5 text-primary"></i>
                         <x-ui.card.title>Informasi Keberangkatan</x-ui.card.title>
                     </div>
                     <x-ui.card.description>Detail waktu dan rute perjalanan</x-ui.card.description>
@@ -191,7 +191,7 @@
                         <!-- Jam Berangkat -->
                         <div class="flex items-start gap-3 p-4 rounded-lg border border-border bg-card">
                             <div class="h-10 w-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
-                                <i data-lucide="clock" class="h-5 w-5 text-orange-600 dark:text-orange-400" ></i>
+                                <i data-lucide="clock" class="h-5 w-5 text-orange-600 dark:text-orange-400"></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Jam Berangkat</p>
@@ -203,17 +203,20 @@
                         <!-- Rute -->
                         <div class="flex items-start gap-3 p-4 rounded-lg border border-border bg-card">
                             <div class="h-10 w-10 rounded-lg bg-cyan-500/10 flex items-center justify-center shrink-0">
-                                <i data-lucide="route" class="h-5 w-5 text-cyan-600 dark:text-cyan-400" ></i>
+                                <i data-lucide="route" class="h-5 w-5 text-cyan-600 dark:text-cyan-400"></i>
                             </div>
                             <div class="flex-1">
                                 <p class="text-sm text-muted-foreground mb-1">Rute Perjalanan</p>
                                 <div class="flex items-center gap-2">
-                                    <span class="text-sm font-medium">{{ $jadwal->rute->asalTerminal->nama_kota ?? '-' }}</span>
-                                    <i data-lucide="arrow-right" class="h-4 w-4 text-muted-foreground" ></i>
-                                    <span class="text-sm font-medium">{{ $jadwal->rute->tujuanTerminal->nama_kota ?? '-' }}</span>
+                                    <span
+                                        class="text-sm font-medium">{{ $jadwal->rute->asalTerminal->nama_kota ?? '-' }}</span>
+                                    <i data-lucide="arrow-right" class="h-4 w-4 text-muted-foreground"></i>
+                                    <span
+                                        class="text-sm font-medium">{{ $jadwal->rute->tujuanTerminal->nama_kota ?? '-' }}</span>
                                 </div>
                                 <p class="text-xs text-muted-foreground mt-1">
-                                    {{ $jadwal->rute->asalTerminal->nama_terminal ?? '-' }} → {{ $jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
+                                    {{ $jadwal->rute->asalTerminal->nama_terminal ?? '-' }} →
+                                    {{ $jadwal->rute->tujuanTerminal->nama_terminal ?? '-' }}
                                 </p>
                             </div>
                         </div>
@@ -225,7 +228,7 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <i data-lucide="bus" class="w-5 h-5 text-primary" ></i>
+                        <i data-lucide="bus" class="w-5 h-5 text-primary"></i>
                         <x-ui.card.title>Informasi Bus & Sopir & Kondektur</x-ui.card.title>
                     </div>
                 </x-ui.card.header>
@@ -234,8 +237,9 @@
                         <!-- Bus Info -->
                         <div class="space-y-4 p-4 rounded-lg border border-border bg-card">
                             <div class="flex items-center gap-3 pb-3 border-b border-border">
-                                <div class="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                                    <i data-lucide="bus" class="h-6 w-6 text-blue-600 dark:text-blue-400" ></i>
+                                <div
+                                    class="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
+                                    <i data-lucide="bus" class="h-6 w-6 text-blue-600 dark:text-blue-400"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-muted-foreground">Bus</p>
@@ -251,7 +255,7 @@
                                 <div>
                                     <p class="text-xs text-muted-foreground mb-1">Kapasitas</p>
                                     <div class="flex items-center gap-2">
-                                        <i data-lucide="users" class="h-4 w-4 text-muted-foreground" ></i>
+                                        <i data-lucide="users" class="h-4 w-4 text-muted-foreground"></i>
                                         <p class="text-sm font-medium">{{ $jadwal->bus->kapasitas ?? '-' }} Kursi</p>
                                     </div>
                                 </div>
@@ -261,25 +265,26 @@
                         <!-- Sopir Info -->
                         <div class="space-y-4 p-4 rounded-lg border border-border bg-card">
                             <div class="flex items-center gap-3 pb-3 border-b border-border">
-                                <div class="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                                    <i data-lucide="user" class="h-6 w-6 text-green-600 dark:text-green-400" ></i>
+                                <div
+                                    class="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
+                                    <i data-lucide="user" class="h-6 w-6 text-green-600 dark:text-green-400"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-muted-foreground">Sopir</p>
-                                    <p class="text-lg font-semibold">{{ $jadwal->sopir->user->name ?? '-' }}</p>
+                                    <p class="text-lg font-semibold">{{ $jadwal->sopir?->user?->name ?? '-' }}</p>
                                 </div>
                             </div>
 
                             <div class="space-y-3">
                                 <div>
                                     <p class="text-xs text-muted-foreground mb-1">NIK</p>
-                                    <p class="text-sm font-medium">{{ $jadwal->sopir->nik ?? '-' }}</p>
+                                    <p class="text-sm font-medium">{{ $jadwal->sopir?->nik ?? '-' }}</p>
                                 </div>
                                 <div>
                                     <p class="text-xs text-muted-foreground mb-1">Nomor SIM</p>
                                     <div class="flex items-center gap-2">
-                                        <i data-lucide="credit-card" class="h-4 w-4 text-muted-foreground" ></i>
-                                        <p class="text-sm font-medium">{{ $jadwal->sopir->nomor_sim ?? '-' }}</p>
+                                        <i data-lucide="credit-card" class="h-4 w-4 text-muted-foreground"></i>
+                                        <p class="text-sm font-medium">{{ $jadwal->sopir?->nomor_sim ?? '-' }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -288,12 +293,14 @@
                         <!-- Kondektur Info -->
                         <div class="space-y-4 p-4 rounded-lg border border-border bg-card">
                             <div class="flex items-center gap-3 pb-3 border-b border-border">
-                                <div class="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-                                    <i data-lucide="user-round" class="h-6 w-6 text-purple-600 dark:text-purple-400" ></i>
+                                <div
+                                    class="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
+                                    <i data-lucide="user-round" class="h-6 w-6 text-purple-600 dark:text-purple-400"></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-muted-foreground">Kondektur</p>
-                                    <p class="text-lg font-semibold">{{ $jadwal->conductor?->user->name ?? 'Belum ditentukan' }}</p>
+                                    <p class="text-lg font-semibold">
+                                        {{ $jadwal->conductor?->user?->name ?? 'Belum ditentukan' }}</p>
                                 </div>
                             </div>
 
@@ -301,13 +308,13 @@
                                 <div class="space-y-3">
                                     <div>
                                         <p class="text-xs text-muted-foreground mb-1">NIK</p>
-                                        <p class="text-sm font-medium">{{ $jadwal->conductor->nik ?? '-' }}</p>
+                                        <p class="text-sm font-medium">{{ $jadwal->conductor?->nik ?? '-' }}</p>
                                     </div>
                                     <div>
                                         <p class="text-xs text-muted-foreground mb-1">Nomor SIM</p>
                                         <div class="flex items-center gap-2">
-                                            <i data-lucide="credit-card" class="h-4 w-4 text-muted-foreground" ></i>
-                                            <p class="text-sm font-medium">{{ $jadwal->conductor->nomor_sim ?? '-' }}</p>
+                                            <i data-lucide="credit-card" class="h-4 w-4 text-muted-foreground"></i>
+                                            <p class="text-sm font-medium">{{ $jadwal->conductor?->nomor_sim ?? '-' }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -323,7 +330,7 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <i data-lucide="armchair" class="w-5 h-5 text-primary" ></i>
+                        <i data-lucide="armchair" class="w-5 h-5 text-primary"></i>
                         <x-ui.card.title>Kelas Bus & Harga</x-ui.card.title>
                     </div>
                     <x-ui.card.description>Detail kelas bus dan harga tiket untuk jadwal ini</x-ui.card.description>
@@ -335,23 +342,25 @@
                                 <div class="p-4 rounded-lg border border-border bg-card">
                                     <div class="flex items-center gap-3 mb-3">
                                         <div class="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                                            <i data-lucide="armchair" class="h-5 w-5 text-primary" ></i>
+                                            <i data-lucide="armchair" class="h-5 w-5 text-primary"></i>
                                         </div>
                                         <div>
                                             <p class="text-sm font-medium">{{ $jadwalKelas->kelasBus?->nama_kelas ?? 'N/A' }}</p>
-                                            <p class="text-xs text-muted-foreground">{{ $jadwalKelas->busKelasBus?->jumlah_kursi ?? 0 }} Kursi</p>
+                                            <p class="text-xs text-muted-foreground">
+                                                {{ $jadwalKelas->busKelasBus?->jumlah_kursi ?? 0 }} Kursi</p>
                                         </div>
                                     </div>
                                     <div class="flex items-center justify-between">
                                         <span class="text-sm text-muted-foreground">Harga</span>
-                                        <span class="text-lg font-bold text-primary">Rp {{ number_format($jadwalKelas->harga, 0, ',', '.') }}</span>
+                                        <span class="text-lg font-bold text-primary">Rp
+                                            {{ number_format($jadwalKelas->harga, 0, ',', '.') }}</span>
                                     </div>
                                 </div>
                             @endforeach
                         </div>
                     @else
                         <div class="text-center py-8">
-                            <i data-lucide="armchair" class="h-12 w-12 text-muted-foreground mx-auto mb-3" ></i>
+                            <i data-lucide="armchair" class="h-12 w-12 text-muted-foreground mx-auto mb-3"></i>
                             <p class="text-sm text-muted-foreground">Belum ada kelas bus yang dikonfigurasi untuk jadwal ini</p>
                         </div>
                     @endif
@@ -362,21 +371,21 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <i data-lucide="info" class="w-5 h-5 text-primary" ></i>
+                        <i data-lucide="info" class="w-5 h-5 text-primary"></i>
                         <x-ui.card.title>Informasi Tambahan</x-ui.card.title>
                     </div>
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-start gap-3">
-                            <i data-lucide="calendar-plus" class="w-5 h-5 text-muted-foreground mt-0.5" ></i>
+                            <i data-lucide="calendar-plus" class="w-5 h-5 text-muted-foreground mt-0.5"></i>
                             <div>
                                 <p class="text-sm text-muted-foreground">Dibuat</p>
                                 <p class="text-sm font-medium">{{ $jadwal->created_at->format('d M Y, H:i') }}</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <i data-lucide="calendar-check" class="w-5 h-5 text-muted-foreground mt-0.5" ></i>
+                            <i data-lucide="calendar-check" class="w-5 h-5 text-muted-foreground mt-0.5"></i>
                             <div>
                                 <p class="text-sm text-muted-foreground">Terakhir Diupdate</p>
                                 <p class="text-sm font-medium">{{ $jadwal->updated_at->format('d M Y, H:i') }}</p>
@@ -389,7 +398,9 @@
     </div>
 
     <style>
-        [x-cloak] { display: none !important; }
+        [x-cloak] {
+            display: none !important;
+        }
     </style>
 
 @endsection

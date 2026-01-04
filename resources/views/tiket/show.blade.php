@@ -1,203 +1,245 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
+    @push('header')
+        <div class="flex items-center gap-2">
+            <a href="{{ route('tiket.index') }}" class="text-muted-foreground hover:text-foreground">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </a>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Detail Tiket</h2>
+        </div>
+    @endpush
 
-@section('title', 'Detail Tiket - ' . $tiket->kode_tiket)
-
-        <div class="max-w-3xl mx-auto">
-            <div class="mb-6 flex justify-between items-start">
-                <div>
-                    <h1 class="text-3xl font-bold text-gray-900">Detail Tiket</h1>
-                    <p class="text-gray-600 mt-1">{{ $tiket->kode_tiket }}</p>
+    <div class="p-6 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <div class="flex items-center gap-2 text-sm text-muted-foreground mb-1">
+                    <span class="font-mono uppercase tracking-wider">{{ $tiket->kode_tiket }}</span>
+                    <span>•</span>
+                    <span>Dipesan pada {{ $tiket->waktu_pesan ? \Carbon\Carbon::parse($tiket->waktu_pesan)->format('d M Y H:i') : '-' }}</span>
                 </div>
+                <h1 class="text-2xl font-bold tracking-tight">Informasi Tiket Perjalanan</h1>
+            </div>
+            <div>
                 @if ($tiket->status === 'dipesan')
-                    <span class="px-4 py-2 bg-yellow-100 text-yellow-800 rounded-lg font-semibold text-sm">
-                        Menunggu Pembayaran
-                    </span>
+                    <x-ui.badge variant="outline" class="bg-yellow-500/10 text-yellow-600 border-yellow-500/20 px-3 py-1 text-sm">Menunggu Pembayaran</x-ui.badge>
                 @elseif ($tiket->status === 'dibayar')
-                    <span class="px-4 py-2 bg-green-100 text-green-800 rounded-lg font-semibold text-sm">
-                        Terbayar
-                    </span>
+                    <x-ui.badge variant="outline" class="bg-green-500/10 text-green-600 border-green-500/20 px-3 py-1 text-sm">Terbayar</x-ui.badge>
                 @elseif ($tiket->status === 'selesai')
-                    <span class="px-4 py-2 bg-blue-100 text-blue-800 rounded-lg font-semibold text-sm">
-                        Selesai
-                    </span>
+                    <x-ui.badge variant="outline" class="bg-blue-500/10 text-blue-600 border-blue-500/20 px-3 py-1 text-sm">Selesai</x-ui.badge>
                 @elseif ($tiket->status === 'batal')
-                    <span class="px-4 py-2 bg-red-100 text-red-800 rounded-lg font-semibold text-sm">
-                        Dibatalkan
-                    </span>
+                    <x-ui.badge variant="outline" class="bg-destructive/10 text-destructive border-destructive/20 px-3 py-1 text-sm">Dibatalkan</x-ui.badge>
                 @endif
             </div>
+        </div>
 
-            <x-ui.card class="mb-6">
-                <x-ui.card.header>
-                    <h2 class="text-xl font-bold">Informasi Perjalanan</h2>
-                </x-ui.card.header>
-                <x-ui.card.content>
-                    <div class="grid grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Dari</p>
-                            <p class="text-2xl font-bold text-gray-900">{{ $tiket->jadwalKelasBus->jadwal->rute->asal }}
-                            </p>
-                            <p class="text-sm text-gray-600">
-                                {{ $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal ?? 'Terminal' }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Tujuan</p>
-                            <p class="text-2xl font-bold text-gray-900">{{ $tiket->jadwalKelasBus->jadwal->rute->tujuan }}
-                            </p>
-                            <p class="text-sm text-gray-600">
-                                {{ $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal ?? 'Terminal' }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="border-t pt-6">
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div>
-                                <p class="text-gray-600 text-xs font-semibold mb-1 uppercase">Tanggal</p>
-                                <p class="font-semibold text-lg">
-                                    {{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }}
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-xs font-semibold mb-1 uppercase">Jam Berangkat</p>
-                                <p class="font-semibold text-lg">
-                                    @if (is_string($tiket->jadwalKelasBus->jadwal->jam_berangkat))
-                                        {{ \Carbon\Carbon::createFromFormat('H:i:s', $tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') }}
-                                    @else
-                                        {{ $tiket->jadwalKelasBus->jadwal->jam_berangkat->format('H:i') }}
-                                    @endif
-                                </p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-xs font-semibold mb-1 uppercase">Bus</p>
-                                <p class="font-semibold text-lg">{{ $tiket->jadwalKelasBus->jadwal->bus->nama }}</p>
-                            </div>
-                            <div>
-                                <p class="text-gray-600 text-xs font-semibold mb-1 uppercase">Sopir</p>
-                                <p class="font-semibold text-lg">
-                                    {{ $tiket->jadwalKelasBus->jadwal->sopir->user->name ?? '-' }}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
-
-            <x-ui.card class="mb-6">
-                <x-ui.card.header>
-                    <h2 class="text-xl font-bold">Informasi Penumpang</h2>
-                </x-ui.card.header>
-                <x-ui.card.content>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Nama Penumpang</p>
-                            <p class="font-semibold text-lg">{{ $tiket->nama_penumpang }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">NIK</p>
-                            <p class="font-semibold text-lg">{{ $tiket->nik }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Jenis Kelamin</p>
-                            <p class="font-semibold text-lg">
-                                {{ $tiket->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Tanggal Lahir</p>
-                            <p class="font-semibold text-lg">
-                                {{ \Carbon\Carbon::parse($tiket->tanggal_lahir)->format('d M Y') }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Nomor Telepon</p>
-                            <p class="font-semibold text-lg">{{ $tiket->nomor_telepon }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Email</p>
-                            <p class="font-semibold text-lg">{{ $tiket->email }}</p>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
-
-            <x-ui.card class="mb-6">
-                <x-ui.card.header>
-                    <h2 class="text-xl font-bold">Detail Tiket</h2>
-                </x-ui.card.header>
-                <x-ui.card.content>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Kode Tiket</p>
-                            <p class="font-semibold text-lg">{{ $tiket->kode_tiket }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Kelas</p>
-                            <p class="font-semibold text-lg">{{ $tiket->jadwalKelasBus->kelasBus->nama_kelas }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Nomor Kursi</p>
-                            <p class="font-semibold text-lg text-blue-600">{{ $tiket->kursi->nomor_kursi }}</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Harga</p>
-                            <p class="font-semibold text-lg text-green-600">
-                                Rp {{ number_format($tiket->harga, 0, ',', '.') }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Waktu Pemesanan</p>
-                            <p class="font-semibold text-lg">
-                                {{ $tiket->waktu_pesan ? \Carbon\Carbon::parse($tiket->waktu_pesan)->format('d M Y H:i') : '-' }}
-                            </p>
-                        </div>
-                        <div>
-                            <p class="text-gray-600 text-sm mb-1">Status</p>
-                            <p class="font-semibold text-lg">
-                                @if ($tiket->status === 'dipesan')
-                                    <span class="text-yellow-600">Menunggu Pembayaran</span>
-                                @elseif ($tiket->status === 'dibayar')
-                                    <span class="text-green-600">Terbayar</span>
-                                @elseif ($tiket->status === 'selesai')
-                                    <span class="text-blue-600">Selesai</span>
-                                @else
-                                    <span class="text-red-600">Dibatalkan</span>
-                                @endif
-                            </p>
-                        </div>
-                    </div>
-                </x-ui.card.content>
-            </x-ui.card>
-
-            @if ($tiket->status === 'dibayar')
-                <x-ui.card class="mb-6 text-center">
+        <div class="grid gap-6 lg:grid-cols-3">
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Perjalanan -->
+                <x-ui.card>
                     <x-ui.card.header>
-                        <h2 class="text-xl font-bold">QR Code Tiket</h2>
+                        <x-ui.card.title class="flex items-center gap-2">
+                            <i data-lucide="map-pin" class="w-5 h-5 text-primary"></i>
+                            Rute Perjalanan
+                        </x-ui.card.title>
                     </x-ui.card.header>
-                    <x-ui.card.content>
-                        <div id="qrcode" class="flex justify-center py-6">
+                    <x-ui.card.content class="space-y-6">
+                        <div class="flex items-center justify-between relative">
+                            <div class="flex-1">
+                                <p class="text-sm text-muted-foreground mb-1">Asal</p>
+                                <p class="text-xl font-bold">{{ $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_kota }}</p>
+                                <p class="text-sm text-muted-foreground">{{ $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal }}</p>
                             </div>
-                        <p class="text-sm text-gray-600 mb-4">Tunjukkan QR Code ini saat naik di terminal</p>
-                        <button type="button" onclick="printQRCode()"
-                            class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">
-                            Cetak QR Code
-                        </button>
+                            <div class="flex flex-col items-center px-4">
+                                <i data-lucide="move-right" class="w-6 h-6 text-muted-foreground"></i>
+                            </div>
+                            <div class="flex-1 text-right">
+                                <p class="text-sm text-muted-foreground mb-1">Tujuan</p>
+                                <p class="text-xl font-bold">{{ $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_kota }}</p>
+                                <p class="text-sm text-muted-foreground">{{ $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal }}</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 pt-6 border-t border-border/50">
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Tanggal</p>
+                                <p class="font-semibold">{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Waktu</p>
+                                <p class="font-semibold">{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') }} WIB</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Bus</p>
+                                <p class="font-semibold">{{ $tiket->jadwalKelasBus->busKelasBus->bus->nama }}</p>
+                            </div>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-muted-foreground tracking-wider mb-1">Sopir</p>
+                                <p class="font-semibold">{{ $tiket->jadwalKelasBus->jadwal->sopir->user->name ?? '-' }}</p>
+                            </div>
+                        </div>
                     </x-ui.card.content>
                 </x-ui.card>
-            @endif
 
-            @if ($tiket->pembayaran)
-                <x-ui.card class="mb-6">
+                <!-- Penumpang -->
+                <x-ui.card>
                     <x-ui.card.header>
-                        <h2 class="text-xl font-bold">Informasi Pembayaran</h2>
+                        <x-ui.card.title class="flex items-center gap-2">
+                            <i data-lucide="users" class="w-5 h-5 text-primary"></i>
+                            Detail Penumpang
+                        </x-ui.card.title>
                     </x-ui.card.header>
                     <x-ui.card.content>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <p class="text-gray-600 text-sm mb-1">Kode Transaksi</p>
-                                <p class="font-semibold text-lg">{{ $tiket->pembayaran->kode_transaksi }}</p>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-sm text-muted-foreground mb-1">Nama Lengkap</p>
+                                    <p class="font-semibold">{{ $tiket->nama_penumpang }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground mb-1">NIK</p>
+                                    <p class="font-semibold">{{ $tiket->nik }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground mb-1">Jenis Kelamin</p>
+                                    <p class="font-semibold">{{ $tiket->jenis_kelamin === 'L' ? 'Laki-laki' : 'Perempuan' }}</p>
+                                </div>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <p class="text-sm text-muted-foreground mb-1">Nomor Telepon</p>
+                                    <p class="font-semibold">{{ $tiket->nomor_telepon }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground mb-1">Email</p>
+                                    <p class="font-semibold">{{ $tiket->email }}</p>
+                                </div>
+                                <div>
+                                    <p class="text-sm text-muted-foreground mb-1">Tanggal Lahir</p>
+                                    <p class="font-semibold">{{ \Carbon\Carbon::parse($tiket->tanggal_lahir)->format('d M Y') }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </x-ui.card.content>
+                </x-ui.card>
+            </div>
+
+            <div class="space-y-6">
+                <!-- Detail Tiket -->
+                <x-ui.card>
+                    <x-ui.card.header>
+                        <x-ui.card.title>Detail Tiket</x-ui.card.title>
+                    </x-ui.card.header>
+                    <x-ui.card.content class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <span class="text-muted-foreground">Kelas</span>
+                            <span class="font-semibold">{{ $tiket->jadwalKelasBus->kelasBus->nama_kelas }}</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-muted-foreground">Nomor Kursi</span>
+                            <x-ui.badge variant="outline" class="font-bold text-primary border-primary/20">{{ $tiket->kursi->nomor_kursi }}</x-ui.badge>
+                        </div>
+                        <div class="flex justify-between items-center pt-4 border-t border-border/50">
+                            <span class="text-muted-foreground">Harga Tiket</span>
+                            <span class="text-lg font-bold text-primary">Rp {{ number_format($tiket->harga, 0, ',', '.') }}</span>
+                        </div>
+                    </x-ui.card.content>
+                    @if ($tiket->status === 'dipesan')
+                        <x-ui.card.footer>
+                            <a href="{{ route('pemesanan.pembayaran', $tiket) }}" class="w-full">
+                                <x-ui.button class="w-full gap-2">
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                    Bayar Sekarang
+                                </x-ui.button>
+                            </a>
+                        </x-ui.card.footer>
+                    @endif
+                </x-ui.card>
+
+                @if ($tiket->status === 'dibayar')
+                    <x-ui.card class="text-center">
+                        <x-ui.card.header>
+                            <x-ui.card.title>E-Tiket QR Code</x-ui.card.title>
+                        </x-ui.card.header>
+                        <x-ui.card.content class="flex flex-col items-center gap-4">
+                            <div id="qrcode" class="p-4 bg-white rounded-xl border border-border/50">
+                                <!-- QR Code will be rendered here -->
+                            </div>
+                            <p class="text-xs text-muted-foreground">Tunjukkan QR Code ini kepada petugas saat keberangkatan</p>
+                        </x-ui.card.content>
+                        <x-ui.card.footer>
+                            <x-ui.button variant="outline" class="w-full gap-2" onclick="printQRCode()">
+                                <i data-lucide="printer" class="w-4 h-4"></i>
+                                Cetak Tiket
+                            </x-ui.button>
+                        </x-ui.card.footer>
+                    </x-ui.card>
+                @endif
+
+                @if ($tiket->pembayaran)
+                    <x-ui.card>
+                        <x-ui.card.header>
+                            <x-ui.card.title>Informasi Pembayaran</x-ui.card.title>
+                        </x-ui.card.header>
+                        <x-ui.card.content class="space-y-3 text-sm">
+                            <div class="flex justify-between">
+                                <span class="text-muted-foreground">Metode</span>
+                                <span class="font-medium uppercase">{{ $tiket->pembayaran->metode_pembayaran }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-muted-foreground">Waktu</span>
+                                <span class="font-medium">{{ \Carbon\Carbon::parse($tiket->pembayaran->waktu_pembayaran)->format('d M Y H:i') }}</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span class="text-muted-foreground">Status</span>
+                                <span class="text-green-600 font-bold">SUKSES</span>
+                            </div>
+                        </x-ui.card.content>
+                    </x-ui.card>
+                @endif
+            </div>
+        </div>
+    </div>
+
+    @if ($tiket->status === 'dibayar')
+        @push('scripts')
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+            <script>
+                new QRCode(document.getElementById("qrcode"), {
+                    text: "{{ $tiket->kode_tiket }}",
+                    width: 180,
+                    height: 180,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                function printQRCode() {
+                    const qrContent = document.getElementById('qrcode').innerHTML;
+                    const printWindow = window.open('', '', 'height=600,width=800');
+                    printWindow.document.write('<html><head><title>Cetak Tiket - {{ $tiket->kode_tiket }}</title>');
+                    printWindow.document.write('<style>body{font-family:sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;margin:0} .ticket{border:2px solid #000;padding:40px;text-align:center;border-radius:20px} h1{margin:0 0 10px 0} p{margin:5px 0}</style>');
+                    printWindow.document.write('</head><body>');
+                    printWindow.document.write('<div class="ticket">');
+                    printWindow.document.write('<h1>TIKET BUS</h1>');
+                    printWindow.document.write('<p><strong>{{ $tiket->kode_tiket }}</strong></p>');
+                    printWindow.document.write('<div style="margin:20px 0">' + qrContent + '</div>');
+                    printWindow.document.write('<p>{{ $tiket->nama_penumpang }}</p>');
+                    printWindow.document.write('<p>{{ $tiket->jadwalKelasBus->jadwal->rute->asal }} → {{ $tiket->jadwalKelasBus->jadwal->rute->tujuan }}</p>');
+                    printWindow.document.write('<p>{{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->tanggal)->format('d M Y') }} | {{ \Carbon\Carbon::parse($tiket->jadwalKelasBus->jadwal->jam_berangkat)->format('H:i') }}</p>');
+                    printWindow.document.write('<p>Kursi: {{ $tiket->kursi->nomor_kursi }}</p>');
+                    printWindow.document.write('</div>');
+                    printWindow.document.write('</body></html>');
+                    printWindow.document.close();
+                    printWindow.focus();
+                    setTimeout(() => {
+                        printWindow.print();
+                        printWindow.close();
+                    }, 250);
+                }
+            </script>
+        @endpush
+    @endif
+@endsection
                             </div>
                             <div>
                                 <p class="text-gray-600 text-sm mb-1">Metode Pembayaran</p>

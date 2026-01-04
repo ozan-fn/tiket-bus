@@ -1,308 +1,264 @@
-@extends('layouts.app')
+@extends('layouts.admin')
 @section('content')
     @push('header')
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Pesan Tiket') }}
-        </h2>
-@endpush
+        <div class="flex items-center gap-2">
+            <a href="{{ route('pemesanan.index') }}" class="text-muted-foreground hover:text-foreground">
+                <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            </a>
+            <h2 class="text-xl font-bold text-gray-900 dark:text-white">Pesan Tiket</h2>
+        </div>
+    @endpush
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-lg p-8 mb-8">
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div>
-                        <p class="text-blue-100 text-sm">ASAL</p>
-                        <p class="text-2xl font-bold">{{ $jadwal->rute->asalTerminal->nama_kota }}</p>
+    <div class="p-6 space-y-6">
+        <!-- Perjalanan Summary -->
+        <div class="bg-primary text-primary-foreground rounded-xl shadow-lg overflow-hidden">
+            <div class="p-6 md:p-8">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center">
+                    <div class="space-y-1">
+                        <p class="text-primary-foreground/70 text-xs font-bold uppercase tracking-wider">Asal</p>
+                        <p class="text-2xl md:text-3xl font-bold">{{ $jadwal->rute->asalTerminal->nama_kota }}</p>
+                        <p class="text-sm text-primary-foreground/80">{{ $jadwal->rute->asalTerminal->nama_terminal }}</p>
                     </div>
-                    <div class="flex items-center justify-center">
-                        <i data-lucide="arrow-right" class="w-8 h-8"></i>
-                    </div>
-                    <div>
-                        <p class="text-blue-100 text-sm">TUJUAN</p>
-                        <p class="text-2xl font-bold">{{ $jadwal->rute->tujuanTerminal->nama_kota }}</p>
-                    </div>
-                    <div>
-                        <p class="text-blue-100 text-sm">TANGGAL</p>
-                        <p class="text-2xl font-bold">{{ $jadwal->tanggal_berangkat->format('d M Y') }}</p>
-                    </div>
-                </div>
-                <div class="mt-6 pt-6 border-t border-blue-400 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-                    <div>
-                        <p class="text-blue-100">Bus</p>
-                        <p class="font-semibold">{{ $jadwal->bus->nama }}</p>
-                    </div>
-                    <div>
-                        <p class="text-blue-100">Jam Berangkat</p>
-                        <p class="font-semibold">{{ $jadwal->jam_berangkat->format('H:i') }}</p>
-                    </div>
-                    <div>
-                        <p class="text-blue-100">Sopir</p>
-                        <p class="font-semibold">{{ $jadwal->sopir->user->name }}</p>
-                    </div>
-                    @if($jadwal->conductor)
-                        <div>
-                            <p class="text-blue-100">Kondektur</p>
-                            <p class="font-semibold">{{ $jadwal->conductor->user->name }}</p>
+                    <div class="flex flex-col items-center justify-center gap-2">
+                        <div class="h-px w-full bg-primary-foreground/20 relative">
+                            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary px-2">
+                                <i data-lucide="bus" class="w-6 h-6"></i>
+                            </div>
                         </div>
-                    @endif
+                        <p class="text-xs font-medium">{{ $jadwal->tanggal_berangkat->format('d M Y') }}</p>
+                    </div>
+                    <div class="space-y-1 md:text-right">
+                        <p class="text-primary-foreground/70 text-xs font-bold uppercase tracking-wider">Tujuan</p>
+                        <p class="text-2xl md:text-3xl font-bold">{{ $jadwal->rute->tujuanTerminal->nama_kota }}</p>
+                        <p class="text-sm text-primary-foreground/80">{{ $jadwal->rute->tujuanTerminal->nama_terminal }}</p>
+                    </div>
                 </div>
             </div>
-
-            <form method="POST" action="{{ route('pemesanan.store', $jadwal) }}" class="space-y-8">
-                @csrf
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <div class="lg:col-span-2 space-y-8">
-                        <x-ui.card.card>
-                            <x-ui.card.header>
-                                <x-ui.card.title>Pilih Kelas Bus</x-ui.card.title>
-                            </x-ui.card.header>
-                            <x-ui.card.content>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    @forelse($jadwal->jadwalKelasBus as $jkb)
-                                        <label class="relative cursor-pointer group">
-                                            <input type="radio" name="jadwal_kelas_bus_id" value="{{ $jkb->id }}"
-                                                {{ old('jadwal_kelas_bus_id') == $jkb->id ? 'checked' : '' }}
-                                                class="sr-only peer" onchange="updateSeatGrid(this)">
-
-                                            <div class="p-4 border-2 rounded-lg transition-all
-                                                {{ old('jadwal_kelas_bus_id') == $jkb->id ? 'bg-blue-50 dark:bg-blue-900/20 border-blue-600' : 'bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600' }}
-                                                hover:border-blue-400">
-                                                <h4 class="font-semibold text-gray-900 dark:text-white">
-                                                    {{ $jkb->kelasBus->nama_kelas }}
-                                                </h4>
-                                                <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">
-                                                    Rp {{ number_format($jkb->harga, 0, ',', '.') }}
-                                                </p>
-                                                <p class="text-xs text-gray-500 dark:text-gray-500 mt-1">
-                                                    {{ $jkb->busKelasBus->kursi->count() }} kursi tersedia
-                                                </p>
-                                            </div>
-                                        </label>
-                                    @empty
-                                        <p class="text-gray-500 dark:text-gray-400">Tidak ada kelas bus tersedia</p>
-                                    @endforelse
-                                </div>
-
-                                @error('jadwal_kelas_bus_id')
-                                    <x-input-error :messages="[$message]" class="mt-4" />
-                                @enderror
-                            </x-ui.card.content>
-                        </x-ui.card.card>
-
-                        <x-ui.card.card>
-                            <x-ui.card.header>
-                                <x-ui.card.title>Pilih Kursi Anda</x-ui.card.title>
-                            </x-ui.card.header>
-                            <x-ui.card.content class="space-y-6">
-                                <div class="flex flex-wrap gap-6 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-blue-500 rounded border-2 border-blue-600"></div>
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">Tersedia</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-red-500 rounded border-2 border-red-600 opacity-50"></div>
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">Terpakai</span>
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <div class="w-8 h-8 bg-green-500 rounded border-2 border-green-600"></div>
-                                        <span class="text-sm text-gray-700 dark:text-gray-300">Terpilih</span>
-                                    </div>
-                                </div>
-
-                                <div id="seat-grid" class="grid gap-4">
-                                    <p class="text-gray-500 dark:text-gray-400">Pilih kelas bus terlebih dahulu</p>
-                                </div>
-
-                                @error('kursi_id')
-                                    <x-input-error :messages="[$message]" />
-                                @enderror
-
-                                <div id="selected-seat-info" class="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg hidden">
-                                    <p class="text-sm text-gray-700 dark:text-gray-300">
-                                        <span class="font-semibold">Kursi Terpilih:</span>
-                                        <span class="text-lg font-bold text-green-600 dark:text-green-400" id="selected-seat-name">-</span>
-                                    </p>
-                                </div>
-                            </x-ui.card.content>
-                        </x-ui.card.card>
-
-                        <x-ui.card.card>
-                            <x-ui.card.header>
-                                <x-ui.card.title>Data Penumpang</x-ui.card.title>
-                            </x-ui.card.header>
-                            <x-ui.card.content class="space-y-5">
-                                <div>
-                                    <x-ui.label.label for="nama_penumpang">
-                                        Nama Lengkap <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
-                                        type="text"
-                                        name="nama_penumpang"
-                                        id="nama_penumpang"
-                                        value="{{ old('nama_penumpang', $user?->name) }}"
-                                        required
-                                        class="mt-1 w-full"
-                                    />
-                                    @error('nama_penumpang')
-                                        <x-input-error :messages="[$message]" class="mt-1" />
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <x-ui.label.label for="nik">
-                                        NIK <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
-                                        type="text"
-                                        name="nik"
-                                        id="nik"
-                                        value="{{ old('nik', $user?->nik) }}"
-                                        placeholder="Nomor Identitas (KTP)"
-                                        required
-                                        class="mt-1 w-full"
-                                    />
-                                    @error('nik')
-                                        <x-input-error :messages="[$message]" class="mt-1" />
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <x-ui.label.label for="jenis_kelamin">
-                                        Jenis Kelamin <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <select
-                                        name="jenis_kelamin"
-                                        id="jenis_kelamin"
-                                        required
-                                        class="mt-1 w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        <option value="">-- Pilih --</option>
-                                        <option value="L" {{ old('jenis_kelamin', $user?->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
-                                        <option value="P" {{ old('jenis_kelamin', $user?->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
-                                    </select>
-                                    @error('jenis_kelamin')
-                                        <x-input-error :messages="[$message]" class="mt-1" />
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <x-ui.label.label for="tanggal_lahir">
-                                        Tanggal Lahir <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
-                                        type="date"
-                                        name="tanggal_lahir"
-                                        id="tanggal_lahir"
-                                        value="{{ old('tanggal_lahir', $user?->tanggal_lahir?->format('Y-m-d')) }}"
-                                        required
-                                        class="mt-1 w-full"
-                                    />
-                                    @error('tanggal_lahir')
-                                        <x-input-error :messages="[$message]" class="mt-1" />
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <x-ui.label.label for="nomor_telepon">
-                                        Nomor Telepon <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
-                                        type="tel"
-                                        name="nomor_telepon"
-                                        id="nomor_telepon"
-                                        value="{{ old('nomor_telepon', $user?->nomor_telepon) }}"
-                                        placeholder="08..."
-                                        required
-                                        class="mt-1 w-full"
-                                    />
-                                    @error('nomor_telepon')
-                                        <x-input-error :messages="[$message]" class="mt-1" />
-                                    @enderror
-                                </div>
-
-                                <div>
-                                    <x-ui.label.label for="email">
-                                        Email <span class="text-red-500">*</span>
-                                    </x-ui.label.label>
-                                    <x-ui.input.input
-                                        type="email"
-                                        name="email"
-                                        id="email"
-                                        value="{{ old('email', $user?->email) }}"
-                                        required
-                                        class="mt-1 w-full"
-                                    />
-                                    @error('email')
-                                        <x-input-error :messages="[$message]" class="mt-1" />
-                                    @enderror
-                                </div>
-                            </x-ui.card.content>
-                        </x-ui.card.card>
+            <div class="bg-black/10 px-6 py-4 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div class="flex items-center gap-2">
+                    <i data-lucide="info" class="w-4 h-4 opacity-70"></i>
+                    <span>{{ $jadwal->bus->nama }}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="clock" class="w-4 h-4 opacity-70"></i>
+                    <span>{{ $jadwal->jam_berangkat->format('H:i') }} WIB</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i data-lucide="user" class="w-4 h-4 opacity-70"></i>
+                    <span>{{ $jadwal->sopir->user->name }}</span>
+                </div>
+                @if($jadwal->conductor)
+                    <div class="flex items-center gap-2">
+                        <i data-lucide="users" class="w-4 h-4 opacity-70"></i>
+                        <span>{{ $jadwal->conductor->user->name }}</span>
                     </div>
+                @endif
+            </div>
+        </div>
 
-                    <div class="lg:col-span-1">
-                        <x-ui.card.card class="sticky top-6">
+        <form method="POST" action="{{ route('pemesanan.store', $jadwal) }}" class="space-y-8">
+            @csrf
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Pilih Kelas -->
+                    <x-ui.card>
+                        <x-ui.card.header>
+                            <x-ui.card.title class="flex items-center gap-2">
+                                <i data-lucide="layers" class="w-5 h-5 text-primary"></i>
+                                Pilih Kelas Bus
+                            </x-ui.card.title>
+                            <x-ui.card.description>Pilih kelas bus yang sesuai dengan kenyamanan Anda</x-ui.card.description>
+                        </x-ui.card.header>
+                        <x-ui.card.content>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                @forelse($jadwal->jadwalKelasBus as $jkb)
+                                    <label class="relative cursor-pointer group">
+                                        <input type="radio" name="jadwal_kelas_bus_id" value="{{ $jkb->id }}"
+                                            {{ old('jadwal_kelas_bus_id') == $jkb->id ? 'checked' : '' }}
+                                            class="sr-only peer" onchange="updateSeatGrid(this)">
+
+                                        <div class="p-4 border-2 rounded-xl transition-all peer-checked:border-primary peer-checked:bg-primary/5 hover:border-primary/50 border-border bg-card">
+                                            <div class="flex justify-between items-start mb-2">
+                                                <h4 class="font-bold text-foreground">{{ $jkb->kelasBus->nama_kelas }}</h4>
+                                                <div class="h-4 w-4 rounded-full border-2 border-muted peer-checked:border-primary peer-checked:bg-primary flex items-center justify-center">
+                                                    <div class="h-1.5 w-1.5 rounded-full bg-white opacity-0 peer-checked:opacity-100"></div>
+                                                </div>
+                                            </div>
+                                            <p class="text-lg font-bold text-primary">Rp {{ number_format($jkb->harga, 0, ',', '.') }}</p>
+                                            <div class="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                                                <i data-lucide="armchair" class="w-3 h-3"></i>
+                                                <span>{{ $jkb->busKelasBus->kursi->count() }} Kursi Tersedia</span>
+                                            </div>
+                                        </div>
+                                    </label>
+                                @empty
+                                    <div class="col-span-full p-8 text-center border-2 border-dashed rounded-xl">
+                                        <p class="text-muted-foreground">Tidak ada kelas bus tersedia</p>
+                                    </div>
+                                @endforelse
+                            </div>
+
+                            @error('jadwal_kelas_bus_id')
+                                <p class="text-sm font-medium text-destructive mt-4">{{ $message }}</p>
+                            @enderror
+                        </x-ui.card.content>
+                    </x-ui.card>
+
+                    <!-- Pilih Kursi -->
+                    <x-ui.card>
+                        <x-ui.card.header>
+                            <x-ui.card.title class="flex items-center gap-2">
+                                <i data-lucide="armchair" class="w-5 h-5 text-primary"></i>
+                                Pilih Kursi
+                            </x-ui.card.title>
+                            <x-ui.card.description>Klik pada kursi yang tersedia untuk memilih</x-ui.card.description>
+                        </x-ui.card.header>
+                        <x-ui.card.content class="space-y-6">
+                            <div class="flex flex-wrap gap-6 p-4 bg-muted/50 rounded-xl border border-border/50">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 bg-primary rounded border border-primary"></div>
+                                    <span class="text-xs font-medium">Terpilih</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 bg-card rounded border border-border"></div>
+                                    <span class="text-xs font-medium">Tersedia</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <div class="w-6 h-6 bg-muted rounded border border-muted-foreground/20 flex items-center justify-center">
+                                        <i data-lucide="x" class="w-3 h-3 text-muted-foreground/50"></i>
+                                    </div>
+                                    <span class="text-xs font-medium">Terisi</span>
+                                </div>
+                            </div>
+
+                            <div id="seat-grid" class="p-8 border-2 border-dashed rounded-xl text-center">
+                                <p class="text-muted-foreground">Silakan pilih kelas bus terlebih dahulu untuk melihat denah kursi</p>
+                            </div>
+
+                            @error('kursi_id')
+                                <p class="text-sm font-medium text-destructive">{{ $message }}</p>
+                            @enderror
+
+                            <div id="selected-seat-info" class="p-4 bg-primary/10 border border-primary/20 rounded-xl hidden">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="h-10 w-10 rounded-lg bg-primary flex items-center justify-center text-white">
+                                            <i data-lucide="armchair" class="w-5 h-5"></i>
+                                        </div>
+                                        <div>
+                                            <p class="text-xs text-muted-foreground font-medium uppercase tracking-wider">Kursi Terpilih</p>
+                                            <p class="text-lg font-bold text-primary" id="selected-seat-name">-</p>
+                                        </div>
+                                    </div>
+                                    <i data-lucide="check-circle-2" class="w-6 h-6 text-primary"></i>
+                                </div>
+                            </div>
+                        </x-ui.card.content>
+                    </x-ui.card>
+
+                    <!-- Data Penumpang -->
+                    <x-ui.card>
+                        <x-ui.card.header>
+                            <x-ui.card.title class="flex items-center gap-2">
+                                <i data-lucide="user-check" class="w-5 h-5 text-primary"></i>
+                                Data Penumpang
+                            </x-ui.card.title>
+                            <x-ui.card.description>Lengkapi data penumpang sesuai dengan identitas resmi</x-ui.card.description>
+                        </x-ui.card.header>
+                        <x-ui.card.content class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <x-ui.label for="nama_penumpang">Nama Lengkap <span class="text-destructive">*</span></x-ui.label>
+                                <x-ui.input type="text" name="nama_penumpang" id="nama_penumpang" value="{{ old('nama_penumpang', $user?->name) }}" required />
+                                @error('nama_penumpang') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="nik">NIK <span class="text-destructive">*</span></x-ui.label>
+                                <x-ui.input type="text" name="nik" id="nik" value="{{ old('nik', $user?->nik) }}" placeholder="Nomor Identitas (KTP)" required />
+                                @error('nik') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="jenis_kelamin">Jenis Kelamin <span class="text-destructive">*</span></x-ui.label>
+                                <select name="jenis_kelamin" id="jenis_kelamin" required class="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                    <option value="">Pilih Jenis Kelamin</option>
+                                    <option value="L" {{ old('jenis_kelamin', $user?->jenis_kelamin) == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="P" {{ old('jenis_kelamin', $user?->jenis_kelamin) == 'P' ? 'selected' : '' }}>Perempuan</option>
+                                </select>
+                                @error('jenis_kelamin') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="tanggal_lahir">Tanggal Lahir <span class="text-destructive">*</span></x-ui.label>
+                                <x-ui.input type="date" name="tanggal_lahir" id="tanggal_lahir" value="{{ old('tanggal_lahir', $user?->tanggal_lahir?->format('Y-m-d')) }}" required />
+                                @error('tanggal_lahir') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="nomor_telepon">Nomor Telepon <span class="text-destructive">*</span></x-ui.label>
+                                <x-ui.input type="tel" name="nomor_telepon" id="nomor_telepon" value="{{ old('nomor_telepon', $user?->nomor_telepon) }}" placeholder="08..." required />
+                                @error('nomor_telepon') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                            </div>
+
+                            <div class="space-y-2">
+                                <x-ui.label for="email">Email <span class="text-destructive">*</span></x-ui.label>
+                                <x-ui.input type="email" name="email" id="email" value="{{ old('email', $user?->email) }}" required />
+                                @error('email') <p class="text-xs text-destructive">{{ $message }}</p> @enderror
+                            </div>
+                        </x-ui.card.content>
+                    </x-ui.card>
+                </div>
+
+                <div class="lg:col-span-1">
+                    <div class="sticky top-6 space-y-6">
+                        <x-ui.card>
                             <x-ui.card.header>
-                                <x-ui.card.title>Ringkasan Pemesanan</x-ui.card.title>
+                                <x-ui.card.title>Ringkasan Pesanan</x-ui.card.title>
                             </x-ui.card.header>
-                            <x-ui.card.content class="space-y-6">
-                                <div class="space-y-4 pb-6 border-b border-gray-200 dark:border-gray-700">
+                            <x-ui.card.content class="space-y-4">
+                                <div class="space-y-3 pb-4 border-b border-border/50">
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600 dark:text-gray-400">Rute</span>
-                                        <span class="font-semibold text-gray-900 dark:text-white text-right">
-                                            {{ $jadwal->rute->asalTerminal->nama_kota }} → {{ $jadwal->rute->tujuanTerminal->nama_kota }}
-                                        </span>
+                                        <span class="text-muted-foreground">Kelas</span>
+                                        <span class="font-bold" id="summary-class">-</span>
                                     </div>
                                     <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600 dark:text-gray-400">Tanggal</span>
-                                        <span class="font-semibold text-gray-900 dark:text-white">
-                                            {{ $jadwal->tanggal_berangkat->format('d M Y') }}
-                                        </span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600 dark:text-gray-400">Jam</span>
-                                        <span class="font-semibold text-gray-900 dark:text-white">
-                                            {{ $jadwal->jam_berangkat->format('H:i') }}
-                                        </span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600 dark:text-gray-400">Kelas</span>
-                                        <span class="font-semibold text-gray-900 dark:text-white" id="summary-class">-</span>
-                                    </div>
-                                    <div class="flex justify-between text-sm">
-                                        <span class="text-gray-600 dark:text-gray-400">Kursi</span>
-                                        <span class="font-semibold text-gray-900 dark:text-white" id="summary-seat">-</span>
+                                        <span class="text-muted-foreground">Nomor Kursi</span>
+                                        <span class="font-bold text-primary" id="summary-seat">-</span>
                                     </div>
                                 </div>
-
                                 <div>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">Total Harga</p>
-                                    <p class="text-3xl font-bold text-blue-600 dark:text-blue-400" id="summary-price">Rp 0</p>
-                                </div>
-
-                                <div class="space-y-3">
-                                    <x-ui.button.button type="submit" variant="default" class="w-full" id="btn-submit" disabled>
-                                        <i data-lucide="check-circle" class="w-5 h-5 mr-2"></i>
-                                        Lanjut Bayar
-                                    </x-ui.button.button>
-                                    <x-ui.button.button type="button" variant="outline" class="w-full" onclick="window.location.href='{{ route('pemesanan.index') }}'">
-                                        <i data-lucide="arrow-left" class="w-5 h-5 mr-2"></i>
-                                        Kembali
-                                    </x-ui.button.button>
+                                    <p class="text-xs text-muted-foreground font-bold uppercase tracking-wider mb-1">Total Pembayaran</p>
+                                    <p class="text-3xl font-bold text-primary" id="summary-price">Rp 0</p>
                                 </div>
                             </x-ui.card.content>
-                        </x-ui.card.card>
+                            <x-ui.card.footer class="flex flex-col gap-3">
+                                <x-ui.button type="submit" class="w-full gap-2" id="btn-submit" disabled>
+                                    <i data-lucide="credit-card" class="w-4 h-4"></i>
+                                    Lanjut ke Pembayaran
+                                </x-ui.button>
+                                <p class="text-[10px] text-center text-muted-foreground">
+                                    Dengan mengklik tombol di atas, Anda menyetujui Syarat & Ketentuan yang berlaku.
+                                </p>
+                            </x-ui.card.footer>
+                        </x-ui.card>
+
+                        <x-ui.card class="bg-muted/30 border-dashed">
+                            <x-ui.card.content class="p-4 flex gap-3">
+                                <i data-lucide="shield-check" class="w-5 h-5 text-primary shrink-0"></i>
+                                <p class="text-xs text-muted-foreground">
+                                    Pembayaran Anda aman dan terenkripsi. Tiket akan langsung dikirim setelah pembayaran dikonfirmasi.
+                                </p>
+                            </x-ui.card.content>
+                        </x-ui.card>
                     </div>
                 </div>
-            </form>
-        </div>
+            </div>
+        </form>
     </div>
 
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    @push('scripts')
     <script>
-        lucide.createIcons();
-
         // Data jadwal dengan kursi
         const seatsData = {!! json_encode($jadwal->jadwalKelasBus->mapWithKeys(function($jkb) {
             return [$jkb->id => [
@@ -315,7 +271,7 @@
         const bookedIds = {{ json_encode($bookedSeatIds) }};
 
         function sortSeats(kursis) {
-            return kursis.sort((a, b) => a.nomor.localeCompare(b.nomor));
+            return kursis.sort((a, b) => a.nomor.localeCompare(b.nomor, undefined, {numeric: true, sensitivity: 'base'}));
         }
 
         function updateSeatGrid(element) {
@@ -327,78 +283,102 @@
             document.getElementById('summary-class').textContent = data.class;
             document.getElementById('summary-price').textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(data.harga);
 
-            // Sort seats by nomor (A-Z)
+            // Sort seats
             const sortedKursis = sortSeats(data.kursis);
 
-            // Render seat grid dengan layout 2-gap-2
-            let html = '';
+            // Render seat grid
+            let html = '<div class="max-w-xs mx-auto space-y-4">';
+            
+            // Driver area
+            html += `
+                <div class="flex justify-between items-center mb-8 pb-4 border-b border-border/50">
+                    <div class="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                        <i data-lucide="circle-dot" class="w-6 h-6 text-muted-foreground"></i>
+                    </div>
+                    <div class="text-xs font-bold text-muted-foreground uppercase tracking-widest">Area Pengemudi</div>
+                </div>
+            `;
+
             for (let i = 0; i < sortedKursis.length; i += 4) {
-                const kiri = [sortedKursis[i], sortedKursis[i + 1]];
-                const kanan = [sortedKursis[i + 2], sortedKursis[i + 3]];
+                const row = sortedKursis.slice(i, i + 4);
+                html += '<div class="flex justify-between gap-8">';
                 
-                html += '<div class="flex items-center justify-between gap-8 mb-4">';
-                
-                // Kursi kiri (2)
-                html += '<div class="flex gap-3">';
-                kiri.forEach(k => {
+                // Left side (2 seats)
+                html += '<div class="flex gap-2">';
+                [row[0], row[1]].forEach(k => {
                     if (!k) return;
-                    const isBooked = bookedIds.includes(k.id);
-                    const isSelected = {{ json_encode(old('kursi_id')) }} == k.id;
-                    
-                    html += `
-                        <label class="cursor-pointer">
-                            <input type="radio" name="kursi_id" value="${k.id}" 
-                                ${isSelected ? 'checked' : ''} 
-                                ${isBooked ? 'disabled' : ''}
-                                class="sr-only peer" onchange="updateSeatInfo('${k.nomor}')">
-                            
-                            <div class="w-12 h-12 rounded border-2 transition-all flex items-center justify-center text-white font-semibold text-xs
-                                ${isBooked ? 'bg-red-500 border-red-600 opacity-50 cursor-not-allowed' : ''}
-                                ${!isBooked && !isSelected ? 'bg-blue-500 border-blue-600 hover:bg-blue-600' : ''}
-                                ${isSelected ? 'bg-green-500 border-green-600' : ''}">
-                                ${k.nomor}
-                            </div>
-                        </label>
-                    `;
+                    html += renderSeat(k);
                 });
                 html += '</div>';
                 
-                // Gap tengah (simulasi pintu/gang)
-                html += '<div class="border-l-2 border-gray-400 dark:border-gray-500 h-12"></div>';
-                
-                // Kursi kanan (2)
-                html += '<div class="flex gap-3">';
-                kanan.forEach(k => {
+                // Right side (2 seats)
+                html += '<div class="flex gap-2">';
+                [row[2], row[3]].forEach(k => {
                     if (!k) return;
-                    const isBooked = bookedIds.includes(k.id);
-                    const isSelected = {{ json_encode(old('kursi_id')) }} == k.id;
-                    
-                    html += `
-                        <label class="cursor-pointer">
-                            <input type="radio" name="kursi_id" value="${k.id}" 
-                                ${isSelected ? 'checked' : ''} 
-                                ${isBooked ? 'disabled' : ''}
-                                class="sr-only peer" onchange="updateSeatInfo('${k.nomor}')">
-                            
-                            <div class="w-12 h-12 rounded border-2 transition-all flex items-center justify-center text-white font-semibold text-xs
-                                ${isBooked ? 'bg-red-500 border-red-600 opacity-50 cursor-not-allowed' : ''}
-                                ${!isBooked && !isSelected ? 'bg-blue-500 border-blue-600 hover:bg-blue-600' : ''}
-                                ${isSelected ? 'bg-green-500 border-green-600' : ''}">
-                                ${k.nomor}
-                            </div>
-                        </label>
-                    `;
+                    html += renderSeat(k);
                 });
-                html += '</div></div>';
+                html += '</div>';
+                
+                html += '</div>';
             }
+            html += '</div>';
             
             grid.innerHTML = html;
+            grid.classList.remove('p-8', 'border-2', 'border-dashed', 'text-center');
             lucide.createIcons();
-            // Reset summary seat text
+            
+            // Reset selection
             document.getElementById('summary-seat').textContent = '-'; 
             document.getElementById('btn-submit').disabled = true;
+            document.getElementById('selected-seat-info').classList.add('hidden');
+        }
+
+        function renderSeat(k) {
+            const isBooked = bookedIds.includes(k.id);
+            const isSelected = {{ json_encode(old('kursi_id')) }} == k.id;
             
-            // Re-check old seat if exists
+            return `
+                <label class="relative group">
+                    <input type="radio" name="kursi_id" value="${k.id}" 
+                        ${isSelected ? 'checked' : ''} 
+                        ${isBooked ? 'disabled' : ''}
+                        class="sr-only peer" onchange="updateSeatInfo('${k.nomor}')">
+                    
+                    <div class="w-10 h-10 rounded-lg border-2 transition-all flex items-center justify-center text-[10px] font-bold
+                        ${isBooked ? 'bg-muted border-muted-foreground/10 text-muted-foreground/30 cursor-not-allowed' : 'bg-card border-border text-foreground hover:border-primary/50 cursor-pointer'}
+                        peer-checked:bg-primary peer-checked:border-primary peer-checked:text-primary-foreground">
+                        ${isBooked ? '<i data-lucide="x" class="w-3 h-3"></i>' : k.nomor}
+                    </div>
+                </label>
+            `;
+        }
+
+        function updateSeatInfo(nomor) {
+            document.getElementById('summary-seat').textContent = nomor;
+            document.getElementById('selected-seat-name').textContent = nomor;
+            document.getElementById('selected-seat-info').classList.remove('hidden');
+            document.getElementById('btn-submit').disabled = false;
+        }
+
+        // Initialize if old value exists
+        window.addEventListener('DOMContentLoaded', () => {
+            const checkedRadio = document.querySelector('input[name="jadwal_kelas_bus_id"]:checked');
+            if (checkedRadio) {
+                updateSeatGrid(checkedRadio);
+                const oldKursiId = {{ json_encode(old('kursi_id')) }};
+                if (oldKursiId) {
+                    const kursiRadio = document.querySelector(\`input[name="kursi_id"][value="\${oldKursiId}"]\`);
+                    if (kursiRadio) {
+                        kursiRadio.checked = true;
+                        const nomor = kursiRadio.closest('label').innerText.trim();
+                        updateSeatInfo(nomor);
+                    }
+                }
+            }
+        });
+    </script>
+    @endpush
+@endsection
             const oldSeatId = {{ json_encode(old('kursi_id')) }};
             if(oldSeatId) {
                 const oldInput = document.querySelector(`input[name="kursi_id"][value="${oldSeatId}"]`);

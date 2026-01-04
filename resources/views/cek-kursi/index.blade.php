@@ -61,11 +61,11 @@
                                 </div>
                                 <div class="text-sm">
                                     <p class="text-xs text-muted-foreground uppercase tracking-wider">Sopir</p>
-                                    <p class="font-semibold text-foreground">{{ $jadwal->sopir->user->name }}</p>
+                                    <p class="font-semibold text-foreground">{{ $jadwal->sopir?->user?->name ?? '-' }}</p>
                                 </div>
                                 <div class="text-sm">
                                     <p class="text-xs text-muted-foreground uppercase tracking-wider">Kondektur</p>
-                                    <p class="font-semibold text-foreground">{{ $jadwal->conductor?->user->name ?? 'Belum ditugaskan' }}</p>
+                                    <p class="font-semibold text-foreground">{{ $jadwal->conductor?->user?->name ?? 'Belum ditugaskan' }}</p>
                                 </div>
                             </div>
 
