@@ -63,7 +63,7 @@ class BusController extends Controller
             "kelas_bus_data.*.kelas_id" => "required|exists:kelas_bus,id",
             "kelas_bus_data.*.jumlah_kursi" => "required|integer|min:1",
             "foto" => "array",
-            "foto.*" => "image|mimes:jpeg,png,jpg,gif|max:2048",
+            "foto.*" => "nullable|image|mimes:jpeg,png,jpg,gif,webp|max:5048",
         ]);
 
         // Check total seats must exactly equal capacity
@@ -258,7 +258,7 @@ class BusController extends Controller
 
     public function destroy(Bus $bus): RedirectResponse
     {
-        if ($bus->jadwals()->exists() || $bus->busKelasBus()->exists()) {
+        if ($bus->jadwals()->exists()) {
             return redirect()->back()->with("error", "Bus tidak dapat dihapus karena masih terkait dengan jadwal atau kelas bus.");
         }
 
