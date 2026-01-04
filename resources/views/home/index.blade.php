@@ -82,7 +82,7 @@
                                     <div class="h-full overflow-y-auto p-4 space-y-4">
                                         <!-- Header -->
                                         <div class="text-sm font-medium text-foreground mb-4">
-                                            Download Sekarang <x-lucide-hand class="inline h-4 w-4 text-white" />
+                                            Download Sekarang <i data-lucide="hand" class="inline h-4 w-4 text-white" ></i>
                                         </div>
 
                                         <!-- Download Card -->
@@ -104,11 +104,11 @@
                                         <!-- Quick Features -->
                                         <div class="grid grid-cols-2 gap-2">
                                             <div class="bg-card border border-border rounded-lg p-3 text-center">
-                                                <div class="mb-1"><x-lucide-smartphone class="h-6 w-6 mx-auto text-white" /></div>
+                                                <div class="mb-1"><i data-lucide="smartphone" class="h-6 w-6 mx-auto text-white" ></i></div>
                                                 <div class="text-xs text-card-foreground font-medium">Mobile App</div>
                                             </div>
                                             <div class="bg-card border border-border rounded-lg p-3 text-center">
-                                                <div class="mb-1"><x-lucide-ticket class="h-6 w-6 mx-auto text-white" /></div>
+                                                <div class="mb-1"><i data-lucide="ticket" class="h-6 w-6 mx-auto text-white" ></i></div>
                                                 <div class="text-xs text-card-foreground font-medium">E-Ticket</div>
                                             </div>
                                         </div>
@@ -121,7 +121,7 @@
 
                             <!-- Decorative Element Outside Phone -->
                             <div class="absolute top-2 right-2 w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center">
-                                <x-lucide-star class="h-4 w-4 text-primary" />
+                                <i data-lucide="star" class="h-4 w-4 text-primary" ></i>
                             </div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@
                     <!-- Feature 1 -->
                     <div class="bg-card text-card-foreground border border-border shadow-sm rounded-xl p-6 space-y-4 hover:shadow-md transition">
                         <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
-                            <x-lucide-credit-card class="h-6 w-6 text-white" />
+                            <i data-lucide="credit-card" class="h-6 w-6 text-white" ></i>
                         </div>
                         <h3 class="text-xl font-semibold">Pemesanan Mudah</h3>
                         <p class="text-muted-foreground">
@@ -157,7 +157,7 @@
                     <!-- Feature 2 -->
                     <div class="bg-card text-card-foreground border border-border shadow-sm rounded-xl p-6 space-y-4 hover:shadow-md transition">
                         <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
-                            <x-lucide-armchair class="h-6 w-6 text-white" />
+                            <i data-lucide="armchair" class="h-6 w-6 text-white" ></i>
                         </div>
                         <h3 class="text-xl font-semibold">Cek Jadwal Real-time</h3>
                         <p class="text-muted-foreground">
@@ -168,7 +168,7 @@
                     <!-- Feature 3 -->
                     <div class="bg-card text-card-foreground border border-border shadow-sm rounded-xl p-6 space-y-4 hover:shadow-md transition">
                         <div class="w-12 h-12 bg-primary bg-opacity-10 rounded-lg flex items-center justify-center">
-                            <x-lucide-headphones class="h-6 w-6 text-white" />
+                            <i data-lucide="headphones" class="h-6 w-6 text-white" ></i>
                         </div>
                         <h3 class="text-xl font-semibold">Dukungan Pelanggan 24/7</h3>
                         <p class="text-muted-foreground">
@@ -195,7 +195,7 @@
                     <details class="group border-b border-border pb-4">
                         <summary class="flex justify-between items-center cursor-pointer text-foreground font-medium py-3">
                             <span>Bagaimana cara download dan menggunakan aplikasi?</span>
-                            <x-lucide-chevron-down class="text-white group-open:rotate-180 transition h-4 w-4" />
+                            <i data-lucide="chevron-down" class="text-white group-open:rotate-180 transition h-4 w-4" ></i>
                         </summary>
                         <p class="text-muted-foreground mt-2 pl-4">
                             Download aplikasi dari App Store atau Google Play. Daftar akun dan mulai pesan tiket bus dengan mudah.
@@ -205,7 +205,7 @@
                     <details class="group border-b border-border pb-4">
                         <summary class="flex justify-between items-center cursor-pointer text-foreground font-medium py-3">
                             <span>Apakah aplikasi tersedia di semua platform?</span>
-                            <x-lucide-chevron-down class="text-white group-open:rotate-180 transition h-4 w-4" />
+                            <i data-lucide="chevron-down" class="text-white group-open:rotate-180 transition h-4 w-4" ></i>
                         </summary>
                         <p class="text-muted-foreground mt-2 pl-4">
                             Ya, aplikasi BusGo tersedia di iOS dan Android. Download sekarang dan nikmati fitur lengkapnya.
@@ -215,7 +215,7 @@
                     <details class="group border-b border-border pb-4">
                         <summary class="flex justify-between items-center cursor-pointer text-foreground font-medium py-3">
                             <span>Apakah data saya aman di aplikasi?</span>
-                            <x-lucide-chevron-down class="text-white group-open:rotate-180 transition h-4 w-4" />
+                            <i data-lucide="chevron-down" class="text-white group-open:rotate-180 transition h-4 w-4" ></i>
                         </summary>
                         <p class="text-muted-foreground mt-2 pl-4">
                             Kami menggunakan enkripsi end-to-end untuk melindungi data Anda. Privasi dan keamanan adalah prioritas utama kami.
@@ -225,7 +225,7 @@
                     <details class="group border-b border-border pb-4">
                         <summary class="flex justify-between items-center cursor-pointer text-foreground font-medium py-3">
                             <span>Bagaimana cara menghubungi dukungan?</span>
-                            <x-lucide-chevron-down class="text-white group-open:rotate-180 transition h-4 w-4" />
+                            <i data-lucide="chevron-down" class="text-white group-open:rotate-180 transition h-4 w-4" ></i>
                         </summary>
                         <p class="text-muted-foreground mt-2 pl-4">
                             Hubungi tim dukungan kami melalui aplikasi di menu "Bantuan" atau email support@busgo.com. Kami siap membantu 24/7.

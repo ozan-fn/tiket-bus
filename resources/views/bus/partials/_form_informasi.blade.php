@@ -9,7 +9,7 @@
             <div class="space-y-2">
                 <x-ui.label for="nama">
                     <div class="flex items-center gap-2">
-                        <x-lucide-bus class="w-4 h-4" />
+                        <i data-lucide="bus" class="w-4 h-4" ></i>
                         Nama Bus
                         <span class="text-red-500">*</span>
                     </div>
@@ -24,7 +24,7 @@
                 />
                 @error('nama')
                     <p class="text-sm text-destructive flex items-center gap-1">
-                        <x-lucide-alert-circle class="w-4 h-4" />
+                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                         {{ $message }}
                     </p>
                 @enderror
@@ -36,7 +36,7 @@
                 <div class="space-y-2">
                     <x-ui.label for="kapasitas">
                         <div class="flex items-center gap-2">
-                            <x-lucide-users class="w-4 h-4" />
+                            <i data-lucide="users" class="w-4 h-4" ></i>
                             Kapasitas Kursi
                             <span class="text-red-500">*</span>
                         </div>
@@ -52,7 +52,7 @@
                     />
                     @error('kapasitas')
                         <p class="text-sm text-destructive flex items-center gap-1">
-                            <x-lucide-alert-circle class="w-4 h-4" />
+                            <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                             {{ $message }}
                         </p>
                     @enderror
@@ -63,7 +63,7 @@
                 <div class="space-y-2">
                     <x-ui.label for="plat_nomor">
                         <div class="flex items-center gap-2">
-                            <x-lucide-hash class="w-4 h-4" />
+                            <i data-lucide="hash" class="w-4 h-4" ></i>
                             Plat Nomor
                             <span class="text-red-500">*</span>
                         </div>
@@ -78,7 +78,7 @@
                     />
                     @error('plat_nomor')
                         <p class="text-sm text-destructive flex items-center gap-1">
-                            <x-lucide-alert-circle class="w-4 h-4" />
+                            <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                             {{ $message }}
                         </p>
                     @enderror

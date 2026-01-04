@@ -11,10 +11,11 @@
                 <x-ui.card.content class="px-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="h-12 w-12 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                            <x-lucide-calendar class="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                            <i data-lucide="calendar" class="h-6 w-6 text-orange-600 dark:text-orange-400"></i>
                         </div>
-                        <a href="{{ route('admin/jadwal.index') }}" class="text-xs text-primary hover:underline flex items-center gap-1">
-                            Lihat <x-lucide-arrow-right class="h-3 w-3" />
+                        <a href="{{ route('admin/jadwal.index') }}"
+                            class="text-xs text-primary hover:underline flex items-center gap-1">
+                            Lihat <i data-lucide="arrow-right" class="h-3 w-3"></i>
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground">Jadwal Hari Ini</p>
@@ -27,10 +28,11 @@
                 <x-ui.card.content class="px-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="h-12 w-12 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                            <x-lucide-users class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                            <i data-lucide="users" class="h-6 w-6 text-purple-600 dark:text-purple-400"></i>
                         </div>
-                        <a href="{{ route('admin/history-pemesanan') }}" class="text-xs text-primary hover:underline flex items-center gap-1">
-                            Lihat <x-lucide-arrow-right class="h-3 w-3" />
+                        <a href="{{ route('admin/history-pemesanan') }}"
+                            class="text-xs text-primary hover:underline flex items-center gap-1">
+                            Lihat <i data-lucide="arrow-right" class="h-3 w-3"></i>
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground">Total Penumpang</p>
@@ -43,10 +45,11 @@
                 <x-ui.card.content class="px-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                            <x-lucide-ticket class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            <i data-lucide="ticket" class="h-6 w-6 text-blue-600 dark:text-blue-400"></i>
                         </div>
-                        <a href="{{ route('admin/history-pemesanan') }}" class="text-xs text-primary hover:underline flex items-center gap-1">
-                            Lihat <x-lucide-arrow-right class="h-3 w-3" />
+                        <a href="{{ route('admin/history-pemesanan') }}"
+                            class="text-xs text-primary hover:underline flex items-center gap-1">
+                            Lihat <i data-lucide="arrow-right" class="h-3 w-3"></i>
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground">Tiket Terjual</p>
@@ -65,7 +68,8 @@
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="space-y-3">
-                        <div class="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
+                        <div
+                            class="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
                             <div>
                                 <p class="text-sm font-semibold">Bus Mawar</p>
                                 <p class="text-xs text-muted-foreground">Jakarta → Surabaya</p>
@@ -74,7 +78,8 @@
                             <x-ui.badge variant="outline">40 Kursi</x-ui.badge>
                         </div>
 
-                        <div class="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
+                        <div
+                            class="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
                             <div>
                                 <p class="text-sm font-semibold">Bus Melati</p>
                                 <p class="text-xs text-muted-foreground">Bandung → Yogyakarta</p>
@@ -83,7 +88,8 @@
                             <x-ui.badge variant="outline">32 Kursi</x-ui.badge>
                         </div>
 
-                        <div class="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
+                        <div
+                            class="flex items-center justify-between p-3 rounded-lg border border-border bg-card hover:bg-accent/50 transition-colors">
                             <div>
                                 <p class="text-sm font-semibold">Bus Anggrek</p>
                                 <p class="text-xs text-muted-foreground">Surabaya → Denpasar</p>
@@ -94,9 +100,10 @@
                     </div>
                 </x-ui.card.content>
                 <x-ui.card.footer class="border-t border-border">
-                    <a href="{{ route('admin/jadwal.index') }}" class="text-sm text-primary hover:underline font-medium flex items-center gap-1">
+                    <a href="{{ route('admin/jadwal.index') }}"
+                        class="text-sm text-primary hover:underline font-medium flex items-center gap-1">
                         Lihat Semua Jadwal
-                        <x-lucide-arrow-right class="h-4 w-4" />
+                        <i data-lucide="arrow-right" class="h-4 w-4"></i>
                     </a>
                 </x-ui.card.footer>
             </x-ui.card>
@@ -109,27 +116,36 @@
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="space-y-3">
-                        <div class="flex items-start gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-200 dark:border-blue-800">
-                            <x-lucide-check-circle class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0" />
+                        <div
+                            class="flex items-start gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-200 dark:border-blue-800">
+                            <i data-lucide="check-circle"
+                                class="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 flex-shrink-0"></i>
                             <div>
                                 <p class="text-sm font-medium">Periksa Kehadiran Penumpang</p>
-                                <p class="text-xs text-muted-foreground mt-1">Pastikan semua penumpang hadir sebelum keberangkatan</p>
+                                <p class="text-xs text-muted-foreground mt-1">Pastikan semua penumpang hadir sebelum
+                                    keberangkatan</p>
                             </div>
                         </div>
 
-                        <div class="flex items-start gap-3 p-3 rounded-lg bg-green-500/10 border border-green-200 dark:border-green-800">
-                            <x-lucide-check-circle class="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                        <div
+                            class="flex items-start gap-3 p-3 rounded-lg bg-green-500/10 border border-green-200 dark:border-green-800">
+                            <i data-lucide="check-circle"
+                                class="h-5 w-5 text-green-600 dark:text-green-400 mt-0.5 flex-shrink-0"></i>
                             <div>
                                 <p class="text-sm font-medium">Verifikasi Tiket</p>
-                                <p class="text-xs text-muted-foreground mt-1">Verifikasi semua tiket penumpang sebelum perjalanan</p>
+                                <p class="text-xs text-muted-foreground mt-1">Verifikasi semua tiket penumpang sebelum
+                                    perjalanan</p>
                             </div>
                         </div>
 
-                        <div class="flex items-start gap-3 p-3 rounded-lg bg-orange-500/10 border border-orange-200 dark:border-orange-800">
-                            <x-lucide-check-circle class="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0" />
+                        <div
+                            class="flex items-start gap-3 p-3 rounded-lg bg-orange-500/10 border border-orange-200 dark:border-orange-800">
+                            <i data-lucide="check-circle"
+                                class="h-5 w-5 text-orange-600 dark:text-orange-400 mt-0.5 flex-shrink-0"></i>
                             <div>
                                 <p class="text-sm font-medium">Lapor Kondisi Bus</p>
-                                <p class="text-xs text-muted-foreground mt-1">Catat kondisi bus dan fasilitas yang rusak</p>
+                                <p class="text-xs text-muted-foreground mt-1">Catat kondisi bus dan fasilitas yang rusak
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -146,7 +162,8 @@
                 <div class="space-y-3">
                     <div class="flex justify-between">
                         <span class="text-sm text-muted-foreground">Role</span>
-                        <span class="text-sm font-medium">{{ auth()->user()?->roles->first()?->name ?? 'Unknown' }}</span>
+                        <span
+                            class="text-sm font-medium">{{ auth()->user()?->roles->first()?->name ?? 'Unknown' }}</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-sm text-muted-foreground">Nama User</span>
@@ -168,10 +185,12 @@
         <x-ui.card class="mt-6">
             <x-ui.card.content class="px-4">
                 <div class="flex items-start gap-3">
-                    <x-lucide-info class="h-5 w-5 text-primary mt-1" />
+                    <i data-lucide="info" class="h-5 w-5 text-primary mt-1"></i>
                     <div>
                         <p class="text-sm font-medium">Informasi Kondektur</p>
-                        <p class="text-xs text-muted-foreground mt-1">Sebagai Kondektur, Anda bertugas untuk mengecek kehadiran penumpang, memverifikasi tiket, dan melaporkan kondisi bus selama perjalanan. Pastikan semua penumpang memiliki tiket yang valid sebelum keberangkatan.</p>
+                        <p class="text-xs text-muted-foreground mt-1">Sebagai Kondektur, Anda bertugas untuk mengecek
+                            kehadiran penumpang, memverifikasi tiket, dan melaporkan kondisi bus selama perjalanan.
+                            Pastikan semua penumpang memiliki tiket yang valid sebelum keberangkatan.</p>
                     </div>
                 </div>
             </x-ui.card.content>

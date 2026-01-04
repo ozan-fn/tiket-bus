@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -23,7 +23,7 @@
         @if(session('success'))
             <x-ui.alert class="mb-6">
                 <x-slot:icon>
-                    <x-lucide-check-circle class="w-4 h-4" />
+                    <i data-lucide="check-circle" class="w-4 h-4" ></i>
                 </x-slot:icon>
                 <x-slot:title>Berhasil!</x-slot:title>
                 <x-slot:description>
@@ -43,7 +43,7 @@
                             </div>
                             <a href="{{ route('admin/banner.create') }}" class="hidden sm:inline-block">
                                 <x-ui.button>
-                                    <x-lucide-plus class="w-4 h-4 mr-2" />
+                                    <i data-lucide="plus" class="w-4 h-4 mr-2" ></i>
                                     Tambah Banner
                                 </x-ui.button>
                             </a>
@@ -64,13 +64,13 @@
                                             />
                                         </div>
                                         <x-ui.button size="icon" type="submit" variant="outline" class="h-9 w-9 shrink-0">
-                                            <x-lucide-search class="w-4 h-4" />
+                                            <i data-lucide="search" class="w-4 h-4" ></i>
                                         </x-ui.button>
                                     </div>
                                     @if($search)
                                         <a href="{{ route('admin/banner.index') }}" class="shrink-0">
                                             <x-ui.button size="icon" type="button" variant="outline" class="h-9! w-9! shrink-0">
-                                                <x-lucide-x class="w-4 h-4" />
+                                                <i data-lucide="x" class="w-4 h-4" ></i>
                                             </x-ui.button>
                                         </a>
                                     @endif
@@ -82,7 +82,7 @@
                     <!-- Mobile Add Button -->
                     <a href="{{ route('admin/banner.create') }}" class="sm:hidden w-full">
                         <x-ui.button class="w-full">
-                            <x-lucide-plus class="w-4 h-4 mr-2" />
+                            <i data-lucide="plus" class="w-4 h-4 mr-2" ></i>
                             Tambah Banner
                         </x-ui.button>
                     </a>
@@ -111,7 +111,7 @@
                                         <x-ui.table.cell>
                                             <div class="flex items-center gap-2 sm:gap-3">
                                                 <div class="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                                    <x-lucide-image class="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                                                    <i data-lucide="image" class="h-4 w-4 sm:h-5 sm:w-5 text-primary" ></i>
                                                 </div>
                                                 <div class="min-w-0">
                                                     <p class="font-medium text-sm sm:text-base truncate">{{ $banner->title }}</p>
@@ -131,7 +131,7 @@
                                                 </x-photo-gallery>
                                             @else
                                                 <span class="text-sm text-muted-foreground flex items-center gap-1">
-                                                    <x-lucide-image-off class="w-4 h-4" />
+                                                    <i data-lucide="image-off" class="w-4 h-4" ></i>
                                                 </span>
                                             @endif
                                         </x-ui.table.cell>
@@ -147,7 +147,7 @@
                                                 <form method="POST" action="{{ route('admin/banner.order', ['banner' => $banner, 'direction' => 'up']) }}" class="inline">
                                                     @csrf
                                                     <x-ui.button type="submit" variant="ghost" size="sm" title="Naikkan Urutan">
-                                                        <x-lucide-chevron-up class="w-4 h-4" />
+                                                        <i data-lucide="chevron-up" class="w-4 h-4" ></i>
                                                     </x-ui.button>
                                                 </form>
 
@@ -155,25 +155,25 @@
                                                 <form method="POST" action="{{ route('admin/banner.order', ['banner' => $banner, 'direction' => 'down']) }}" class="inline">
                                                     @csrf
                                                     <x-ui.button type="submit" variant="ghost" size="sm" title="Turunkan Urutan">
-                                                        <x-lucide-chevron-down class="w-4 h-4" />
+                                                        <i data-lucide="chevron-down" class="w-4 h-4" ></i>
                                                     </x-ui.button>
                                                 </form>
 
                                                 <a href="{{ route('admin/banner.show', $banner) }}" class="hidden sm:inline-block">
                                                     <x-ui.button variant="ghost" size="sm">
-                                                        <x-lucide-eye class="w-4 h-4" />
+                                                        <i data-lucide="eye" class="w-4 h-4" ></i>
                                                     </x-ui.button>
                                                 </a>
                                                 <a href="{{ route('admin/banner.edit', $banner) }}">
                                                     <x-ui.button variant="ghost" size="sm">
-                                                        <x-lucide-pencil class="w-4 h-4" />
+                                                        <i data-lucide="pencil" class="w-4 h-4" ></i>
                                                     </x-ui.button>
                                                 </a>
 
                                                 <!-- Delete Dialog -->
                                                 <div x-data="{ open: false }">
                                                     <x-ui.button @click="open = true" variant="ghost" size="sm" class="text-destructive hover:bg-destructive/10">
-                                                        <x-lucide-trash-2 class="w-4 h-4" />
+                                                        <i data-lucide="trash-2" class="w-4 h-4" ></i>
                                                     </x-ui.button>
 
                                                     <!-- Dialog Overlay & Content -->
@@ -208,7 +208,7 @@
 
                                                                     <div class="flex items-start gap-4">
                                                                         <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                                            <x-lucide-alert-triangle class="h-6 w-6 text-destructive" />
+                                                                            <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
                                                                         </div>
                                                                         <div class="flex-1">
                                                                             <h3 class="text-lg font-semibold mb-2">Hapus Banner</h3>
@@ -225,7 +225,7 @@
                                                                                     @csrf
                                                                                     @method('DELETE')
                                                                                     <x-ui.button type="submit" size="sm" class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                                        <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                                                                        <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                                                                         Ya, Hapus
                                                                                     </x-ui.button>
                                                                                 </form>
@@ -249,7 +249,7 @@
                                                 <div class="flex items-start justify-between mb-3">
                                                     <div class="flex items-center gap-3">
                                                         <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                                            <x-lucide-image class="h-4 w-4 text-primary" />
+                                                            <i data-lucide="image" class="h-4 w-4 text-primary" ></i>
                                                         </div>
                                                         <div>
                                                             <p class="font-medium text-sm">{{ $banner->title }}</p>
@@ -278,7 +278,7 @@
                                                             </x-photo-gallery>
                                                         @else
                                                             <span class="text-xs text-muted-foreground flex items-center gap-1">
-                                                                <x-lucide-image-off class="w-3 h-3" /> Tidak ada gambar
+                                                                <i data-lucide="image-off" class="w-3 h-3" ></i> Tidak ada gambar
                                                             </span>
                                                         @endif
                                                     </div>
@@ -302,7 +302,7 @@
                                                     <form method="POST" action="{{ route('admin/banner.order', ['banner' => $banner, 'direction' => 'up']) }}" class="flex-1">
                                                         @csrf
                                                         <x-ui.button type="submit" variant="outline" size="sm" class="w-full text-xs">
-                                                            <x-lucide-chevron-up class="w-3 h-3 mr-1" />
+                                                            <i data-lucide="chevron-up" class="w-3 h-3 mr-1" ></i>
                                                             Naik
                                                         </x-ui.button>
                                                     </form>
@@ -311,26 +311,26 @@
                                                     <form method="POST" action="{{ route('admin/banner.order', ['banner' => $banner, 'direction' => 'down']) }}" class="flex-1">
                                                         @csrf
                                                         <x-ui.button type="submit" variant="outline" size="sm" class="w-full text-xs">
-                                                            <x-lucide-chevron-down class="w-3 h-3 mr-1" />
+                                                            <i data-lucide="chevron-down" class="w-3 h-3 mr-1" ></i>
                                                             Turun
                                                         </x-ui.button>
                                                     </form>
 
                                                     <a href="{{ route('admin/banner.show', $banner) }}" class="flex-1">
                                                         <x-ui.button variant="outline" size="sm" class="w-full text-xs">
-                                                            <x-lucide-eye class="w-3 h-3 mr-1" />
+                                                            <i data-lucide="eye" class="w-3 h-3 mr-1" ></i>
                                                             Lihat
                                                         </x-ui.button>
                                                     </a>
                                                     <a href="{{ route('admin/banner.edit', $banner) }}" class="flex-1">
                                                         <x-ui.button variant="outline" size="sm" class="w-full text-xs">
-                                                            <x-lucide-pencil class="w-3 h-3 mr-1" />
+                                                            <i data-lucide="pencil" class="w-3 h-3 mr-1" ></i>
                                                             Edit
                                                         </x-ui.button>
                                                     </a>
                                                     <div x-data="{ open: false }" class="flex-1">
                                                         <x-ui.button @click="open = true" variant="outline" size="sm" class="w-full text-xs text-destructive hover:bg-destructive/10">
-                                                            <x-lucide-trash-2 class="w-3 h-3 mr-1" />
+                                                            <i data-lucide="trash-2" class="w-3 h-3 mr-1" ></i>
                                                             Hapus
                                                         </x-ui.button>
 
@@ -341,7 +341,7 @@
                                                                     <div x-show="open" x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" @click.stop class="relative w-full max-w-lg bg-card rounded-lg shadow-lg border border-border p-6">
                                                                         <div class="flex items-start gap-4">
                                                                             <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                                                <x-lucide-alert-triangle class="h-6 w-6 text-destructive" />
+                                                                                <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
                                                                             </div>
                                                                             <div class="flex-1">
                                                                                 <h3 class="text-lg font-semibold mb-2">Hapus Banner</h3>
@@ -357,7 +357,7 @@
                                                                                         @csrf
                                                                                         @method('DELETE')
                                                                                         <x-ui.button type="submit" size="sm" class="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                                            <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                                                                            <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                                                                             Ya, Hapus
                                                                                         </x-ui.button>
                                                                                     </form>
@@ -381,9 +381,9 @@
                     <div class="text-center py-12">
                         <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
                             @if($search)
-                                <x-lucide-search-x class="h-8 w-8 text-muted-foreground" />
+                                <i data-lucide="search-x" class="h-8 w-8 text-muted-foreground" ></i>
                             @else
-                                <x-lucide-image class="h-8 w-8 text-muted-foreground" />
+                                <i data-lucide="image" class="h-8 w-8 text-muted-foreground" ></i>
                             @endif
                         </div>
                         @if($search)
@@ -391,7 +391,7 @@
                             <p class="text-sm text-muted-foreground mb-4">Tidak ada banner yang cocok dengan pencarian "<strong>{{ $search }}</strong>"</p>
                             <a href="{{ route('admin/banner.index') }}" class="inline-block">
                                 <x-ui.button variant="outline" class="w-full sm:w-auto">
-                                    <x-lucide-x class="w-4 h-4 mr-2" />
+                                    <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                                     Reset Pencarian
                                 </x-ui.button>
                             </a>
@@ -400,7 +400,7 @@
                             <p class="text-sm text-muted-foreground mb-4">Mulai tambahkan banner pertama Anda</p>
                             <a href="{{ route('admin/banner.create') }}" class="inline-block">
                                 <x-ui.button class="w-full sm:w-auto">
-                                    <x-lucide-plus class="w-4 h-4 mr-2" />
+                                    <i data-lucide="plus" class="w-4 h-4 mr-2" ></i>
                                     Tambah Banner
                                 </x-ui.button>
                             </a>

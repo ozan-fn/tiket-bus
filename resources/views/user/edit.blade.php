@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/user.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -32,7 +32,7 @@
             @if(session('success'))
                 <x-ui.alert class="mb-6">
                     <x-slot:icon>
-                        <x-lucide-check-circle class="w-4 h-4" />
+                        <i data-lucide="check-circle" class="w-4 h-4" ></i>
                     </x-slot:icon>
                     <x-slot:title>Berhasil!</x-slot:title>
                     <x-slot:description>
@@ -44,7 +44,7 @@
             @if ($errors->any())
                 <x-ui.alert variant="destructive" class="mb-6">
                     <x-slot:icon>
-                        <x-lucide-alert-circle class="w-4 h-4" />
+                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                     </x-slot:icon>
                     <x-slot:title>Error!</x-slot:title>
                     <x-slot:description>
@@ -69,7 +69,7 @@
                         </div>
                         <a href="{{ route('admin/user.index') }}">
                             <x-ui.button variant="outline" size="sm">
-                                <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                 Kembali
                             </x-ui.button>
                         </a>
@@ -166,7 +166,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="nik">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-id-card class="w-4 h-4" />
+                                            <i data-lucide="id-card" class="w-4 h-4" ></i>
                                             NIK
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -189,7 +189,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="nomor_sim">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-file-text class="w-4 h-4" />
+                                            <i data-lucide="file-text" class="w-4 h-4" ></i>
                                             Nomor SIM
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -212,7 +212,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="alamat">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-map-pin class="w-4 h-4" />
+                                            <i data-lucide="map-pin" class="w-4 h-4" ></i>
                                             Alamat
                                         </div>
                                     </x-ui.label>
@@ -233,7 +233,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="telepon">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-phone class="w-4 h-4" />
+                                            <i data-lucide="phone" class="w-4 h-4" ></i>
                                             Telepon
                                         </div>
                                     </x-ui.label>
@@ -254,7 +254,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="tanggal_lahir">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-calendar class="w-4 h-4" />
+                                            <i data-lucide="calendar" class="w-4 h-4" ></i>
                                             Tanggal Lahir
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -276,7 +276,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="status">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-check-circle class="w-4 h-4" />
+                                            <i data-lucide="check-circle" class="w-4 h-4" ></i>
                                             Status
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -301,12 +301,12 @@
                         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
                             <a href="{{ route('admin/user.index') }}" class="w-full sm:w-auto">
                                 <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
-                                    <x-lucide-x class="w-4 h-4 mr-2" />
+                                    <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                                     Batal
                                 </x-ui.button>
                             </a>
                             <x-ui.button type="submit" class="w-full sm:w-auto">
-                                <x-lucide-save class="w-4 h-4 mr-2" />
+                                <i data-lucide="save" class="w-4 h-4 mr-2" ></i>
                                 Update User
                             </x-ui.button>
                         </div>

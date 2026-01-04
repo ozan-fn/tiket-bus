@@ -6,7 +6,7 @@
                     <x-ui.breadcrumb.link href="{{ route('dashboard') }}">Home</x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>Scan Tiket</x-ui.breadcrumb.page>
@@ -23,7 +23,7 @@
                     <div class="text-center">
                         <div class="flex justify-center mb-6">
                             <div class="p-3 bg-primary/10 rounded-full">
-                                <x-lucide-qr-code class="w-12 h-12 text-primary" />
+                                <i data-lucide="qr-code" class="w-12 h-12 text-primary" ></i>
                             </div>
                         </div>
 
@@ -38,7 +38,7 @@
                                     :class="activeTab === 'manual' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-foreground'"
                                     class="pb-2 px-4 font-medium transition-colors">
                                     <span class="flex items-center gap-2 justify-center">
-                                        <x-lucide-keyboard class="w-4 h-4" />
+                                        <i data-lucide="keyboard" class="w-4 h-4" ></i>
                                         Input Manual
                                     </span>
                                 </button>
@@ -46,7 +46,7 @@
                                     :class="activeTab === 'camera' ? 'border-b-2 border-primary text-primary' : 'text-muted-foreground hover:text-foreground'"
                                     class="pb-2 px-4 font-medium transition-colors">
                                     <span class="flex items-center gap-2 justify-center">
-                                        <x-lucide-camera class="w-4 h-4" />
+                                        <i data-lucide="camera" class="w-4 h-4" ></i>
                                         Scan Kamera
                                     </span>
                                 </button>
@@ -71,7 +71,7 @@
                                     <button @click="verifyTicket()" :disabled="loading"
                                         class="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium">
                                         <span x-show="!loading" class="flex items-center justify-center gap-2">
-                                            <x-lucide-search class="w-4 h-4" />
+                                            <i data-lucide="search" class="w-4 h-4" ></i>
                                             Verifikasi Tiket
                                         </span>
                                         <span x-show="loading" class="flex items-center justify-center gap-2">
@@ -89,7 +89,7 @@
                                         <button @click="startCamera()" :disabled="loading"
                                             class="w-full px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium">
                                             <span class="flex items-center justify-center gap-2">
-                                                <x-lucide-camera class="w-4 h-4" />
+                                                <i data-lucide="camera" class="w-4 h-4" ></i>
                                                 Buka Kamera
                                             </span>
                                         </button>
@@ -108,7 +108,7 @@
                                             <div class="w-64 h-64 border-2 border-primary rounded-lg opacity-50"></div>
                                         </div>
                                         <button @click="stopCamera()" class="absolute top-2 right-2 p-2 bg-black/50 hover:bg-black/75 rounded-lg text-white transition-colors">
-                                            <x-lucide-x class="w-5 h-5" />
+                                            <i data-lucide="x" class="w-5 h-5" ></i>
                                         </button>
                                         <div class="absolute bottom-4 left-0 right-0 text-center">
                                             <div x-show="scanning" class="inline-block px-3 py-1 bg-yellow-500/80 text-white text-sm rounded">Memindai QR Code...</div>
@@ -118,10 +118,10 @@
 
                                     <div x-show="cameraActive" class="flex gap-2">
                                         <button @click="captureFrame()" :disabled="scanning" class="flex-1 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed font-medium">
-                                            <span class="flex items-center justify-center gap-2"><x-lucide-camera class="w-4 h-4" /> Ambil Foto</span>
+                                            <span class="flex items-center justify-center gap-2"><i data-lucide="camera" class="w-4 h-4" ></i> Ambil Foto</span>
                                         </button>
                                         <button @click="stopCamera()" class="flex-1 px-4 py-2 bg-accent text-foreground rounded-lg hover:bg-accent/80 transition-colors font-medium">
-                                            <span class="flex items-center justify-center gap-2"><x-lucide-x class="w-4 h-4" /> Tutup</span>
+                                            <span class="flex items-center justify-center gap-2"><i data-lucide="x" class="w-4 h-4" ></i> Tutup</span>
                                         </button>
                                     </div>
                                 </div>
@@ -134,14 +134,14 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div class="p-4 bg-accent/50 rounded-lg border border-border">
                     <div class="flex items-center gap-3 mb-2">
-                        <x-lucide-check-circle class="w-5 h-5 text-primary" />
+                        <i data-lucide="check-circle" class="w-5 h-5 text-primary" ></i>
                         <h4 class="font-semibold text-foreground">Verifikasi Tiket</h4>
                     </div>
                     <p class="text-sm text-muted-foreground">Scan QR code atau masukkan kode tiket untuk memverifikasi keaslian tiket penumpang</p>
                 </div>
                 <div class="p-4 bg-accent/50 rounded-lg border border-border">
                     <div class="flex items-center gap-3 mb-2">
-                        <x-lucide-shield-check class="w-5 h-5 text-primary" />
+                        <i data-lucide="shield-check" class="w-5 h-5 text-primary" ></i>
                         <h4 class="font-semibold text-foreground">Keamanan Tinggi</h4>
                     </div>
                     <p class="text-sm text-muted-foreground">Validasi real-time dengan database pusat</p>
@@ -170,7 +170,7 @@
                     <!-- Close Button -->
                     <button @click="closeDialog()"
                             class="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10">
-                        <x-lucide-x class="w-5 h-5" />
+                        <i data-lucide="x" class="w-5 h-5" ></i>
                     </button>
 
                     <!-- Content -->
@@ -181,7 +181,7 @@
                                 <div class="text-center mb-6">
                                     <div class="flex justify-center mb-4">
                                         <div class="p-3 bg-green-100 dark:bg-green-900/30 rounded-full">
-                                            <x-lucide-check-circle class="w-12 h-12 text-green-600 dark:text-green-400" />
+                                            <i data-lucide="check-circle" class="w-12 h-12 text-green-600 dark:text-green-400" ></i>
                                         </div>
                                     </div>
                                     <h2 class="text-2xl font-bold text-foreground mb-2" x-text="dialogMessage || 'Tiket Valid'"></h2>
@@ -285,7 +285,7 @@
                                 <div class="text-center mb-6">
                                     <div class="flex justify-center mb-4">
                                         <div class="p-3 bg-red-100 dark:bg-red-900/30 rounded-full">
-                                            <x-lucide-alert-circle class="w-12 h-12 text-red-600 dark:text-red-400" />
+                                            <i data-lucide="alert-circle" class="w-12 h-12 text-red-600 dark:text-red-400" ></i>
                                         </div>
                                     </div>
                                     <h2 class="text-2xl font-bold text-foreground mb-2">Tiket Tidak Valid</h2>

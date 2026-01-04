@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/pemesanan.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -42,12 +42,12 @@
                         </div>
                         <div class="flex gap-2">
                             <x-ui.button @click="window.print()" size="sm">
-                                <x-lucide-printer class="w-4 h-4 mr-2" />
+                                <i data-lucide="printer" class="w-4 h-4 mr-2" ></i>
                                 Print Struk (58mm)
                             </x-ui.button>
                             <a href="{{ route('admin/pemesanan.index') }}">
                                 <x-ui.button variant="outline" size="sm">
-                                    <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                     Kembali
                                 </x-ui.button>
                             </a>
@@ -147,7 +147,7 @@
                                         <p class="text-xs text-muted-foreground">{{ $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_kota ?? '' }}</p>
                                     </div>
                                     <div class="flex items-center justify-center">
-                                        <x-lucide-arrow-right class="w-6 h-6 text-primary" />
+                                        <i data-lucide="arrow-right" class="w-6 h-6 text-primary" ></i>
                                     </div>
                                     <div>
                                         <p class="text-xs text-muted-foreground uppercase">Tujuan</p>
@@ -171,12 +171,12 @@
                         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 pt-6 border-t border-border">
                             <a href="{{ route('admin/pemesanan.index') }}">
                                 <x-ui.button variant="outline">
-                                    <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                     Kembali ke Daftar
                                 </x-ui.button>
                             </a>
                             <x-ui.button @click="window.print()">
-                                <x-lucide-printer class="w-4 h-4 mr-2" />
+                                <i data-lucide="printer" class="w-4 h-4 mr-2" ></i>
                                 Print Tiket
                             </x-ui.button>
                         </div>

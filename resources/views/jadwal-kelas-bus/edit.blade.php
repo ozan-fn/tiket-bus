@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/jadwal-kelas-bus.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -32,7 +32,7 @@
             @if(session('error'))
                 <x-ui.alert variant="destructive" class="mb-6">
                     <x-slot:icon>
-                        <x-lucide-alert-circle class="w-4 h-4" />
+                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                     </x-slot:icon>
                     <x-slot:title>Error!</x-slot:title>
                     <x-slot:description>
@@ -50,7 +50,7 @@
                         </div>
                         <a href="{{ route('admin/jadwal-kelas-bus.index') }}">
                             <x-ui.button variant="outline" size="sm">
-                                <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                 Kembali
                             </x-ui.button>
                         </a>
@@ -66,7 +66,7 @@
                             <div class="space-y-2">
                                 <x-ui.label for="jadwal_id">
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-calendar class="w-4 h-4" />
+                                        <i data-lucide="calendar" class="w-4 h-4" ></i>
                                         Jadwal
                                     </div>
                                     <span class="text-red-500">*</span>
@@ -88,12 +88,12 @@
                                 </select>
                                 @error('jadwal_id')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
-                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                         {{ $message }}
                                     </p>
                                 @enderror
                                 <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
+                                    <i data-lucide="info" class="w-3 h-3" ></i>
                                     Pilih jadwal perjalanan yang akan digunakan
                                 </p>
                             </div>
@@ -102,7 +102,7 @@
                             <div class="space-y-2">
                                 <x-ui.label for="bus_kelas_bus_id">
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-armchair class="w-4 h-4" />
+                                        <i data-lucide="armchair" class="w-4 h-4" ></i>
                                         Kelas Bus
                                     </div>
                                     <span class="text-red-500">*</span>
@@ -122,12 +122,12 @@
                                 </select>
                                 @error('bus_kelas_bus_id')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
-                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                         {{ $message }}
                                     </p>
                                 @enderror
                                 <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
+                                    <i data-lucide="info" class="w-3 h-3" ></i>
                                     Pilih kelas bus yang tersedia
                                 </p>
                             </div>
@@ -136,7 +136,7 @@
                             <div class="space-y-2">
                                 <x-ui.label for="harga">
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-banknote class="w-4 h-4" />
+                                        <i data-lucide="banknote" class="w-4 h-4" ></i>
                                         Harga Tiket
                                     </div>
                                     <span class="text-red-500">*</span>
@@ -157,12 +157,12 @@
                                 </div>
                                 @error('harga')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
-                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                         {{ $message }}
                                     </p>
                                 @enderror
                                 <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
+                                    <i data-lucide="info" class="w-3 h-3" ></i>
                                     Harga tiket untuk kelas bus ini
                                 </p>
                             </div>
@@ -170,20 +170,20 @@
                             <!-- Info Box -->
                             <div class="p-4 rounded-lg border border-border bg-muted/50">
                                 <div class="flex items-center gap-2 mb-3">
-                                    <x-lucide-info class="w-5 h-5 text-primary" />
+                                    <i data-lucide="info" class="w-5 h-5 text-primary" ></i>
                                     <p class="text-sm font-medium">Informasi Penting</p>
                                 </div>
                                 <ul class="space-y-2 text-sm text-muted-foreground">
                                     <li class="flex items-start gap-2">
-                                        <x-lucide-check class="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                                        <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" ></i>
                                         <span>Pastikan kombinasi jadwal dan kelas bus belum ada</span>
                                     </li>
                                     <li class="flex items-start gap-2">
-                                        <x-lucide-check class="w-4 h-4 text-green-600 mt-0.5 shrink-0" />
+                                        <i data-lucide="check" class="w-4 h-4 text-green-600 mt-0.5 shrink-0" ></i>
                                         <span>Harga tiket dapat disesuaikan dengan kelas bus</span>
                                     </li>
                                     <li class="flex items-start gap-2">
-                                        <x-lucide-alert-triangle class="w-4 h-4 text-orange-600 mt-0.5 shrink-0" />
+                                        <i data-lucide="alert-triangle" class="w-4 h-4 text-orange-600 mt-0.5 shrink-0" ></i>
                                         <span>Tidak dapat mengubah jika sudah ada tiket terjual</span>
                                     </li>
                                 </ul>
@@ -192,7 +192,7 @@
                             <!-- Preview -->
                             <div class="p-4 rounded-lg border border-primary/20 bg-primary/5" id="preview-box" style="display: none;">
                                 <div class="flex items-center gap-2 mb-3">
-                                    <x-lucide-eye class="w-5 h-5 text-primary" />
+                                    <i data-lucide="eye" class="w-5 h-5 text-primary" ></i>
                                     <p class="text-sm font-medium">Preview</p>
                                 </div>
                                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
@@ -215,12 +215,12 @@
                         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
                             <a href="{{ route('admin/jadwal-kelas-bus.index') }}" class="w-full sm:w-auto">
                                 <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
-                                    <x-lucide-x class="w-4 h-4 mr-2" />
+                                    <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                                     Batal
                                 </x-ui.button>
                             </a>
                             <x-ui.button type="submit" class="w-full sm:w-auto">
-                                <x-lucide-save class="w-4 h-4 mr-2" />
+                                <i data-lucide="save" class="w-4 h-4 mr-2" ></i>
                                 Update Jadwal Kelas Bus
                             </x-ui.button>
                         </div>

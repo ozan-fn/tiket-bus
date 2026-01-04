@@ -7,7 +7,7 @@
         <div class="space-y-2">
             <x-ui.label>
                 <div class="flex items-center gap-2">
-                    <x-lucide-sparkles class="w-4 h-4" />
+                    <i data-lucide="sparkles" class="w-4 h-4" ></i>
                     Pilih Fasilitas
                 </div>
             </x-ui.label>
@@ -24,7 +24,7 @@
                 @endforeach
             </select>
             <p class="text-xs text-muted-foreground flex items-center gap-1">
-                <x-lucide-info class="w-3 h-3" />
+                <i data-lucide="info" class="w-3 h-3" ></i>
                 Tekan Ctrl (Windows) atau Cmd (Mac) untuk memilih lebih dari satu
             </p>
         </div>
@@ -35,7 +35,7 @@
                 @foreach($fasilitas as $fasilitasItem)
                     @if(in_array($fasilitasItem->id, old('fasilitas_ids', [])))
                         <x-ui.badge variant="secondary" class="flex items-center gap-1">
-                            <x-lucide-check class="w-3 h-3" />
+                            <i data-lucide="check" class="w-3 h-3" ></i>
                             {{ $fasilitasItem->nama }}
                         </x-ui.badge>
                     @endif

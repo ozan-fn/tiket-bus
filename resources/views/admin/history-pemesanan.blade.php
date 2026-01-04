@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -23,7 +23,7 @@
         @if(session('success'))
             <x-ui.alert class="mb-6">
                 <x-slot:icon>
-                    <x-lucide-check-circle class="w-4 h-4" />
+                    <i data-lucide="check-circle" class="w-4 h-4" ></i>
                 </x-slot:icon>
                 <x-slot:title>Berhasil!</x-slot:title>
                 <x-slot:description>
@@ -70,12 +70,12 @@
 
                     <div class="md:col-span-2 lg:col-span-4 flex gap-2">
                         <x-ui.button type="submit">
-                            <x-lucide-search class="w-4 h-4 mr-2" />
+                            <i data-lucide="search" class="w-4 h-4 mr-2" ></i>
                             Filter
                         </x-ui.button>
                         <a href="{{ route('admin/history-pemesanan') }}">
                             <x-ui.button type="button" variant="outline">
-                                <x-lucide-x class="w-4 h-4 mr-2" />
+                                <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                                 Reset
                             </x-ui.button>
                         </a>
@@ -90,7 +90,7 @@
                 <x-ui.card.content class="pt-6">
                     <div class="flex items-center gap-4">
                         <div class="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                            <x-lucide-ticket class="h-6 w-6 text-blue-600" />
+                            <i data-lucide="ticket" class="h-6 w-6 text-blue-600" ></i>
                         </div>
                         <div>
                             <p class="text-sm text-muted-foreground">Total Tiket</p>
@@ -139,7 +139,7 @@
                                         <x-ui.table.cell class="hidden lg:table-cell">
                                             <div class="flex items-center gap-1 text-sm">
                                                 <span class="font-medium">{{ $tiket->jadwalKelasBus->jadwal->rute->asalTerminal->nama_terminal }}</span>
-                                                <x-lucide-arrow-right class="h-3 w-3 text-muted-foreground shrink-0" />
+                                                <i data-lucide="arrow-right" class="h-3 w-3 text-muted-foreground shrink-0" ></i>
                                                 <span class="font-medium">{{ $tiket->jadwalKelasBus->jadwal->rute->tujuanTerminal->nama_terminal }}</span>
                                             </div>
                                             <p class="text-xs text-muted-foreground mt-1">{{ $tiket->jadwalKelasBus->jadwal->bus->nama_bus }} - {{ $tiket->jadwalKelasBus->kelasBus->nama_kelas }}</p>
@@ -178,7 +178,7 @@
                                         <x-ui.table.cell class="text-right">
                                             <a href="{{ route('admin/pemesanan.show', $tiket) }}">
                                                 <x-ui.button variant="ghost" size="icon">
-                                                    <x-lucide-eye class="w-4 h-4" />
+                                                    <i data-lucide="eye" class="w-4 h-4" ></i>
                                                 </x-ui.button>
                                             </a>
                                         </x-ui.table.cell>
@@ -188,7 +188,7 @@
                                         <x-ui.table.cell colspan="9" class="text-center py-12">
                                             <div class="flex flex-col items-center">
                                                 <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                                                    <x-lucide-ticket class="w-8 h-8 text-muted-foreground" />
+                                                    <i data-lucide="ticket" class="w-8 h-8 text-muted-foreground" ></i>
                                                 </div>
                                                 <h3 class="text-lg font-semibold mb-2">Tidak Ada Data</h3>
                                                 <p class="text-sm text-muted-foreground">Belum ada pemesanan tiket yang tercatat</p>
@@ -202,7 +202,7 @@
                 @else
                     <div class="flex flex-col items-center justify-center py-12 text-center">
                         <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-                            <x-lucide-ticket class="w-8 h-8 text-muted-foreground" />
+                            <i data-lucide="ticket" class="w-8 h-8 text-muted-foreground" ></i>
                         </div>
                         <h3 class="text-lg font-semibold mb-2">Belum Ada Pemesanan</h3>
                         <p class="text-sm text-muted-foreground">Belum ada pemesanan tiket yang tercatat dalam sistem.</p>

@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/laporan.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -47,7 +47,7 @@
 
                     <div class="flex items-end">
                         <x-ui.button type="submit" class="w-full">
-                            <x-lucide-search class="w-4 h-4 mr-2" />
+                            <i data-lucide="search" class="w-4 h-4 mr-2" ></i>
                             Terapkan Filter
                         </x-ui.button>
                     </div>
@@ -59,7 +59,7 @@
             <x-ui.card.content class="pt-6">
                 <div class="flex items-center gap-4">
                     <div class="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center shrink-0">
-                        <x-lucide-users class="h-6 w-6 text-purple-700 dark:text-purple-400" />
+                        <i data-lucide="users" class="h-6 w-6 text-purple-700 dark:text-purple-400" ></i>
                     </div>
                     <div>
                         <p class="text-sm text-muted-foreground">Total Penumpang</p>
@@ -101,7 +101,7 @@
                 @else
                     <div class="flex flex-col items-center justify-center py-12 text-center">
                         <div class="h-16 w-16 rounded-full bg-muted dark:bg-muted/50 flex items-center justify-center mb-4">
-                            <x-lucide-bar-chart-3 class="w-8 h-8 text-muted-foreground" />
+                            <i data-lucide="bar-chart-3" class="w-8 h-8 text-muted-foreground" ></i>
                         </div>
                         <p class="text-muted-foreground">Tidak ada data penumpang</p>
                     </div>
@@ -136,7 +136,7 @@
                                         <x-ui.table.cell>
                                             <div class="flex items-center gap-1 text-sm text-foreground">
                                                 <span class="font-medium">{{ $rute->asal }}</span>
-                                                <x-lucide-arrow-right class="h-3 w-3 text-muted-foreground shrink-0" />
+                                                <i data-lucide="arrow-right" class="h-3 w-3 text-muted-foreground shrink-0" ></i>
                                                 <span class="font-medium">{{ $rute->tujuan }}</span>
                                             </div>
                                         </x-ui.table.cell>
@@ -154,7 +154,7 @@
                 @else
                     <div class="flex flex-col items-center justify-center py-12 text-center">
                         <div class="h-16 w-16 rounded-full bg-muted dark:bg-muted/50 flex items-center justify-center mb-4">
-                            <x-lucide-route class="w-8 h-8 text-muted-foreground" />
+                            <i data-lucide="route" class="w-8 h-8 text-muted-foreground" ></i>
                         </div>
                         <h3 class="text-lg font-semibold mb-2 text-foreground">Tidak Ada Data</h3>
                         <p class="text-sm text-muted-foreground">Tidak ada penumpang dalam periode yang dipilih</p>
@@ -215,7 +215,7 @@
                 @else
                     <div class="flex flex-col items-center justify-center py-12 text-center">
                         <div class="h-16 w-16 rounded-full bg-muted dark:bg-muted/50 flex items-center justify-center mb-4">
-                            <x-lucide-users class="w-8 h-8 text-muted-foreground" />
+                            <i data-lucide="users" class="w-8 h-8 text-muted-foreground" ></i>
                         </div>
                         <h3 class="text-lg font-semibold mb-2 text-foreground">Tidak Ada Data</h3>
                         <p class="text-sm text-muted-foreground">Tidak ada data penumpang ditemukan</p>

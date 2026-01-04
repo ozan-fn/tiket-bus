@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/pembayaran-manual.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -38,7 +38,7 @@
                         </div>
                         <a href="{{ route('admin/pembayaran-manual.index') }}">
                             <x-ui.button variant="outline" size="sm">
-                                <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                 Kembali
                             </x-ui.button>
                         </a>
@@ -54,7 +54,7 @@
                             <div class="space-y-2">
                                 <x-ui.label for="tiket_id">
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-ticket class="w-4 h-4" />
+                                        <i data-lucide="ticket" class="w-4 h-4" ></i>
                                         Tiket
                                     </div>
                                 </x-ui.label>
@@ -74,7 +74,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="metode">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-credit-card class="w-4 h-4" />
+                                            <i data-lucide="credit-card" class="w-4 h-4" ></i>
                                             Metode Pembayaran
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -99,7 +99,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="nominal">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-banknote class="w-4 h-4" />
+                                            <i data-lucide="banknote" class="w-4 h-4" ></i>
                                             Nominal
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -130,7 +130,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="status">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-check-circle class="w-4 h-4" />
+                                            <i data-lucide="check-circle" class="w-4 h-4" ></i>
                                             Status
                                         </div>
                                         <span class="text-red-500">*</span>
@@ -154,7 +154,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="waktu_bayar">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-calendar class="w-4 h-4" />
+                                            <i data-lucide="calendar" class="w-4 h-4" ></i>
                                             Waktu Bayar
                                         </div>
                                     </x-ui.label>
@@ -176,12 +176,12 @@
                         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
                             <a href="{{ route('admin/pembayaran-manual.index') }}" class="w-full sm:w-auto">
                                 <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
-                                    <x-lucide-x class="w-4 h-4 mr-2" />
+                                    <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                                     Batal
                                 </x-ui.button>
                             </a>
                             <x-ui.button type="submit" class="w-full sm:w-auto">
-                                <x-lucide-save class="w-4 h-4 mr-2" />
+                                <i data-lucide="save" class="w-4 h-4 mr-2" ></i>
                                 Update Pembayaran
                             </x-ui.button>
                         </div>

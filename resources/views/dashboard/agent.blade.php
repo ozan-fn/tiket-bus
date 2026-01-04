@@ -11,10 +11,11 @@
                 <x-ui.card.content class="px-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="h-12 w-12 rounded-lg bg-orange-500/10 flex items-center justify-center">
-                            <x-lucide-calendar class="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                            <i data-lucide="calendar" class="h-6 w-6 text-orange-600 dark:text-orange-400"></i>
                         </div>
-                        <a href="{{ route('admin/jadwal.index') }}" class="text-xs text-primary hover:underline flex items-center gap-1">
-                            Lihat <x-lucide-arrow-right class="h-3 w-3" />
+                        <a href="{{ route('admin/jadwal.index') }}"
+                            class="text-xs text-primary hover:underline flex items-center gap-1">
+                            Lihat <i data-lucide="arrow-right" class="h-3 w-3"></i>
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground">Total Jadwal</p>
@@ -27,10 +28,11 @@
                 <x-ui.card.content class="px-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="h-12 w-12 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                            <x-lucide-ticket class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                            <i data-lucide="ticket" class="h-6 w-6 text-blue-600 dark:text-blue-400"></i>
                         </div>
-                        <a href="{{ route('admin/history-pemesanan') }}" class="text-xs text-primary hover:underline flex items-center gap-1">
-                            Lihat <x-lucide-arrow-right class="h-3 w-3" />
+                        <a href="{{ route('admin/history-pemesanan') }}"
+                            class="text-xs text-primary hover:underline flex items-center gap-1">
+                            Lihat <i data-lucide="arrow-right" class="h-3 w-3"></i>
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground">Tiket Terjual</p>
@@ -43,10 +45,11 @@
                 <x-ui.card.content class="px-4">
                     <div class="flex items-center justify-between mb-3">
                         <div class="h-12 w-12 rounded-lg bg-green-500/10 flex items-center justify-center">
-                            <x-lucide-dollar-sign class="h-6 w-6 text-green-600 dark:text-green-400" />
+                            <i data-lucide="dollar-sign" class="h-6 w-6 text-green-600 dark:text-green-400"></i>
                         </div>
-                        <a href="{{ route('admin/history-pemesanan') }}" class="text-xs text-primary hover:underline flex items-center gap-1">
-                            Lihat <x-lucide-arrow-right class="h-3 w-3" />
+                        <a href="{{ route('admin/history-pemesanan') }}"
+                            class="text-xs text-primary hover:underline flex items-center gap-1">
+                            Lihat <i data-lucide="arrow-right" class="h-3 w-3"></i>
                         </a>
                     </div>
                     <p class="text-sm text-muted-foreground">Total Pendapatan</p>
@@ -64,16 +67,19 @@
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="space-y-2">
-                        <a href="{{ route('admin/jadwal.index') }}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
-                            <x-lucide-calendar class="h-5 w-5 text-primary" />
+                        <a href="{{ route('admin/jadwal.index') }}"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
+                            <i data-lucide="calendar" class="h-5 w-5 text-primary"></i>
                             <span class="text-sm">Lihat Jadwal</span>
                         </a>
-                        <a href="{{ route('admin/jadwal-kelas-bus.index') }}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
-                            <x-lucide-tag class="h-5 w-5 text-primary" />
+                        <a href="{{ route('admin/jadwal-kelas-bus.index') }}"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
+                            <i data-lucide="tag" class="h-5 w-5 text-primary"></i>
                             <span class="text-sm">Kelola Harga Tiket</span>
                         </a>
-                        <a href="{{ route('admin/history-pemesanan') }}" class="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
-                            <x-lucide-clipboard-list class="h-5 w-5 text-primary" />
+                        <a href="{{ route('admin/history-pemesanan') }}"
+                            class="flex items-center gap-3 p-3 rounded-lg hover:bg-accent transition-colors">
+                            <i data-lucide="clipboard-list" class="h-5 w-5 text-primary"></i>
                             <span class="text-sm">Lihat History Pemesanan</span>
                         </a>
                     </div>
@@ -89,7 +95,8 @@
                     <div class="space-y-3">
                         <div class="flex justify-between">
                             <span class="text-sm text-muted-foreground">Role</span>
-                            <span class="text-sm font-medium">{{ auth()->user()?->roles->first()?->name ?? 'Unknown' }}</span>
+                            <span
+                                class="text-sm font-medium">{{ auth()->user()?->roles->first()?->name ?? 'Unknown' }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-sm text-muted-foreground">Nama User</span>
@@ -112,10 +119,12 @@
         <x-ui.card class="mt-6">
             <x-ui.card.content class="px-4">
                 <div class="flex items-start gap-3">
-                    <x-lucide-info class="h-5 w-5 text-primary mt-1" />
+                    <i data-lucide="info" class="h-5 w-5 text-primary mt-1"></i>
                     <div>
                         <p class="text-sm font-medium">Akses Terbatas</p>
-                        <p class="text-xs text-muted-foreground mt-1">Sebagai Agent, Anda hanya memiliki akses ke Jadwal, Harga Tiket, dan History Pemesanan. Untuk akses ke fitur lengkap, hubungi Administrator Owner.</p>
+                        <p class="text-xs text-muted-foreground mt-1">Sebagai Agent, Anda hanya memiliki akses ke
+                            Jadwal, Harga Tiket, dan History Pemesanan. Untuk akses ke fitur lengkap, hubungi
+                            Administrator Owner.</p>
                     </div>
                 </div>
             </x-ui.card.content>

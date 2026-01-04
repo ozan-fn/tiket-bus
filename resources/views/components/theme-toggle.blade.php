@@ -16,16 +16,14 @@
     title="Toggle theme"
 >
     <!-- Sun Icon (Light Mode) -->
-    <x-lucide-sun
-        x-show="theme === 'dark'"
+    <i data-lucide="sun" x-show="theme === 'dark'"
         x-cloak
         class="h-5 w-5"
-    />
+    ></i>
 
     <!-- Moon Icon (Dark Mode) -->
-    <x-lucide-moon
-        x-show="theme === 'light'"
+    <i data-lucide="moon" x-show="theme === 'light'"
         x-cloak
         class="h-5 w-5"
-    />
+    ></i>
 </button>

@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/fasilitas.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -35,7 +35,7 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div class="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <x-lucide-sparkles class="h-8 w-8 text-primary" />
+                                <i data-lucide="sparkles" class="h-8 w-8 text-primary" ></i>
                             </div>
                             <div>
                                 <x-ui.card.title class="text-2xl">{{ $fasilitas->nama }}</x-ui.card.title>
@@ -45,7 +45,7 @@
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <a href="{{ route('admin/fasilitas.edit', $fasilitas) }}" class="flex-1 sm:flex-initial">
                                 <x-ui.button variant="outline" class="w-full">
-                                    <x-lucide-pencil class="w-4 h-4 mr-2" />
+                                    <i data-lucide="pencil" class="w-4 h-4 mr-2" ></i>
                                     Edit
                                 </x-ui.button>
                             </a>
@@ -53,7 +53,7 @@
                             <!-- Delete Dialog -->
                             <div x-data="{ open: false }">
                                 <x-ui.button @click="open = true" variant="outline" class="text-destructive hover:bg-destructive/10">
-                                    <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                     Hapus
                                 </x-ui.button>
 
@@ -89,7 +89,7 @@
 
                                                 <div class="flex items-start gap-4">
                                                     <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                        <x-lucide-alert-triangle class="h-6 w-6 text-destructive" />
+                                                        <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
                                                     </div>
                                                     <div class="flex-1">
                                                         <h3 class="text-lg font-semibold mb-2">Hapus Fasilitas</h3>
@@ -106,7 +106,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <x-ui.button type="submit" class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                    <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                                                     Ya, Hapus
                                                                 </x-ui.button>
                                                             </form>
@@ -121,7 +121,7 @@
 
                             <a href="{{ route('admin/fasilitas.index') }}">
                                 <x-ui.button variant="outline">
-                                    <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                     Kembali
                                 </x-ui.button>
                             </a>
@@ -133,7 +133,7 @@
                         <!-- ID Fasilitas -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-fingerprint class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <i data-lucide="fingerprint" class="h-5 w-5 text-blue-600 dark:text-blue-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">ID Fasilitas</p>
@@ -144,12 +144,12 @@
                         <!-- Status -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-check-circle class="h-5 w-5 text-green-600 dark:text-green-400" />
+                                <i data-lucide="check-circle" class="h-5 w-5 text-green-600 dark:text-green-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Status</p>
                                 <x-ui.badge class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                    <x-lucide-circle-check class="h-3 w-3" />
+                                    <i data-lucide="circle-check" class="h-3 w-3" ></i>
                                     Aktif
                                 </x-ui.badge>
                             </div>
@@ -158,7 +158,7 @@
                         <!-- Digunakan -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-bus class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                <i data-lucide="bus" class="h-5 w-5 text-purple-600 dark:text-purple-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Digunakan</p>
@@ -174,7 +174,7 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <x-lucide-info class="w-5 h-5 text-primary" />
+                        <i data-lucide="info" class="w-5 h-5 text-primary" ></i>
                         <x-ui.card.title>Detail Fasilitas</x-ui.card.title>
                     </div>
                     <x-ui.card.description>Informasi lengkap tentang fasilitas</x-ui.card.description>
@@ -185,7 +185,7 @@
                     <div class="flex items-center gap-4 pb-4 border-b dark:border-gray-700">
                         <div class="flex-shrink-0">
                             <div class="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                                <x-lucide-hash class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                <i data-lucide="hash" class="h-6 w-6 text-blue-600 dark:text-blue-400" ></i>
                             </div>
                         </div>
                         <div class="flex-1">
@@ -198,7 +198,7 @@
                     <div class="flex items-center gap-4 pb-4 border-b dark:border-gray-700">
                         <div class="flex-shrink-0">
                             <div class="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center">
-                                <x-lucide-sparkles class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                                <i data-lucide="sparkles" class="h-6 w-6 text-purple-600 dark:text-purple-400" ></i>
                             </div>
                         </div>
                         <div class="flex-1">
@@ -211,7 +211,7 @@
                     <div class="flex items-center gap-4 pb-4 border-b dark:border-gray-700">
                         <div class="flex-shrink-0">
                             <div class="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                                <x-lucide-calendar-plus class="h-6 w-6 text-green-600 dark:text-green-400" />
+                                <i data-lucide="calendar-plus" class="h-6 w-6 text-green-600 dark:text-green-400" ></i>
                             </div>
                         </div>
                         <div class="flex-1">
@@ -225,7 +225,7 @@
                         <div class="flex items-center gap-4">
                             <div class="flex-shrink-0">
                                 <div class="h-12 w-12 rounded-lg bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center">
-                                    <x-lucide-calendar-clock class="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                                    <i data-lucide="calendar-clock" class="h-6 w-6 text-orange-600 dark:text-orange-400" ></i>
                                 </div>
                             </div>
                             <div class="flex-1">

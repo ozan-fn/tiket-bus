@@ -127,12 +127,12 @@
                 <!-- Logo -->
                 <div class="h-16 flex items-center justify-between px-6 border-b border-border shrink-0">
                     <a href="{{ route('dashboard') }}" class="flex items-center gap-2">
-                        {{-- <x-lucide-zap class="w-8 h-8 text-primary" /> --}}
+                        {{-- <i data-lucide="zap" class="w-8 h-8 text-primary" ></i> --}}
                         <span class="text-xl font-bold">tiket bus</span>
                     </a>
                     <!-- Close button for mobile -->
                     <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent">
-                        <x-lucide-x class="w-5 h-5" />
+                        <i data-lucide="x" class="w-5 h-5" ></i>
                     </button>
                 </div>
 
@@ -219,7 +219,7 @@
                                             <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-foreground rounded-r-full"></span>
                                         @endif
 
-                                        <x-dynamic-component :component="'lucide-' . $menu['icon']" class="w-5 h-5 shrink-0" />
+                                        <i data-lucide="{{ $menu['icon'] }}" class="w-5 h-5 shrink-0"></i>
                                         {{ $menu['label'] }}
                                     </a>
                                 @endif
@@ -256,7 +256,7 @@
                                     @endif
                                 </p>
                             </div>
-                            <x-lucide-chevron-right class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" x-bind:class="open ? 'rotate-90' : ''" />
+                            <i data-lucide="chevron-right" class="w-4 h-4 text-muted-foreground shrink-0 transition-transform" x-bind:class="open ? 'rotate-90' : ''" ></i>
                         </button>
 
                         <div
@@ -268,18 +268,18 @@
                             <div class="px-2 py-1.5 text-sm font-semibold">Akun Saya</div>
                             <div class="h-px bg-border my-1"></div>
                             <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors">
-                                <x-lucide-user class="w-4 h-4" />
+                                <i data-lucide="user" class="w-4 h-4" ></i>
                                 Profile
                             </a>
                             <a href="{{ route('profile.edit') }}" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors">
-                                <x-lucide-settings class="w-4 h-4" />
+                                <i data-lucide="settings" class="w-4 h-4" ></i>
                                 Pengaturan
                             </a>
                             <div class="h-px bg-border my-1"></div>
                             <form method="POST" action="{{ route('logout') }}" class="w-full">
                                 @csrf
                                 <button type="submit" class="flex items-center gap-2 w-full px-2 py-1.5 text-sm rounded-sm hover:bg-accent transition-colors text-destructive">
-                                    <x-lucide-log-out class="w-4 h-4" />
+                                    <i data-lucide="log-out" class="w-4 h-4" ></i>
                                     Logout
                                 </button>
                             </form>
@@ -330,7 +330,7 @@
                     <div class="flex items-center gap-3">
                         <!-- Mobile menu button -->
                         <button onclick="toggleSidebar()" class="lg:hidden p-2 rounded-lg hover:bg-accent transition-colors">
-                            <x-lucide-menu class="w-6 h-6" />
+                            <i data-lucide="menu" class="w-6 h-6" ></i>
                         </button>
                         @isset($header)
                             <div class="flex-1">
@@ -341,8 +341,8 @@
                     <div class="flex items-center gap-2">
                         <!-- Fullscreen Toggle -->
                         <button onclick="toggleFullscreen()" class="p-2 rounded-lg hover:bg-accent transition-colors" title="Toggle Fullscreen">
-                            <x-lucide-maximize class="w-5 h-5" id="fullscreen-icon-max" />
-                            <x-lucide-minimize class="w-5 h-5 hidden" id="fullscreen-icon-min" />
+                            <i data-lucide="maximize" class="w-5 h-5" id="fullscreen-icon-max" ></i>
+                            <i data-lucide="minimize" class="w-5 h-5 hidden" id="fullscreen-icon-min" ></i>
                         </button>
 
                         <!-- Theme Toggle -->
@@ -458,6 +458,25 @@
     </script>
 
     @stack('scripts')
+
+    <!-- Lucide Icons CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script>
+        // Initialize icons when DOM is ready and after AJAX calls
+        function initLucideIcons() {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initLucideIcons);
+
+        // Re-initialize after Alpine components update
+        if (typeof window.Alpine !== 'undefined') {
+            document.addEventListener('alpine:init', initLucideIcons);
+        }
+    </script>
 </body>
 
 </html>

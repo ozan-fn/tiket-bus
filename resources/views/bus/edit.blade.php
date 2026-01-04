@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/bus.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -31,7 +31,7 @@
         <div class="max-w-6xl mx-auto space-y-6">
             @if ($errors->any())
                 <x-ui.alert variant="destructive">
-                    <x-lucide-alert-circle class="w-5 h-5" />
+                    <i data-lucide="alert-circle" class="w-5 h-5" ></i>
                     <div>
                         <h4 class="font-semibold mb-2">Terjadi Kesalahan</h4>
                         <ul class="text-sm space-y-1">
@@ -54,25 +54,25 @@
                 <div class="flex gap-2 mb-6 border-b border-border overflow-x-auto">
                     <button type="button" data-tab="informasi" class="tab-button active px-4 py-2 border-b-2 border-primary text-sm font-medium text-primary whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <x-lucide-info class="w-4 h-4" />
+                            <i data-lucide="info" class="w-4 h-4" ></i>
                             Informasi Bus
                         </div>
                     </button>
                     <button type="button" data-tab="fasilitas" class="tab-button px-4 py-2 border-b-2 border-transparent text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <x-lucide-sparkles class="w-4 h-4" />
+                            <i data-lucide="sparkles" class="w-4 h-4" ></i>
                             Fasilitas
                         </div>
                     </button>
                     <button type="button" data-tab="kelas" class="tab-button px-4 py-2 border-b-2 border-transparent text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <x-lucide-armchair class="w-4 h-4" />
+                            <i data-lucide="armchair" class="w-4 h-4" ></i>
                             Kelas Bus
                         </div>
                     </button>
                     <button type="button" data-tab="foto" class="tab-button px-4 py-2 border-b-2 border-transparent text-sm font-medium text-muted-foreground hover:text-foreground whitespace-nowrap">
                         <div class="flex items-center gap-2">
-                            <x-lucide-image class="w-4 h-4" />
+                            <i data-lucide="image" class="w-4 h-4" ></i>
                             Foto
                         </div>
                     </button>
@@ -92,7 +92,7 @@
                                 <div class="space-y-2">
                                     <x-ui.label for="nama">
                                         <div class="flex items-center gap-2">
-                                            <x-lucide-bus class="w-4 h-4" />
+                                            <i data-lucide="bus" class="w-4 h-4" ></i>
                                             Nama Bus
                                             <span class="text-red-500">*</span>
                                         </div>
@@ -108,7 +108,7 @@
                                     />
                                     @error('nama')
                                         <p class="text-sm text-destructive flex items-center gap-1">
-                                            <x-lucide-alert-circle class="w-4 h-4" />
+                                            <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                             {{ $message }}
                                         </p>
                                     @enderror
@@ -120,7 +120,7 @@
                                     <div class="space-y-2">
                                         <x-ui.label for="kapasitas">
                                             <div class="flex items-center gap-2">
-                                                <x-lucide-users class="w-4 h-4" />
+                                                <i data-lucide="users" class="w-4 h-4" ></i>
                                                 Kapasitas Kursi
                                                 <span class="text-red-500">*</span>
                                             </div>
@@ -137,7 +137,7 @@
                                         />
                                         @error('kapasitas')
                                             <p class="text-sm text-destructive flex items-center gap-1">
-                                                <x-lucide-alert-circle class="w-4 h-4" />
+                                                <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                                 {{ $message }}
                                             </p>
                                         @enderror
@@ -148,7 +148,7 @@
                                     <div class="space-y-2">
                                         <x-ui.label for="plat_nomor">
                                             <div class="flex items-center gap-2">
-                                                <x-lucide-hash class="w-4 h-4" />
+                                                <i data-lucide="hash" class="w-4 h-4" ></i>
                                                 Plat Nomor
                                                 <span class="text-red-500">*</span>
                                             </div>
@@ -164,7 +164,7 @@
                                         />
                                         @error('plat_nomor')
                                             <p class="text-sm text-destructive flex items-center gap-1">
-                                                <x-lucide-alert-circle class="w-4 h-4" />
+                                                <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                                 {{ $message }}
                                             </p>
                                         @enderror
@@ -198,7 +198,7 @@
                                     @endforeach
                                 </select>
                                 <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
+                                    <i data-lucide="info" class="w-3 h-3" ></i>
                                     Tekan Ctrl (Windows) atau Cmd (Mac) untuk memilih lebih dari satu
                                 </p>
 
@@ -208,7 +208,7 @@
                                     <div id="fasilitas-preview" class="flex flex-wrap gap-2">
                                         @foreach($bus->fasilitas as $fас)
                                             <x-ui.badge>
-                                                <x-lucide-check class="w-3 h-3 mr-1" />
+                                                <i data-lucide="check" class="w-3 h-3 mr-1" ></i>
                                                 {{ $fас->nama }}
                                             </x-ui.badge>
                                         @endforeach
@@ -229,7 +229,7 @@
                                     <x-ui.card.description>Tambahkan atau perbarui kelas bus dan alokasi jumlah kursi</x-ui.card.description>
                                 </div>
                                 <x-ui.button type="button" size="sm" onclick="addKelasBusRow()">
-                                    <x-lucide-plus class="w-4 h-4 mr-2" />
+                                    <i data-lucide="plus" class="w-4 h-4 mr-2" ></i>
                                     Tambah Kelas
                                 </x-ui.button>
                             </div>
@@ -260,7 +260,7 @@
                                             />
                                         </div>
                                         <x-ui.button type="button" variant="destructive" size="sm" onclick="removeKelasBusRow(this)">
-                                            <x-lucide-trash-2 class="w-4 h-4" />
+                                            <i data-lucide="trash-2" class="w-4 h-4" ></i>
                                         </x-ui.button>
                                     </div>
                                 @endforeach
@@ -269,7 +269,7 @@
                             <!-- Kelas Bus Summary -->
                             <div class="mt-6 p-4 rounded-lg bg-muted/50 border border-border">
                                 <h4 class="text-sm font-semibold mb-2 flex items-center gap-2">
-                                    <x-lucide-info class="w-4 h-4" />
+                                    <i data-lucide="info" class="w-4 h-4" ></i>
                                     Ringkasan Kelas Bus
                                 </h4>
                                 <div id="kelas-summary" class="text-sm text-muted-foreground space-y-2">
@@ -302,7 +302,7 @@
                                 @if($bus->photos->count() > 0)
                                     <div>
                                         <h4 class="text-sm font-semibold mb-3 flex items-center gap-2">
-                                            <x-lucide-check-circle class="w-4 h-4 text-green-500" />
+                                            <i data-lucide="check-circle" class="w-4 h-4 text-green-500" ></i>
                                             Foto yang Tersimpan ({{ $bus->photos->count() }})
                                         </h4>
                                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -314,7 +314,7 @@
                                                         onclick="deleteFoto({{ $photo->id }}, this)"
                                                         class="absolute top-1 right-1 bg-destructive text-destructive-foreground rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
                                                     >
-                                                        <x-lucide-trash-2 class="w-4 h-4" />
+                                                        <i data-lucide="trash-2" class="w-4 h-4" ></i>
                                                     </button>
                                                 </div>
                                             @endforeach
@@ -324,7 +324,7 @@
 
                                 <!-- Upload Area -->
                                 <div class="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary hover:bg-primary/5 transition-all cursor-pointer bg-muted/30">
-                                    <x-lucide-upload class="h-12 w-12 text-muted-foreground mx-auto mb-3" />
+                                    <i data-lucide="upload" class="h-12 w-12 text-muted-foreground mx-auto mb-3" ></i>
                                     <label for="foto" class="cursor-pointer">
                                         <span class="text-sm text-primary hover:underline font-medium">Klik untuk upload</span>
                                         <span class="text-sm text-muted-foreground"> atau drag & drop</span>
@@ -338,7 +338,7 @@
                                         class="hidden"
                                     />
                                     <p class="text-xs text-muted-foreground mt-2 flex items-center justify-center gap-1">
-                                        <x-lucide-file-image class="w-3 h-3" />
+                                        <i data-lucide="file-image" class="w-3 h-3" ></i>
                                         PNG, JPG, JPEG, GIF (Max. 2MB per file)
                                     </p>
                                 </div>
@@ -346,7 +346,7 @@
                                 <!-- New Preview -->
                                 <div>
                                     <h4 class="text-sm font-semibold mb-3 flex items-center gap-2">
-                                        <x-lucide-image class="w-4 h-4" />
+                                        <i data-lucide="image" class="w-4 h-4" ></i>
                                         Preview Foto Baru
                                     </h4>
                                     <div id="preview" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
@@ -360,12 +360,12 @@
                 <div class="flex flex-col-reverse sm:flex-row items-center justify-between gap-3 sticky bottom-0 bg-background border-t border-border p-4 mt-4 rounded-lg">
                     <a href="{{ route('admin/bus.index') }}" class="w-full sm:w-auto">
                         <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
-                            <x-lucide-x class="w-4 h-4 mr-2" />
+                            <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                             Batal
                         </x-ui.button>
                     </a>
                     <x-ui.button type="submit" class="w-full sm:w-auto">
-                        <x-lucide-save class="w-4 h-4 mr-2" />
+                        <i data-lucide="save" class="w-4 h-4 mr-2" ></i>
                         Perbarui Bus
                     </x-ui.button>
                 </div>
@@ -396,7 +396,7 @@
                 />
             </div>
             <x-ui.button type="button" variant="destructive" size="sm" onclick="removeKelasBusRow(this)">
-                <x-lucide-trash-2 class="w-4 h-4" />
+                <i data-lucide="trash-2" class="w-4 h-4" ></i>
             </x-ui.button>
         </div>
     </template>
@@ -430,7 +430,7 @@
             const selected = Array.from(this.selectedOptions).map(opt => opt.text);
             const preview = document.getElementById('fasilitas-preview');
             preview.innerHTML = selected.map(name =>
-                `<x-ui.badge class="bg-primary text-primary-foreground"><x-lucide-check class="w-3 h-3 mr-1" /> ${name}</x-ui.badge>`
+                `<x-ui.badge class="bg-primary text-primary-foreground"><i data-lucide="check" class="w-3 h-3 mr-1" ></i> ${name}</x-ui.badge>`
             ).join('');
         });
 

@@ -13,12 +13,12 @@
         <span>{{ $label }}</span>
         @if($isSorted)
             @if($isAsc)
-                <x-lucide-arrow-up class="w-4 h-4 text-primary" />
+                <i data-lucide="arrow-up" class="w-4 h-4 text-primary" ></i>
             @else
-                <x-lucide-arrow-down class="w-4 h-4 text-primary" />
+                <i data-lucide="arrow-down" class="w-4 h-4 text-primary" ></i>
             @endif
         @else
-            <x-lucide-arrow-up-down class="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" />
+            <i data-lucide="arrow-up-down" class="w-4 h-4 text-muted-foreground group-hover:text-foreground transition-colors" ></i>
         @endif
     </a>
 </x-ui.table.head>

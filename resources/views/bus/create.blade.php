@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/bus.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -31,7 +31,7 @@
         <div class="max-w-6xl mx-auto space-y-6">
             @if ($errors->any())
                 <x-ui.alert variant="destructive" class="mb-6">
-                    <x-lucide-alert-circle class="w-5 h-5" />
+                    <i data-lucide="alert-circle" class="w-5 h-5" ></i>
                     <div>
                         <h4 class="font-semibold mb-2">Terjadi Kesalahan</h4>
                         <ul class="text-sm space-y-1">
@@ -52,16 +52,16 @@
                 <x-ui.tabs :default="'informasi'">
                     <x-ui.tabs.list class="mb-4 border-b border-border overflow-x-auto gap-x-2">
                         <x-ui.tabs.trigger value="informasi">
-                            <x-lucide-info class="w-4 h-4" /> Informasi Bus
+                            <i data-lucide="info" class="w-4 h-4" ></i> Informasi Bus
                         </x-ui.tabs.trigger>
                         <x-ui.tabs.trigger value="fasilitas">
-                            <x-lucide-sparkles class="w-4 h-4" /> Fasilitas
+                            <i data-lucide="sparkles" class="w-4 h-4" ></i> Fasilitas
                         </x-ui.tabs.trigger>
                         <x-ui.tabs.trigger value="kelas">
-                            <x-lucide-armchair class="w-4 h-4" /> Kelas Bus
+                            <i data-lucide="armchair" class="w-4 h-4" ></i> Kelas Bus
                         </x-ui.tabs.trigger>
                         <x-ui.tabs.trigger value="foto">
-                            <x-lucide-image class="w-4 h-4" /> Foto
+                            <i data-lucide="image" class="w-4 h-4" ></i> Foto
                         </x-ui.tabs.trigger>
                     </x-ui.tabs.list>
 
@@ -148,7 +148,7 @@
                 />
             </div>
             <x-ui.button type="button" variant="destructive" size="sm" onclick="removeKelasBusRow(this)">
-                <x-lucide-trash-2 class="w-4 h-4" />
+                <i data-lucide="trash-2" class="w-4 h-4" ></i>
             </x-ui.button>
         </div>
     </template>
@@ -162,7 +162,7 @@
             const selected = Array.from(this.selectedOptions).map(opt => opt.text);
             const preview = document.getElementById('fasilitas-preview');
             preview.innerHTML = selected.map(name =>
-                `<x-ui.badge class="bg-primary text-primary-foreground"><x-lucide-check class="w-3 h-3 mr-1" /> ${name}</x-ui.badge>`
+                `<x-ui.badge class="bg-primary text-primary-foreground"><i data-lucide="check" class="w-3 h-3 mr-1" ></i> ${name}</x-ui.badge>`
             ).join('');
         });
 

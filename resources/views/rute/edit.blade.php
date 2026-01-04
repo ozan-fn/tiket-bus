@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/rute.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -38,7 +38,7 @@
                         </div>
                         <a href="{{ route('admin/rute.index') }}">
                             <x-ui.button variant="outline" size="sm">
-                                <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                 Kembali
                             </x-ui.button>
                         </a>
@@ -54,7 +54,7 @@
                             <div class="space-y-2">
                                 <x-ui.label for="asal_terminal_id">
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-map-pin class="w-4 h-4" />
+                                        <i data-lucide="map-pin" class="w-4 h-4" ></i>
                                         Terminal Asal (Keberangkatan)
                                     </div>
                                     <span class="text-red-500">*</span>
@@ -74,12 +74,12 @@
                                 </select>
                                 @error('asal_terminal_id')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
-                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                         {{ $message }}
                                     </p>
                                 @enderror
                                 <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
+                                    <i data-lucide="info" class="w-3 h-3" ></i>
                                     Pilih terminal keberangkatan
                                 </p>
                             </div>
@@ -87,7 +87,7 @@
                             <!-- Arrow Indicator -->
                             <div class="flex items-center justify-center">
                                 <div class="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-                                    <x-lucide-arrow-down class="h-6 w-6 text-primary" />
+                                    <i data-lucide="arrow-down" class="h-6 w-6 text-primary" ></i>
                                 </div>
                             </div>
 
@@ -95,7 +95,7 @@
                             <div class="space-y-2">
                                 <x-ui.label for="tujuan_terminal_id">
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-map-pin-check-inside class="w-4 h-4" />
+                                        <i data-lucide="map-pin-check-inside" class="w-4 h-4" ></i>
                                         Terminal Tujuan (Kedatangan)
                                     </div>
                                     <span class="text-red-500">*</span>
@@ -115,12 +115,12 @@
                                 </select>
                                 @error('tujuan_terminal_id')
                                     <p class="text-sm text-destructive mt-1 flex items-center gap-1">
-                                        <x-lucide-alert-circle class="w-4 h-4" />
+                                        <i data-lucide="alert-circle" class="w-4 h-4" ></i>
                                         {{ $message }}
                                     </p>
                                 @enderror
                                 <p class="text-xs text-muted-foreground flex items-center gap-1">
-                                    <x-lucide-info class="w-3 h-3" />
+                                    <i data-lucide="info" class="w-3 h-3" ></i>
                                     Pilih terminal tujuan (harus berbeda dengan terminal asal)
                                 </p>
                             </div>
@@ -128,7 +128,7 @@
                             <!-- Preview Rute -->
                             <div class="p-4 rounded-lg border border-border bg-muted/50" id="route-preview" style="display: none;">
                                 <div class="flex items-center gap-2 mb-3">
-                                    <x-lucide-route class="w-5 h-5 text-primary" />
+                                    <i data-lucide="route" class="w-5 h-5 text-primary" ></i>
                                     <p class="text-sm font-medium">Preview Rute</p>
                                 </div>
                                 <div class="flex items-center gap-3">
@@ -136,7 +136,7 @@
                                         <p class="text-xs text-muted-foreground">Dari</p>
                                         <p class="text-sm font-medium" id="preview-asal">-</p>
                                     </div>
-                                    <x-lucide-arrow-right class="w-5 h-5 text-muted-foreground" />
+                                    <i data-lucide="arrow-right" class="w-5 h-5 text-muted-foreground" ></i>
                                     <div class="flex-1">
                                         <p class="text-xs text-muted-foreground">Ke</p>
                                         <p class="text-sm font-medium" id="preview-tujuan">-</p>
@@ -148,12 +148,12 @@
                         <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-border">
                             <a href="{{ route('admin/rute.index') }}" class="w-full sm:w-auto">
                                 <x-ui.button type="button" variant="outline" class="w-full sm:w-auto">
-                                    <x-lucide-x class="w-4 h-4 mr-2" />
+                                    <i data-lucide="x" class="w-4 h-4 mr-2" ></i>
                                     Batal
                                 </x-ui.button>
                             </a>
                             <x-ui.button type="submit" class="w-full sm:w-auto">
-                                <x-lucide-save class="w-4 h-4 mr-2" />
+                                <i data-lucide="save" class="w-4 h-4 mr-2" ></i>
                                 Update Rute
                             </x-ui.button>
                         </div>

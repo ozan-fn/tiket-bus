@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/kelas-bus.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -34,7 +34,7 @@
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-4">
                             <div class="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <x-lucide-armchair class="h-6 w-6 text-primary" />
+                                <i data-lucide="armchair" class="h-6 w-6 text-primary" ></i>
                             </div>
                             <div>
                                 <x-ui.card.title>{{ $kelasBus->nama_kelas }}</x-ui.card.title>
@@ -69,14 +69,14 @@
                 <x-ui.card.footer class="flex flex-col-reverse sm:flex-row gap-2 justify-between">
                     <a href="{{ route('admin/kelas-bus.index') }}">
                         <x-ui.button variant="outline">
-                            <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                            <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                             Kembali
                         </x-ui.button>
                     </a>
                     <div class="flex gap-2">
                         <a href="{{ route('admin/kelas-bus.edit', $kelasBus) }}">
                             <x-ui.button variant="outline">
-                                <x-lucide-pencil class="w-4 h-4 mr-2" />
+                                <i data-lucide="pencil" class="w-4 h-4 mr-2" ></i>
                                 Edit
                             </x-ui.button>
                         </a>
@@ -84,7 +84,7 @@
                         <!-- Delete Dialog -->
                         <div x-data="{ open: false }">
                             <x-ui.button @click="open = true" class="text-destructive hover:bg-destructive/10" variant="outline">
-                                <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                 Hapus
                             </x-ui.button>
 
@@ -120,7 +120,7 @@
 
                                             <div class="flex items-start gap-4">
                                                 <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                    <x-lucide-alert-triangle class="h-6 w-6 text-destructive" />
+                                                    <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
                                                 </div>
                                                 <div class="flex-1">
                                                     <h3 class="text-lg font-semibold mb-2">Hapus Kelas Bus</h3>
@@ -137,7 +137,7 @@
                                                             @csrf
                                                             @method('DELETE')
                                                             <x-ui.button type="submit" size="sm" class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                                                <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                                                 Ya, Hapus
                                                             </x-ui.button>
                                                         </form>

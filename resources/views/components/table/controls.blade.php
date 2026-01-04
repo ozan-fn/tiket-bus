@@ -9,7 +9,7 @@
             title="Filter Tanggal"
             class="inline-flex items-center justify-center w-9 h-9 border border-input rounded-lg hover:bg-muted transition-colors"
         >
-            <x-lucide-calendar class="w-4 h-4" />
+            <i data-lucide="calendar" class="w-4 h-4" ></i>
         </button>
 
         <!-- Dropdown Panel -->

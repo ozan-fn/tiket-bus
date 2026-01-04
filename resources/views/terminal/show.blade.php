@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/terminal.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -35,7 +35,7 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div class="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <x-lucide-building-2 class="h-8 w-8 text-primary" />
+                                <i data-lucide="building-2" class="h-8 w-8 text-primary" ></i>
                             </div>
                             <div>
                                 <x-ui.card.title class="text-2xl">{{ $terminal->nama_terminal }}</x-ui.card.title>
@@ -45,7 +45,7 @@
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <a href="{{ route('admin/terminal.edit', $terminal) }}" class="flex-1 sm:flex-initial">
                                 <x-ui.button variant="outline" class="w-full">
-                                    <x-lucide-pencil class="w-4 h-4 mr-2" />
+                                    <i data-lucide="pencil" class="w-4 h-4 mr-2" ></i>
                                     Edit
                                 </x-ui.button>
                             </a>
@@ -53,7 +53,7 @@
                             <!-- Delete Dialog -->
                             <div x-data="{ open: false }">
                                 <x-ui.button @click="open = true" variant="outline" class="text-destructive hover:bg-destructive/10">
-                                    <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                     Hapus
                                 </x-ui.button>
 
@@ -89,7 +89,7 @@
 
                                                 <div class="flex items-start gap-4">
                                                     <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                        <x-lucide-alert-triangle class="h-6 w-6 text-destructive" />
+                                                        <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
                                                     </div>
                                                     <div class="flex-1">
                                                         <h3 class="text-lg font-semibold mb-2">Hapus Terminal</h3>
@@ -106,7 +106,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <x-ui.button type="submit" class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                    <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                                                     Ya, Hapus
                                                                 </x-ui.button>
                                                             </form>
@@ -121,7 +121,7 @@
 
                             <a href="{{ route('admin/terminal.index') }}">
                                 <x-ui.button variant="outline">
-                                    <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                     Kembali
                                 </x-ui.button>
                             </a>
@@ -133,7 +133,7 @@
                         <!-- Nama Terminal -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-building-2 class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <i data-lucide="building-2" class="h-5 w-5 text-blue-600 dark:text-blue-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Nama Terminal</p>
@@ -144,7 +144,7 @@
                         <!-- Nama Kota -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-map-pin class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                <i data-lucide="map-pin" class="h-5 w-5 text-purple-600 dark:text-purple-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Kota</p>
@@ -155,7 +155,7 @@
                         <!-- Alamat -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50 md:col-span-2">
                             <div class="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-map class="h-5 w-5 text-green-600 dark:text-green-400" />
+                                <i data-lucide="map" class="h-5 w-5 text-green-600 dark:text-green-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Alamat</p>
@@ -170,7 +170,7 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <x-lucide-images class="w-5 h-5 text-primary" />
+                        <i data-lucide="images" class="w-5 h-5 text-primary" ></i>
                         <x-ui.card.title>Galeri Foto</x-ui.card.title>
                     </div>
                     <x-ui.card.description>Foto-foto terminal ({{ $terminal->photos->count() }} foto)</x-ui.card.description>
@@ -186,7 +186,7 @@
                                     <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                         <a href="{{ asset('storage/' . $photo->path) }}" target="_blank">
                                             <x-ui.button size="sm" variant="secondary">
-                                                <x-lucide-maximize-2 class="w-4 h-4 mr-2" />
+                                                <i data-lucide="maximize-2" class="w-4 h-4 mr-2" ></i>
                                                 Lihat
                                             </x-ui.button>
                                         </a>
@@ -197,7 +197,7 @@
                     @else
                         <div class="text-center py-12">
                             <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                                <x-lucide-image-off class="w-8 h-8 text-muted-foreground" />
+                                <i data-lucide="image-off" class="w-8 h-8 text-muted-foreground" ></i>
                             </div>
                             <p class="text-sm text-muted-foreground">Tidak ada foto</p>
                         </div>
@@ -209,21 +209,21 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <x-lucide-info class="w-5 h-5 text-primary" />
+                        <i data-lucide="info" class="w-5 h-5 text-primary" ></i>
                         <x-ui.card.title>Informasi Tambahan</x-ui.card.title>
                     </div>
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-start gap-3">
-                            <x-lucide-calendar-plus class="w-5 h-5 text-muted-foreground mt-0.5" />
+                            <i data-lucide="calendar-plus" class="w-5 h-5 text-muted-foreground mt-0.5" ></i>
                             <div>
                                 <p class="text-sm text-muted-foreground">Dibuat</p>
                                 <p class="text-sm font-medium">{{ $terminal->created_at->format('d M Y, H:i') }}</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <x-lucide-calendar-check class="w-5 h-5 text-muted-foreground mt-0.5" />
+                            <i data-lucide="calendar-check" class="w-5 h-5 text-muted-foreground mt-0.5" ></i>
                             <div>
                                 <p class="text-sm text-muted-foreground">Terakhir Diupdate</p>
                                 <p class="text-sm font-medium">{{ $terminal->updated_at->format('d M Y, H:i') }}</p>

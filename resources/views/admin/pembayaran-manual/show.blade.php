@@ -9,7 +9,7 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/pembayaran-manual.index') }}">
@@ -17,7 +17,7 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -40,13 +40,13 @@ tiket-bus\resources\views\admin\pembayaran-manual\show.blade.php
                         <div class="flex gap-2">
                             <a href="{{ route('admin/pembayaran-manual.edit', $pembayaran) }}">
                                 <x-ui.button variant="outline" size="sm">
-                                    <x-lucide-edit class="w-4 h-4 mr-2" />
+                                    <i data-lucide="edit" class="w-4 h-4 mr-2" ></i>
                                     Edit
                                 </x-ui.button>
                             </a>
                             <a href="{{ route('admin/pembayaran-manual.index') }}">
                                 <x-ui.button variant="outline" size="sm">
-                                    <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                     Kembali
                                 </x-ui.button>
                             </a>

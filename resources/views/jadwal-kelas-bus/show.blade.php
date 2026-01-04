@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.link href="{{ route('admin/jadwal-kelas-bus.index') }}">
@@ -16,7 +16,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -35,7 +35,7 @@
                     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div class="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center">
-                                <x-lucide-ticket class="h-8 w-8 text-primary" />
+                                <i data-lucide="ticket" class="h-8 w-8 text-primary" ></i>
                             </div>
                             <div>
                                 <x-ui.card.title class="text-2xl">Jadwal Kelas Bus</x-ui.card.title>
@@ -45,7 +45,7 @@
                         <div class="flex items-center gap-2 w-full sm:w-auto">
                             <a href="{{ route('admin/jadwal-kelas-bus.edit', $jadwalKelasBu) }}" class="flex-1 sm:flex-initial">
                                 <x-ui.button variant="outline" class="w-full">
-                                    <x-lucide-pencil class="w-4 h-4 mr-2" />
+                                    <i data-lucide="pencil" class="w-4 h-4 mr-2" ></i>
                                     Edit
                                 </x-ui.button>
                             </a>
@@ -54,7 +54,7 @@
                             <!-- Delete Dialog -->
                             <div x-data="{ open: false }">
                                 <x-ui.button @click="open = true" variant="outline" class="text-destructive hover:bg-destructive/10">
-                                    <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                     Hapus
                                 </x-ui.button>
 
@@ -90,7 +90,7 @@
 
                                                 <div class="flex items-start gap-4">
                                                     <div class="h-12 w-12 rounded-full bg-destructive/10 flex items-center justify-center shrink-0">
-                                                        <x-lucide-alert-triangle class="h-6 w-6 text-destructive" />
+                                                        <i data-lucide="alert-triangle" class="h-6 w-6 text-destructive" ></i>
                                                     </div>
                                                     <div class="flex-1">
                                                         <h3 class="text-lg font-semibold mb-2">Hapus Jadwal Kelas Bus</h3>
@@ -107,7 +107,7 @@
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <x-ui.button type="submit" class="w-full sm:w-auto bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                                                                    <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                                                    <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                                                     Ya, Hapus
                                                                 </x-ui.button>
                                                             </form>
@@ -121,14 +121,14 @@
                             </div>
                             @else
                             <x-ui.button variant="outline" disabled class="cursor-not-allowed opacity-50">
-                                <x-lucide-trash-2 class="w-4 h-4 mr-2" />
+                                <i data-lucide="trash-2" class="w-4 h-4 mr-2" ></i>
                                 Tidak Dapat Dihapus
                             </x-ui.button>
                             @endif
 
                             <a href="{{ route('admin/jadwal-kelas-bus.index') }}">
                                 <x-ui.button variant="outline">
-                                    <x-lucide-arrow-left class="w-4 h-4 mr-2" />
+                                    <i data-lucide="arrow-left" class="w-4 h-4 mr-2" ></i>
                                     Kembali
                                 </x-ui.button>
                             </a>
@@ -140,7 +140,7 @@
                         <!-- ID -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-blue-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-fingerprint class="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                                <i data-lucide="fingerprint" class="h-5 w-5 text-blue-600 dark:text-blue-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">ID</p>
@@ -151,7 +151,7 @@
                         <!-- Harga -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-green-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-banknote class="h-5 w-5 text-green-600 dark:text-green-400" />
+                                <i data-lucide="banknote" class="h-5 w-5 text-green-600 dark:text-green-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Harga</p>
@@ -162,7 +162,7 @@
                         <!-- Tiket Terjual -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-purple-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-ticket class="h-5 w-5 text-purple-600 dark:text-purple-400" />
+                                <i data-lucide="ticket" class="h-5 w-5 text-purple-600 dark:text-purple-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Tiket Terjual</p>
@@ -173,18 +173,18 @@
                         <!-- Status -->
                         <div class="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
                             <div class="h-10 w-10 rounded-lg bg-orange-500/10 flex items-center justify-center shrink-0">
-                                <x-lucide-info class="h-5 w-5 text-orange-600 dark:text-orange-400" />
+                                <i data-lucide="info" class="h-5 w-5 text-orange-600 dark:text-orange-400" ></i>
                             </div>
                             <div>
                                 <p class="text-sm text-muted-foreground">Status</p>
                                 @if($jadwalKelasBu->tikets->count() > 0)
                                     <x-ui.badge class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                        <x-lucide-circle-check class="h-3 w-3" />
+                                        <i data-lucide="circle-check" class="h-3 w-3" ></i>
                                         Ada Tiket
                                     </x-ui.badge>
                                 @else
                                     <x-ui.badge variant="secondary">
-                                        <x-lucide-circle class="h-3 w-3" />
+                                        <i data-lucide="circle" class="h-3 w-3" ></i>
                                         Belum Ada Tiket
                                     </x-ui.badge>
                                 @endif
@@ -199,7 +199,7 @@
                 <x-ui.card>
                     <x-ui.card.header>
                         <div class="flex items-center gap-2">
-                            <x-lucide-calendar class="w-5 h-5 text-primary" />
+                            <i data-lucide="calendar" class="w-5 h-5 text-primary" ></i>
                             <x-ui.card.title>Informasi Jadwal</x-ui.card.title>
                         </div>
                         <x-ui.card.description>Detail waktu keberangkatan</x-ui.card.description>
@@ -209,7 +209,7 @@
                             <!-- Tanggal Berangkat -->
                             <div class="flex items-center gap-4 p-3 rounded-lg border border-border bg-card">
                                 <div class="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center shrink-0">
-                                    <x-lucide-calendar class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                    <i data-lucide="calendar" class="h-6 w-6 text-blue-600 dark:text-blue-400" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-muted-foreground">Tanggal Berangkat</p>
@@ -221,7 +221,7 @@
                             <!-- Jam Berangkat -->
                             <div class="flex items-center gap-4 p-3 rounded-lg border border-border bg-card">
                                 <div class="h-12 w-12 rounded-lg bg-purple-100 dark:bg-purple-900/20 flex items-center justify-center shrink-0">
-                                    <x-lucide-clock class="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                                    <i data-lucide="clock" class="h-6 w-6 text-purple-600 dark:text-purple-400" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-muted-foreground">Jam Berangkat</p>
@@ -232,18 +232,18 @@
                             <!-- Status Jadwal -->
                             <div class="flex items-center gap-4 p-3 rounded-lg border border-border bg-card">
                                 <div class="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center shrink-0">
-                                    <x-lucide-power class="h-6 w-6 text-green-600 dark:text-green-400" />
+                                    <i data-lucide="power" class="h-6 w-6 text-green-600 dark:text-green-400" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-muted-foreground">Status Jadwal</p>
                                     @if($jadwalKelasBu->jadwal->status === 'aktif')
                                         <x-ui.badge class="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                                            <x-lucide-circle-check class="h-3 w-3" />
+                                            <i data-lucide="circle-check" class="h-3 w-3" ></i>
                                             Aktif
                                         </x-ui.badge>
                                     @else
                                         <x-ui.badge variant="secondary">
-                                            <x-lucide-circle-x class="h-3 w-3" />
+                                            <i data-lucide="circle-x" class="h-3 w-3" ></i>
                                             Tidak Aktif
                                         </x-ui.badge>
                                     @endif
@@ -257,7 +257,7 @@
                 <x-ui.card>
                     <x-ui.card.header>
                         <div class="flex items-center gap-2">
-                            <x-lucide-armchair class="w-5 h-5 text-primary" />
+                            <i data-lucide="armchair" class="w-5 h-5 text-primary" ></i>
                             <x-ui.card.title>Informasi Kelas</x-ui.card.title>
                         </div>
                         <x-ui.card.description>Detail kelas bus</x-ui.card.description>
@@ -267,7 +267,7 @@
                             <!-- Nama Kelas -->
                             <div class="flex items-center gap-4 p-3 rounded-lg border border-border bg-card">
                                 <div class="h-12 w-12 rounded-lg bg-orange-100 dark:bg-orange-900/20 flex items-center justify-center shrink-0">
-                                    <x-lucide-tag class="h-6 w-6 text-orange-600 dark:text-orange-400" />
+                                    <i data-lucide="tag" class="h-6 w-6 text-orange-600 dark:text-orange-400" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-muted-foreground">Nama Kelas</p>
@@ -275,7 +275,7 @@
                                 </div>
                                 <a href="{{ route('admin/kelas-bus.show', $jadwalKelasBu->kelasBus) }}">
                                     <x-ui.button variant="ghost" size="sm">
-                                        <x-lucide-eye class="w-4 h-4" />
+                                        <i data-lucide="eye" class="w-4 h-4" ></i>
                                     </x-ui.button>
                                 </a>
                             </div>
@@ -283,7 +283,7 @@
                             <!-- Jumlah Kursi -->
                             <div class="flex items-center gap-4 p-3 rounded-lg border border-border bg-card">
                                 <div class="h-12 w-12 rounded-lg bg-cyan-100 dark:bg-cyan-900/20 flex items-center justify-center shrink-0">
-                                    <x-lucide-armchair class="h-6 w-6 text-cyan-600 dark:text-cyan-400" />
+                                    <i data-lucide="armchair" class="h-6 w-6 text-cyan-600 dark:text-cyan-400" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <p class="text-sm text-muted-foreground">Jumlah Kursi</p>
@@ -307,7 +307,7 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <x-lucide-route class="w-5 h-5 text-primary" />
+                        <i data-lucide="route" class="w-5 h-5 text-primary" ></i>
                         <x-ui.card.title>Rute Perjalanan</x-ui.card.title>
                     </div>
                     <x-ui.card.description>Informasi rute dan terminal</x-ui.card.description>
@@ -318,7 +318,7 @@
                         <div class="space-y-4 p-4 rounded-lg border border-border bg-card">
                             <div class="flex items-center gap-3 pb-3 border-b border-border">
                                 <div class="h-12 w-12 rounded-lg bg-blue-100 dark:bg-blue-900/20 flex items-center justify-center">
-                                    <x-lucide-map-pin class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                                    <i data-lucide="map-pin" class="h-6 w-6 text-blue-600 dark:text-blue-400" ></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-muted-foreground">Terminal Asal</p>
@@ -334,7 +334,7 @@
                                 <div>
                                     <p class="text-xs text-muted-foreground mb-1">Kota</p>
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-map-pin class="h-4 w-4 text-muted-foreground" />
+                                        <i data-lucide="map-pin" class="h-4 w-4 text-muted-foreground" ></i>
                                         <p class="text-sm font-medium">{{ $jadwalKelasBu->jadwal->rute->asalTerminal->nama_kota ?? '-' }}</p>
                                     </div>
                                 </div>
@@ -345,7 +345,7 @@
                         <div class="space-y-4 p-4 rounded-lg border border-border bg-card">
                             <div class="flex items-center gap-3 pb-3 border-b border-border">
                                 <div class="h-12 w-12 rounded-lg bg-green-100 dark:bg-green-900/20 flex items-center justify-center">
-                                    <x-lucide-map-pin-check-inside class="h-6 w-6 text-green-600 dark:text-green-400" />
+                                    <i data-lucide="map-pin-check-inside" class="h-6 w-6 text-green-600 dark:text-green-400" ></i>
                                 </div>
                                 <div>
                                     <p class="text-sm text-muted-foreground">Terminal Tujuan</p>
@@ -361,7 +361,7 @@
                                 <div>
                                     <p class="text-xs text-muted-foreground mb-1">Kota</p>
                                     <div class="flex items-center gap-2">
-                                        <x-lucide-map-pin class="h-4 w-4 text-muted-foreground" />
+                                        <i data-lucide="map-pin" class="h-4 w-4 text-muted-foreground" ></i>
                                         <p class="text-sm font-medium">{{ $jadwalKelasBu->jadwal->rute->tujuanTerminal->nama_kota ?? '-' }}</p>
                                     </div>
                                 </div>
@@ -377,7 +377,7 @@
                 <x-ui.card>
                     <x-ui.card.header>
                         <div class="flex items-center gap-2">
-                            <x-lucide-bus class="w-5 h-5 text-primary" />
+                            <i data-lucide="bus" class="w-5 h-5 text-primary" ></i>
                             <x-ui.card.title>Informasi Bus</x-ui.card.title>
                         </div>
                         <x-ui.card.description>Detail bus yang digunakan</x-ui.card.description>
@@ -386,24 +386,24 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-4 p-4 rounded-lg border border-border bg-card">
                                 <div class="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                    <x-lucide-bus class="h-8 w-8 text-primary" />
+                                    <i data-lucide="bus" class="h-8 w-8 text-primary" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="text-lg font-semibold">{{ $jadwalKelasBu->jadwal->bus->nama }}</h4>
                                     <div class="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                                         <div class="flex items-center gap-1">
-                                            <x-lucide-hash class="h-4 w-4" />
+                                            <i data-lucide="hash" class="h-4 w-4" ></i>
                                             <span>{{ $jadwalKelasBu->jadwal->bus->plat_nomor }}</span>
                                         </div>
                                         <div class="flex items-center gap-1">
-                                            <x-lucide-users class="h-4 w-4" />
+                                            <i data-lucide="users" class="h-4 w-4" ></i>
                                             <span>{{ $jadwalKelasBu->jadwal->bus->kapasitas }} kursi</span>
                                         </div>
                                     </div>
                                 </div>
                                 <a href="{{ route('admin/bus.show', $jadwalKelasBu->jadwal->bus) }}">
                                     <x-ui.button variant="outline" size="sm">
-                                        <x-lucide-eye class="w-4 h-4" />
+                                        <i data-lucide="eye" class="w-4 h-4" ></i>
                                     </x-ui.button>
                                 </a>
                             </div>
@@ -415,7 +415,7 @@
                 <x-ui.card>
                     <x-ui.card.header>
                         <div class="flex items-center gap-2">
-                            <x-lucide-user-round class="w-5 h-5 text-primary" />
+                            <i data-lucide="user-round" class="w-5 h-5 text-primary" ></i>
                             <x-ui.card.title>Informasi Sopir</x-ui.card.title>
                         </div>
                         <x-ui.card.description>Detail sopir yang bertugas</x-ui.card.description>
@@ -424,20 +424,20 @@
                         <div class="space-y-4">
                             <div class="flex items-center gap-4 p-4 rounded-lg border border-border bg-card">
                                 <div class="h-16 w-16 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                    <x-lucide-user-round class="h-8 w-8 text-primary" />
+                                    <i data-lucide="user-round" class="h-8 w-8 text-primary" ></i>
                                 </div>
                                 <div class="flex-1">
                                     <h4 class="text-lg font-semibold">{{ $jadwalKelasBu->jadwal->sopir->user->name ?? 'N/A' }}</h4>
                                     <div class="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
                                         <div class="flex items-center gap-1">
-                                            <x-lucide-id-card class="h-4 w-4" />
+                                            <i data-lucide="id-card" class="h-4 w-4" ></i>
                                             <span>{{ $jadwalKelasBu->jadwal->sopir->nomor_sim }}</span>
                                         </div>
                                     </div>
                                 </div>
                                 <a href="{{ route('admin/sopir.show', $jadwalKelasBu->jadwal->sopir) }}">
                                     <x-ui.button variant="outline" size="sm">
-                                        <x-lucide-eye class="w-4 h-4" />
+                                        <i data-lucide="eye" class="w-4 h-4" ></i>
                                     </x-ui.button>
                                 </a>
                             </div>
@@ -452,7 +452,7 @@
                 <x-ui.card.header>
                     <div class="flex items-center justify-between">
                         <div class="flex items-center gap-2">
-                            <x-lucide-ticket class="w-5 h-5 text-primary" />
+                            <i data-lucide="ticket" class="w-5 h-5 text-primary" ></i>
                             <x-ui.card.title>Daftar Tiket</x-ui.card.title>
                         </div>
                         <x-ui.badge variant="secondary">
@@ -488,7 +488,7 @@
                                     <td class="p-2 align-middle">
                                         @if($tiket->kursi)
                                             <x-ui.badge variant="outline">
-                                                <x-lucide-armchair class="h-3 w-3 mr-1" />
+                                                <i data-lucide="armchair" class="h-3 w-3 mr-1" ></i>
                                                 {{ $tiket->kursi->nomor_kursi }}
                                             </x-ui.badge>
                                         @else
@@ -526,21 +526,21 @@
             <x-ui.card>
                 <x-ui.card.header>
                     <div class="flex items-center gap-2">
-                        <x-lucide-info class="w-5 h-5 text-primary" />
+                        <i data-lucide="info" class="w-5 h-5 text-primary" ></i>
                         <x-ui.card.title>Informasi Tambahan</x-ui.card.title>
                     </div>
                 </x-ui.card.header>
                 <x-ui.card.content>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div class="flex items-start gap-3">
-                            <x-lucide-calendar-plus class="w-5 h-5 text-muted-foreground mt-0.5" />
+                            <i data-lucide="calendar-plus" class="w-5 h-5 text-muted-foreground mt-0.5" ></i>
                             <div>
                                 <p class="text-sm text-muted-foreground">Dibuat</p>
                                 <p class="text-sm font-medium">{{ $jadwalKelasBu->created_at->format('d M Y, H:i') }}</p>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <x-lucide-calendar-check class="w-5 h-5 text-muted-foreground mt-0.5" />
+                            <i data-lucide="calendar-check" class="w-5 h-5 text-muted-foreground mt-0.5" ></i>
                             <div>
                                 <p class="text-sm text-muted-foreground">Terakhir Diupdate</p>
                                 <p class="text-sm font-medium">{{ $jadwalKelasBu->updated_at->format('d M Y, H:i') }}</p>

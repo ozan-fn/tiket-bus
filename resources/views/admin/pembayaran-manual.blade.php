@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -43,7 +43,7 @@
                                     class="flex-1"
                                 />
                                 <x-ui.button type="submit" variant="outline" size="sm">
-                                    <x-lucide-search class="w-4 h-4" />
+                                    <i data-lucide="search" class="w-4 h-4" ></i>
                                 </x-ui.button>
                             </form>
                         </div>
@@ -124,10 +124,10 @@
                                         <x-ui.table.cell>
                                             <div class="flex items-center gap-1">
                                                 <a href="{{ route('admin/pembayaran-manual.show', $item) }}" class="p-1 rounded hover:bg-accent">
-                                                    <x-lucide-eye class="w-4 h-4" />
+                                                    <i data-lucide="eye" class="w-4 h-4" ></i>
                                                 </a>
                                                 <a href="{{ route('admin/pembayaran-manual.edit', $item) }}" class="p-1 rounded hover:bg-accent">
-                                                    <x-lucide-edit class="w-4 h-4" />
+                                                    <i data-lucide="edit" class="w-4 h-4" ></i>
                                                 </a>
                                             </div>
                                         </x-ui.table.cell>
@@ -160,10 +160,10 @@
                                             </div>
                                             <div class="flex items-center gap-1">
                                                 <a href="{{ route('admin/pembayaran-manual.show', $item) }}" class="p-2 rounded hover:bg-accent">
-                                                    <x-lucide-eye class="w-4 h-4" />
+                                                    <i data-lucide="eye" class="w-4 h-4" ></i>
                                                 </a>
                                                 <a href="{{ route('admin/pembayaran-manual.edit', $item) }}" class="p-2 rounded hover:bg-accent">
-                                                    <x-lucide-edit class="w-4 h-4" />
+                                                    <i data-lucide="edit" class="w-4 h-4" ></i>
                                                 </a>
                                             </div>
                                         </div>
@@ -172,7 +172,7 @@
                                     <x-ui.table.row>
                                         <x-ui.table.cell colspan="8" class="text-center py-12">
                                             <div class="flex flex-col items-center gap-2">
-                                                <x-lucide-credit-card class="w-12 h-12 text-muted-foreground" />
+                                                <i data-lucide="credit-card" class="w-12 h-12 text-muted-foreground" ></i>
                                                 <h3 class="text-lg font-medium">Belum ada pembayaran</h3>
                                                 <p class="text-sm text-muted-foreground">Pembayaran manual akan muncul di sini.</p>
                                             </div>

@@ -6,7 +6,7 @@
                     <x-ui.breadcrumb.link href="{{ route('dashboard') }}">Home</x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>Scan Tiket</x-ui.breadcrumb.page>
@@ -22,7 +22,7 @@
                 <x-ui.card.header>
                     <div class="flex items-center gap-3">
                         <div class="p-2 bg-primary/10 rounded-lg">
-                            <x-lucide-qr-code class="w-6 h-6 text-primary" />
+                            <i data-lucide="qr-code" class="w-6 h-6 text-primary" ></i>
                         </div>
                         <div>
                             <x-ui.card.title>Scan Tiket Penumpang</x-ui.card.title>
@@ -41,7 +41,7 @@
                                 class="pb-3 px-4 font-medium transition-colors text-sm"
                             >
                                 <span class="flex items-center gap-2">
-                                    <x-lucide-keyboard class="w-4 h-4" />
+                                    <i data-lucide="keyboard" class="w-4 h-4" ></i>
                                     Input Manual
                                 </span>
                             </button>
@@ -51,7 +51,7 @@
                                 class="pb-3 px-4 font-medium transition-colors text-sm"
                             >
                                 <span class="flex items-center gap-2">
-                                    <x-lucide-camera class="w-4 h-4" />
+                                    <i data-lucide="camera" class="w-4 h-4" ></i>
                                     Scan Kamera
                                 </span>
                             </button>
@@ -72,7 +72,7 @@
                                     :disabled="loading || !kodeTiket"
                                     class="px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 disabled:opacity-50 transition-colors flex items-center gap-2"
                                 >
-                                    <x-lucide-search x-show="!loading" class="w-4 h-4" />
+                                    <i data-lucide="search" x-show="!loading" class="w-4 h-4" ></i>
                                     <span x-text="loading ? '...' : 'Cek'"></span>
                                 </button>
                             </div>
@@ -89,7 +89,7 @@
                                     class="w-full flex flex-col items-center justify-center gap-3 py-8 border-2 border-dashed border-muted-foreground/20 rounded-xl hover:bg-accent/50 transition-all group"
                                 >
                                     <div class="p-3 bg-primary/10 rounded-full group-hover:scale-110 transition-transform">
-                                        <x-lucide-camera class="w-8 h-8 text-primary" />
+                                        <i data-lucide="camera" class="w-8 h-8 text-primary" ></i>
                                     </div>
                                     <span class="font-medium">Buka Scanner Kamera</span>
                                 </button>
@@ -109,8 +109,8 @@
                             <div class="space-y-4">
                                 <div class="flex items-center gap-3">
                                     <div :class="result.success ? 'text-green-600' : 'text-red-600'">
-                                        <x-lucide-check-circle x-show="result.success" class="w-6 h-6" />
-                                        <x-lucide-x-circle x-show="!result.success" class="w-6 h-6" />
+                                        <i data-lucide="check-circle" x-show="result.success" class="w-6 h-6" ></i>
+                                        <i data-lucide="x-circle" x-show="!result.success" class="w-6 h-6" ></i>
                                     </div>
                                     <h3 class="font-bold text-foreground" x-text="result?.message"></h3>
                                 </div>
@@ -185,7 +185,7 @@
                                             <p class="text-[10px] text-muted-foreground uppercase mb-1 text-center">Rute Perjalanan</p>
                                             <div class="flex justify-between items-center px-4">
                                                 <span class="font-bold text-sm" x-text="result.data.jadwal && result.data.jadwal.asal ? result.data.jadwal.asal : 'N/A'"></span>
-                                                <x-lucide-arrow-right class="w-4 h-4 text-primary" />
+                                                <i data-lucide="arrow-right" class="w-4 h-4 text-primary" ></i>
                                                 <span class="font-bold text-sm" x-text="result.data.jadwal && result.data.jadwal.tujuan ? result.data.jadwal.tujuan : 'N/A'"></span>
                                             </div>
                                         </div>

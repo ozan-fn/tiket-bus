@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -30,7 +30,7 @@
                         <!-- Search Bar -->
                         <form method="GET" action="{{ route('admin/pemesanan.index') }}" class="flex gap-2 mt-4 flex-wrap">
                             <div class="relative flex-1 sm:flex-initial sm:w-80">
-                                <x-lucide-search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" ></i>
                                 <x-ui.input
                                     type="text"
                                     name="asal"
@@ -40,7 +40,7 @@
                                 />
                             </div>
                             <div class="relative flex-1 sm:flex-initial sm:w-80">
-                                <x-lucide-map-pin class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                <i data-lucide="map-pin" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" ></i>
                                 <x-ui.input
                                     type="text"
                                     name="tujuan"
@@ -57,12 +57,12 @@
                                 />
                             </div>
                             <x-ui.button type="submit" variant="outline" size="sm" class="h-9 w-9 shrink-0">
-                                <x-lucide-search class="w-4 h-4" />
+                                <i data-lucide="search" class="w-4 h-4" ></i>
                             </x-ui.button>
                             @if(request('asal') || request('tujuan') || request('tanggal'))
                                 <a href="{{ route('admin/pemesanan.index') }}" class="shrink-0">
                                     <x-ui.button type="button" variant="outline" size="icon" class="h-10 w-10">
-                                        <x-lucide-x class="w-4 h-4" />
+                                        <i data-lucide="x" class="w-4 h-4" ></i>
                                     </x-ui.button>
                                 </a>
                             @endif
@@ -82,7 +82,7 @@
                                         <p class="text-xs text-muted-foreground mb-1">Bus</p>
                                         <div class="flex items-center gap-2">
                                             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                                <x-lucide-bus class="h-4 w-4 text-primary" />
+                                                <i data-lucide="bus" class="h-4 w-4 text-primary" ></i>
                                             </div>
                                             <div>
                                                 <p class="font-semibold text-sm">{{ $jadwal->bus->nama }}</p>
@@ -96,7 +96,7 @@
                                         <p class="text-xs text-muted-foreground mb-1">Rute</p>
                                         <div class="flex items-center gap-1 text-sm">
                                             <span class="font-semibold">{{ $jadwal->rute->asalTerminal->nama_kota }}</span>
-                                            <x-lucide-arrow-right class="h-3 w-3 text-muted-foreground" />
+                                            <i data-lucide="arrow-right" class="h-3 w-3 text-muted-foreground" ></i>
                                             <span class="font-semibold">{{ $jadwal->rute->tujuanTerminal->nama_kota }}</span>
                                         </div>
                                     </div>
@@ -120,7 +120,7 @@
                                     <div class="flex justify-end">
                                         <a href="{{ route('admin/pemesanan.create', $jadwal) }}">
                                             <x-ui.button size="sm" class="flex items-center gap-2">
-                                                <x-lucide-plus class="w-4 h-4" />
+                                                <i data-lucide="plus" class="w-4 h-4" ></i>
                                                 Pesan
                                             </x-ui.button>
                                         </a>
@@ -135,7 +135,7 @@
                                     <div class="flex items-start justify-between gap-2">
                                         <div class="flex items-center gap-2 flex-1">
                                             <div class="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                                                <x-lucide-bus class="h-4 w-4 text-primary" />
+                                                <i data-lucide="bus" class="h-4 w-4 text-primary" ></i>
                                             </div>
                                             <div>
                                                 <p class="font-semibold text-sm">{{ $jadwal->bus->nama }}</p>
@@ -154,7 +154,7 @@
                                     <div class="space-y-1">
                                         <p class="text-xs text-muted-foreground">Rute</p>
                                         <div class="flex items-center gap-2 text-sm">
-                                            <x-lucide-map-pin class="h-4 w-4 text-muted-foreground" />
+                                            <i data-lucide="map-pin" class="h-4 w-4 text-muted-foreground" ></i>
                                             <span class="font-semibold">{{ $jadwal->rute->asalTerminal->nama_kota }} → {{ $jadwal->rute->tujuanTerminal->nama_kota }}</span>
                                         </div>
                                     </div>
@@ -163,7 +163,7 @@
                                     <div class="space-y-1">
                                         <p class="text-xs text-muted-foreground">Jadwal</p>
                                         <div class="flex items-center gap-2 text-sm">
-                                            <x-lucide-calendar class="h-4 w-4 text-muted-foreground" />
+                                            <i data-lucide="calendar" class="h-4 w-4 text-muted-foreground" ></i>
                                             <div>
                                                 <p class="font-semibold">{{ $jadwal->tanggal_berangkat->format('d M Y') }}</p>
                                                 <p class="text-xs text-muted-foreground">{{ $jadwal->jam_berangkat->format('H:i') }} WIB</p>
@@ -174,7 +174,7 @@
                                     <!-- Button -->
                                     <a href="{{ route('admin/pemesanan.create', $jadwal) }}" class="w-full">
                                         <x-ui.button class="w-full flex items-center justify-center gap-2" size="sm">
-                                            <x-lucide-plus class="w-4 h-4" />
+                                            <i data-lucide="plus" class="w-4 h-4" ></i>
                                             Pesan Tiket
                                         </x-ui.button>
                                     </a>
@@ -191,7 +191,7 @@
                 @else
                     <div class="text-center py-12">
                         <div class="h-16 w-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
-                            <x-lucide-inbox class="h-8 w-8 text-muted-foreground" />
+                            <i data-lucide="inbox" class="h-8 w-8 text-muted-foreground" ></i>
                         </div>
                         <h3 class="text-lg font-semibold text-foreground mb-2">Tidak ada jadwal tersedia</h3>
                         <p class="text-muted-foreground">Coba ubah filter pencarian Anda</p>

@@ -12,11 +12,12 @@
         </div>
     @else
         <!-- {{ $menu['label'] }} Menu Item -->
-        <a href="{{ route($menu['route']) }}" class="group relative flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs($menu['route'] . '*') || request()->routeIs($menu['route']) ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground' }} transition-colors">
+        <a href="{{ route($menu['route']) }}"
+            class="group relative flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg {{ request()->routeIs($menu['route'] . '*') || request()->routeIs($menu['route']) ? 'bg-primary text-primary-foreground shadow-sm' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground' }} transition-colors">
             @if(request()->routeIs($menu['route'] . '*') || request()->routeIs($menu['route']))
                 <span class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary-foreground rounded-r-full"></span>
             @endif
-            <x-dynamic-component :component="'lucide-' . $menu['icon']" class="w-5 h-5 shrink-0" />
+            <i data-lucide="{{ $menu['icon'] }}" class="w-5 h-5 shrink-0"></i>
             {{ $menu['label'] }}
         </a>
     @endif

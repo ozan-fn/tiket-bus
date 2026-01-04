@@ -6,7 +6,7 @@
                     <x-ui.breadcrumb.link href="{{ route('dashboard') }}">Home</x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>User Management</x-ui.breadcrumb.page>
@@ -18,7 +18,7 @@
     <div class="p-4 sm:p-6">
         @if(session('success'))
             <x-ui.alert class="mb-6">
-                <x-slot:icon><x-lucide-check-circle class="w-4 h-4" /></x-slot:icon>
+                <x-slot:icon><i data-lucide="check-circle" class="w-4 h-4" ></i></x-slot:icon>
                 <x-slot:title>Berhasil!</x-slot:title>
                 <x-slot:description>{{ session('success') }}</x-slot:description>
             </x-ui.alert>
@@ -36,7 +36,7 @@
                                 </div>
                                 <a href="{{ route('admin/user.create') }}" class="hidden sm:inline-block">
                                     <x-ui.button>
-                                        <x-lucide-plus class="w-4 h-4 mr-2" /> Tambah User
+                                        <i data-lucide="plus" class="w-4 h-4 mr-2" ></i> Tambah User
                                     </x-ui.button>
                                 </a>
                             </div>
@@ -50,16 +50,16 @@
                                         @endif
                                             <div class="flex flex-row gap-2">
                                         <div class="relative flex-1 min-w-0">
-                                            <x-lucide-search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" ></i>
                                             <x-ui.input type="text" name="search" placeholder="Cari nama atau email..." value="{{ request('search') }}" class="pl-9 h-10 max-w-md" />
                                         </div>
                                         <x-ui.button size="icon" type="submit" variant="outline" class="h-9 w-9 shrink-0">
-                                            <x-lucide-search class="w-4 h-4" />
+                                            <i data-lucide="search" class="w-4 h-4" ></i>
                                         </x-ui.button></div>
                                         @if(request('search'))
                                             <a href="{{ route('admin/user.index', ['role' => request('role')]) }}" class="shrink-0">
                                                 <x-ui.button size="icon" type="button" variant="outline" class="h-10 w-10 shrink-0">
-                                                    <x-lucide-x class="w-4 h-4" />
+                                                    <i data-lucide="x" class="w-4 h-4" ></i>
                                                 </x-ui.button>
                                             </a>
                                         @endif
@@ -71,7 +71,7 @@
                                         <x-ui.dropdown>
                                             <x-slot:trigger>
                                                 <x-ui.button size="icon" variant="{{ request('role') ? 'default' : 'outline' }}">
-                                                    <x-lucide-filter class="w-4 h-4" />
+                                                    <i data-lucide="filter" class="w-4 h-4" ></i>
                                                 </x-ui.button>
                                             </x-slot:trigger>
 
@@ -82,7 +82,7 @@
                                             <x-ui.dropdown.item as="a" href="{{ route('admin/user.index', ['search' => request('search')]) }}" active="{{ !request('role') ? 'true' : 'false' }}">
                                                 Semua
                                                 @if(!request('role'))
-                                                    <x-lucide-check class="w-4 h-4 ml-auto" />
+                                                    <i data-lucide="check" class="w-4 h-4 ml-auto" ></i>
                                                 @endif
                                             </x-ui.dropdown.item>
 
@@ -94,7 +94,7 @@
                                                 >
                                                     {{ ucfirst($role->name) }}
                                                     @if(request('role') == $role->name)
-                                                        <x-lucide-check class="w-4 h-4 ml-auto" />
+                                                        <i data-lucide="check" class="w-4 h-4 ml-auto" ></i>
                                                     @endif
                                                 </x-ui.dropdown.item>
                                             @endforeach
@@ -108,7 +108,7 @@
                         {{-- Mobile Add Button --}}
                         <a href="{{ route('admin/user.create') }}" class="sm:hidden w-full">
                             <x-ui.button class="w-full">
-                                <x-lucide-plus class="w-4 h-4 mr-2" /> Tambah User
+                                <i data-lucide="plus" class="w-4 h-4 mr-2" ></i> Tambah User
                             </x-ui.button>
                         </a>
                     </div>
@@ -142,14 +142,14 @@
                                                 <x-ui.table.cell class="text-right">
                                                     <div class="flex items-center justify-end gap-2">
                                                         <a href="{{ route('admin/user.show', $user) }}">
-                                                            <x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-eye class="w-4 h-4" /></x-ui.button>
+                                                            <x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><i data-lucide="eye" class="w-4 h-4" ></i></x-ui.button>
                                                         </a>
                                                         <a href="{{ route('admin/user.edit', $user) }}">
-                                                            <x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-pencil class="w-4 h-4" /></x-ui.button>
+                                                            <x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><i data-lucide="pencil" class="w-4 h-4" ></i></x-ui.button>
                                                         </a>
                                                         {{-- Modal Delete --}}
                                                         <div x-data="{ open: false }">
-                                                            <x-ui.button @click="open = true" variant="ghost" size="sm" class="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"><x-lucide-trash-2 class="w-4 h-4" /></x-ui.button>
+                                                            <x-ui.button @click="open = true" variant="ghost" size="sm" class="h-8 w-8 p-0 text-destructive hover:bg-destructive/10"><i data-lucide="trash-2" class="w-4 h-4" ></i></x-ui.button>
                                                             <template x-teleport="body">
                                                                 <div x-show="open" x-cloak class="fixed inset-0 z-50 overflow-y-auto" @keydown.escape.window="open = false">
                                                                     <div x-show="open" class="fixed inset-0 bg-black/50 backdrop-blur-sm" @click="open = false"></div>
@@ -181,8 +181,8 @@
                                                             <p class="text-xs text-muted-foreground">{{ $user->email }}</p>
                                                         </div>
                                                         <div class="flex gap-1">
-                                                            <a href="{{ route('admin/user.show', $user) }}"><x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-eye class="w-4 h-4" /></x-ui.button></a>
-                                                            <a href="{{ route('admin/user.edit', $user) }}"><x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><x-lucide-pencil class="w-4 h-4" /></x-ui.button></a>
+                                                            <a href="{{ route('admin/user.show', $user) }}"><x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><i data-lucide="eye" class="w-4 h-4" ></i></x-ui.button></a>
+                                                            <a href="{{ route('admin/user.edit', $user) }}"><x-ui.button variant="ghost" size="sm" class="h-8 w-8 p-0"><i data-lucide="pencil" class="w-4 h-4" ></i></x-ui.button></a>
                                                             {{-- Mobile Delete Button Logic Here (Same as Desktop) --}}
                                                         </div>
                                                     </div>

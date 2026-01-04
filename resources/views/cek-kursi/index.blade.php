@@ -8,7 +8,7 @@
                     </x-ui.breadcrumb.link>
                 </x-ui.breadcrumb.item>
                 <x-ui.breadcrumb.separator>
-                    <x-lucide-chevron-right class="w-3.5 h-3.5" />
+                    <i data-lucide="chevron-right" class="w-3.5 h-3.5" ></i>
                 </x-ui.breadcrumb.separator>
                 <x-ui.breadcrumb.item>
                     <x-ui.breadcrumb.page>
@@ -30,17 +30,17 @@
                             <div class="flex flex-col gap-3 mb-3 pb-3 border-b border-border">
                                 <div class="flex items-center gap-2">
                                     <span class="inline-flex items-center gap-1 px-2 py-1 bg-primary/10 text-primary rounded text-xs font-semibold">
-                                        <x-lucide-clock class="w-3 h-3" />
+                                        <i data-lucide="clock" class="w-3 h-3" ></i>
                                         {{ $jadwal->jam_berangkat->format('H:i') }}
                                     </span>
                                     <span class="inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-xs font-semibold">
-                                        <x-lucide-calendar class="w-3 h-3" />
+                                        <i data-lucide="calendar" class="w-3 h-3" ></i>
                                         {{ $jadwal->tanggal_berangkat->format('d M Y') }}
                                     </span>
                                 </div>
                                 <div class="flex items-center gap-2 text-sm">
                                     <span class="font-semibold text-foreground">{{ $jadwal->rute->asalTerminal->nama_terminal }}</span>
-                                    <x-lucide-arrow-right class="w-4 h-4 text-muted-foreground" />
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-muted-foreground" ></i>
                                     <span class="font-semibold text-foreground">{{ $jadwal->rute->tujuanTerminal->nama_terminal }}</span>
                                 </div>
                                 <div class="flex items-center justify-between">
@@ -88,7 +88,7 @@
                                             type="button"
                                             @click="loadKursi({{ $kelasBus->id }}, '{{ $kelasBus->kelasBus->nama_kelas }}', {{ $kelasBus->harga }})"
                                             class="px-3 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium whitespace-nowrap flex items-center gap-2 text-xs">
-                                            <x-lucide-eye class="w-3 h-3" />
+                                            <i data-lucide="eye" class="w-3 h-3" ></i>
                                             Lihat {{ $kelasBus->kelasBus->nama_kelas }}
                                         </button>
                                     @endforeach
@@ -101,7 +101,7 @@
                         <div class="p-12 text-center">
                             <div class="flex justify-center mb-6">
                                 <div class="p-3 bg-accent/50 rounded-full">
-                                    <x-lucide-inbox class="w-12 h-12 text-muted-foreground" />
+                                    <i data-lucide="inbox" class="w-12 h-12 text-muted-foreground" ></i>
                                 </div>
                             </div>
                             <h3 class="text-lg font-semibold text-foreground mb-2">Tidak ada jadwal</h3>
@@ -141,7 +141,7 @@
                 <div class="bg-card border border-border rounded-lg shadow-sm overflow-hidden p-8">
                     <div class="flex justify-center mb-4">
                         <div class="p-3 bg-accent/50 rounded-full">
-                            <x-lucide-check-circle class="w-6 h-6 text-green-600 dark:text-green-400" />
+                            <i data-lucide="check-circle" class="w-6 h-6 text-green-600 dark:text-green-400" ></i>
                         </div>
                     </div>
                     <h3 class="font-semibold text-foreground mb-1">Semua jadwal sudah dimuat</h3>
@@ -184,7 +184,7 @@
                                 <p class="text-sm text-muted-foreground mt-1">Cek status kursi untuk kelas ini</p>
                             </div>
                             <button @click="closeModal" class="p-1 hover:bg-muted rounded-lg transition-colors">
-                                <x-lucide-x class="w-5 h-5 text-muted-foreground" />
+                                <i data-lucide="x" class="w-5 h-5 text-muted-foreground" ></i>
                             </button>
                         </div>
 
@@ -213,7 +213,7 @@
                                         <p class="text-xs text-muted-foreground mb-1">Rute</p>
                                         <p class="font-semibold text-foreground">
                                             <span x-text="kursiData?.jadwal?.asal_terminal"></span>
-                                            <x-lucide-arrow-right class="w-3 h-3 inline-block mx-1" />
+                                            <i data-lucide="arrow-right" class="w-3 h-3 inline-block mx-1" ></i>
                                             <span x-text="kursiData?.jadwal?.tujuan_terminal"></span>
                                         </p>
                                     </div>
@@ -313,7 +313,7 @@
                         <div x-show="!isLoadingKursi && errorMessage" class="text-center py-8">
                             <div class="flex justify-center mb-4">
                                 <div class="p-3 bg-destructive/10 rounded-full">
-                                    <x-lucide-alert-circle class="w-6 h-6 text-destructive" />
+                                    <i data-lucide="alert-circle" class="w-6 h-6 text-destructive" ></i>
                                 </div>
                             </div>
                             <p class="text-foreground font-medium mb-2">Gagal memuat data</p>
