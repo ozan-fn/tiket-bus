@@ -248,7 +248,7 @@ class DashboardController extends Controller
 
         // Hitung statistik
         $totalJadwal = Jadwal::where("sopir_id", $sopir->id)->count();
-        
+
         // Jadwal Selesai: status 'selesai' ATAU status 'aktif' tapi waktu sudah lewat
         $jadwalSelesai = Jadwal::where("sopir_id", $sopir->id)
             ->where(function ($q) {
