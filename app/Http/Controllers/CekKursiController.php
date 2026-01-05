@@ -45,7 +45,7 @@ class CekKursiController extends Controller
             }
 
             // Get jadwal kelas bus with related data
-            $jadwalKelasBus = JadwalKelasBus::with(["jadwal.bus", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "kelasBus.bus", "tikets.kursi"])->find($jadwalKelasBusId);
+            $jadwalKelasBus = JadwalKelasBus::with(["jadwal.bus", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "busKelasBus.kelasBus", "tikets.kursi"])->find($jadwalKelasBusId);
 
             if (!$jadwalKelasBus) {
                 return response()->json(
@@ -58,8 +58,7 @@ class CekKursiController extends Controller
             }
 
             // Get all kursi untuk kelas bus ini
-            $kelasBus = $jadwalKelasBus->kelasBus;
-            $allKursi = Kursi::where("kelas_bus_id", $kelasBus->id)->orderBy("nomor_kursi", "asc")->get();
+            $allKursi = Kursi::where("bus_kelas_bus_id", $jadwalKelasBus->bus_kelas_bus_id)->orderBy("nomor_kursi", "asc")->get();
 
             // Get booked tickets
             $bookedKursiIds = $jadwalKelasBus->tikets()->pluck("kursi_id")->toArray();

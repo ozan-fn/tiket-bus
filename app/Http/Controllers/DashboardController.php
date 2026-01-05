@@ -130,9 +130,21 @@ class DashboardController extends Controller
 
     private function conductorDashboard()
     {
+        $user = auth()->user();
         $userRole = "conductor";
 
-        return view("dashboard.conductor", compact("userRole"));
+        // Statistik sederhana untuk kondektur (bisa disesuaikan nanti)
+        $jadwalHariIni = Jadwal::where("conductor_id", $user->sopir?->id ?? 0)
+            ->whereDate("tanggal_berangkat", now()->toDateString())
+            ->count();
+
+        $totalPenumpang = Tiket::whereHas("jadwalKelasBus.jadwal", function ($q) use ($user) {
+            $q->where("conductor_id", $user->sopir?->id ?? 0);
+        })->where("status", "dibayar")->count();
+
+        $tiketTerjual = $totalPenumpang;
+
+        return view("dashboard.conductor", compact("userRole", "jadwalHariIni", "totalPenumpang", "tiketTerjual"));
     }
 
     private function userDashboard()
@@ -204,9 +216,9 @@ class DashboardController extends Controller
 
         // Ambil jadwal terbaru sopir (aktif atau yang akan datang)
         $jadwalAktif = Jadwal::where("sopir_id", $sopir->id)
-            ->where("status", "aktif")
-            ->orderBy("tanggal_berangkat", "desc")
-            ->orderBy("jam_berangkat", "desc")
+            ->active()
+            ->orderBy("tanggal_berangkat", "asc")
+            ->orderBy("jam_berangkat", "asc")
             ->with([
                 "bus",
                 "rute.asalTerminal",
@@ -222,10 +234,12 @@ class DashboardController extends Controller
             ])
             ->first();
 
-        // Ambil jadwal-jadwal mendatang
+        // Ambil jadwal-jadwal mendatang (setelah jadwal aktif pertama)
         $jadwalMendatang = Jadwal::where("sopir_id", $sopir->id)
-            ->where("status", "aktif")
-            ->whereRaw("CONCAT(DATE(tanggal_berangkat), ' ', TIME(jam_berangkat)) > NOW()")
+            ->active()
+            ->when($jadwalAktif, function ($query) use ($jadwalAktif) {
+                return $query->where("id", "!=", $jadwalAktif->id);
+            })
             ->orderBy("tanggal_berangkat", "asc")
             ->orderBy("jam_berangkat", "asc")
             ->with(["bus", "rute.asalTerminal", "rute.tujuanTerminal"])
@@ -234,11 +248,20 @@ class DashboardController extends Controller
 
         // Hitung statistik
         $totalJadwal = Jadwal::where("sopir_id", $sopir->id)->count();
-        $jadwalSelesai = Jadwal::where("sopir_id", $sopir->id)->where("status", "selesai")->count();
+        
+        // Jadwal Selesai: status 'selesai' ATAU status 'aktif' tapi waktu sudah lewat
+        $jadwalSelesai = Jadwal::where("sopir_id", $sopir->id)
+            ->where(function ($q) {
+                $q->where("status", "selesai")
+                    ->orWhere(function ($q2) {
+                        $q2->expired();
+                    });
+            })
+            ->count();
 
         $userRole = "driver";
 
-        return view("dashboard", compact(
+        return view("dashboard.driver", compact(
             "jadwalAktif",
             "jadwalMendatang",
             "totalJadwal",

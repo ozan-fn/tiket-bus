@@ -88,7 +88,7 @@
                             ['label' => 'Harga Tiket', 'route' => 'admin/jadwal-kelas-bus.index', 'icon' => 'tag', 'type' => 'menu', 'roles' => ['owner', 'agent']],
                             ['label' => 'Scan', 'type' => 'section', 'roles' => ['agent']],
                             ['label' => 'Scan Tiket', 'route' => 'admin/scan.index', 'icon' => 'qr-code', 'type' => 'menu', 'roles' => ['agent']],
-                            ['label' => 'User', 'route' => 'admin/user.index', 'icon' => 'users', 'type' => 'menu', 'roles' => ['agent']],
+                            // ['label' => 'User', 'route' => 'admin/user.index', 'icon' => 'users', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'Pemeriksaan', 'type' => 'section', 'roles' => ['agent']],
                             ['label' => 'Cek Kursi', 'route' => 'admin/cek-kursi.index', 'icon' => 'armchair', 'type' => 'menu', 'roles' => ['agent']],
                             ['label' => 'Operasional', 'type' => 'section', 'roles' => ['driver']],

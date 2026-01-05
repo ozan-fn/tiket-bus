@@ -495,7 +495,7 @@ class SopirController extends Controller
                 "bus",
                 "rute.asalTerminal",
                 "rute.tujuanTerminal",
-                "jadwalKelasBus.kelasBus.kursi",
+                "jadwalKelasBus.busKelasBus.kursi",
                 "jadwalKelasBus.tikets"
             ])->find($jadwalId);
 
@@ -509,7 +509,7 @@ class SopirController extends Controller
             // Build kursi data
             $kursiData = [];
             foreach ($jadwal->jadwalKelasBus as $jkb) {
-                foreach ($jkb->kelasBus->kursi as $kursi) {
+                foreach ($jkb->busKelasBus->kursi as $kursi) {
                     $bookedTicket = $jkb->tikets->where("kursi_id", $kursi->id)->first();
                     $kursiData[] = [
                         "id" => $kursi->id,

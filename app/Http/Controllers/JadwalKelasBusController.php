@@ -97,7 +97,7 @@ class JadwalKelasBusController extends Controller
      */
     public function show(JadwalKelasBus $jadwalKelasBu)
     {
-        $jadwalKelasBu->load(["jadwal.bus", "jadwal.sopir.user", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "kelasBus.bus", "tikets.kursi", "tikets.user"]);
+        $jadwalKelasBu->load(["jadwal.bus", "jadwal.sopir.user", "jadwal.rute.asalTerminal", "jadwal.rute.tujuanTerminal", "busKelasBus.kelasBus", "tikets.kursi", "tikets.user"]);
 
         return view("jadwal-kelas-bus.show", compact("jadwalKelasBu"));
     }

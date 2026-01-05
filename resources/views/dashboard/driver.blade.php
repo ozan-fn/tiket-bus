@@ -135,7 +135,7 @@
                                             $penumpangDipesan[] = [
                                                 'nama' => $tiket->nama_penumpang,
                                                 'kode' => $tiket->kode_tiket,
-                                                'kelas' => $jkb->kelasBus->nama,
+                                                'kelas' => $jkb->kelasBus->nama_kelas,
                                                 'is_hadir' => $tiket->is_hadir,
                                             ];
                                         }
