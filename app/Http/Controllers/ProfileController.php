@@ -51,6 +51,17 @@ class ProfileController extends Controller
 
         $user->save();
 
+        // Update data sopir jika user adalah driver
+        if ($user->hasRole('driver') && $user->sopir) {
+            $user->sopir->update([
+                'nomor_sim' => $request->nomor_sim,
+                'alamat' => $request->alamat,
+                'nik' => $request->nik,
+                'telepon' => $request->nomor_telepon,
+                'tanggal_lahir' => $request->tanggal_lahir,
+            ]);
+        }
+
         if ($request->hasFile('avatar')) {
             if ($user->avatar) {
                 \Storage::disk('public')->delete($user->avatar);

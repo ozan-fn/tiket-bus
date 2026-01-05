@@ -73,6 +73,22 @@
                 <x-datepicker id="tanggal_lahir" name="tanggal_lahir" :value="old('tanggal_lahir', $user->tanggal_lahir?->format('Y-m-d'))" />
                 <x-input-error class="mt-2" :messages="$errors->get('tanggal_lahir')" />
             </div>
+
+            @if ($user->hasRole('driver') && $user->sopir)
+                <div class="space-y-2">
+                    <x-ui.label for="nomor_sim">{{ __('Nomor SIM') }}</x-ui.label>
+                    <x-ui.input id="nomor_sim" name="nomor_sim" type="text" class="block w-full" :value="old('nomor_sim', $user->sopir->nomor_sim)" placeholder="Nomor SIM" />
+                    <x-input-error class="mt-2" :messages="$errors->get('nomor_sim')" />
+                </div>
+
+                <div class="space-y-2 md:col-span-2">
+                    <x-ui.label for="alamat">{{ __('Alamat') }}</x-ui.label>
+                    <textarea id="alamat" name="alamat"
+                        class="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        placeholder="Alamat Lengkap">{{ old('alamat', $user->sopir->alamat) }}</textarea>
+                    <x-input-error class="mt-2" :messages="$errors->get('alamat')" />
+                </div>
+            @endif
         </div>
 
         <div class="flex items-center gap-4">

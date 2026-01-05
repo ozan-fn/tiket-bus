@@ -29,6 +29,8 @@ class ProfileUpdateRequest extends FormRequest
             'tanggal_lahir' => ['nullable', 'date'],
             'jenis_kelamin' => ['nullable', 'in:L,P'],
             'nomor_telepon' => ['nullable', 'string', 'max:20'],
+            'nomor_sim' => ['nullable', 'string', 'max:50'],
+            'alamat' => ['nullable', 'string', 'max:500'],
         ];
     }
 }
